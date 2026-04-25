@@ -54,7 +54,6 @@
             border-radius: 25px; padding: 20px; text-align: left;
         }
 
-        /* --- FORMULARIOS --- */
         .card-white { background: var(--white); color: #000; border-radius: 30px; padding: 25px; margin-top: 10px; }
         .form-label { display: block; font-size: 0.7rem; font-weight: 800; color: #666; margin: 12px 0 5px 5px; text-transform: uppercase; }
         .form-control, .login-input {
@@ -68,11 +67,9 @@
         .btn-green { background: var(--success-green); color: #fff; margin-top: 25px; }
         .btn-cancel { background: transparent; border: 1px solid var(--danger-red); color: var(--danger-red); padding: 10px; font-size: 0.8rem; margin-top: 15px; border-radius: 10px; width: 100%; }
 
-        /* --- CATÁLOGO --- */
         .car-card { background: #1a1a1a; border-radius: 25px; padding: 15px; margin-bottom: 25px; border: 1px solid #333; }
         .car-card img { width: 100%; border-radius: 20px; }
 
-        /* --- NAVBAR INFERIOR --- */
         .nav-bar {
             position: fixed; bottom: 0; width: 100%; background: #0d0d0d;
             display: flex; justify-content: space-around; padding: 15px 0 30px 0;
@@ -94,10 +91,16 @@
         <input type="tel" id="user-phone" class="login-input" placeholder="Número de teléfono">
         <label class="form-label" style="color:#888; text-align:left;">Selecciona tu modelo actual:</label>
         <select id="user-unit" class="login-input">
-            <option value="Duster">Duster</option>
             <option value="Kwid">Kwid</option>
             <option value="Kardian">Kardian</option>
+            <option value="Duster">Duster</option>
             <option value="Stepway">Stepway</option>
+            <option value="Oroch">Oroch</option>
+            <option value="Koleos">Koleos</option>
+            <option value="Master">Master</option>
+            <option value="Kangoo">Kangoo</option>
+            <option value="Captur">Captur</option>
+            <option value="Megane E-Tech">Megane E-Tech</option>
         </select>
         <button class="btn-action btn-yellow" onclick="saveData()">INGRESAR</button>
     </div>
@@ -153,11 +156,18 @@
 
     <script>
         const API_BASE = "https://sheetdb.io/api/v1/eyx5rh2dow3oj";
+        
         const CARS = {
-            "Duster": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/duster-hjd/duster-lanzamiento/duster-card.png",
             "Kwid": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/kwid-bwj-ph2/kwid-card.png",
             "Kardian": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/kardian-hjf/kardian-card.png",
-            "Stepway": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/stepway-bja/stepway-card.png"
+            "Duster": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/duster-hjd/duster-lanzamiento/duster-card.png",
+            "Stepway": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/stepway-bja/stepway-card.png",
+            "Oroch": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/oroch-hjd-ph2/oroch-card.png",
+            "Koleos": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/koleos-hzg-ph2/koleos-card.png",
+            "Master": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/master-x62-ph2/master-card.png",
+            "Kangoo": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/kangoo-ffk/kangoo-card.png",
+            "Captur": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/captur-hjd/captur-card.png",
+            "Megane E-Tech": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/megane-bc-ev/megane-card.png"
         };
 
         window.onload = () => {
@@ -165,28 +175,36 @@
             if(user) {
                 renderUser(JSON.parse(user));
                 document.getElementById('login-screen').style.display = 'none';
-                loadCat();
-                loadSemi();
-                updateAppointmentUI();
+                initAppData();
             }
         };
 
         function saveData() {
-            const d = { name: document.getElementById('user-name').value, phone: document.getElementById('user-phone').value, unit: document.getElementById('user-unit').value };
-            if(!d.name || !d.phone) return alert("Completa tus datos");
-            localStorage.setItem('renault_user', JSON.stringify(d));
-            renderUser(d);
+            const name = document.getElementById('user-name').value;
+            const phone = document.getElementById('user-phone').value;
+            const unit = document.getElementById('user-unit').value;
+            
+            if(!name || !phone) return alert("Por favor completa tu nombre y teléfono");
+            
+            const userData = { name, phone, unit };
+            localStorage.setItem('renault_user', JSON.stringify(userData));
+            
+            renderUser(userData);
             document.getElementById('login-screen').style.display = 'none';
+            initAppData();
+        }
+
+        function initAppData() {
             loadCat();
             loadSemi();
+            updateAppointmentUI();
         }
 
         function renderUser(d) {
             document.getElementById('greet').innerText = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
-            document.getElementById('main-car').src = CARS[d.unit];
+            document.getElementById('main-car').src = CARS[d.unit] || CARS["Kwid"];
             document.getElementById('tag-car').innerText = `Tu ${d.unit}`;
-            document.getElementById('c-name').value = d.name;
-            document.getElementById('c-phone').value = d.phone;
+            // Pre-llenar formularios
             document.getElementById('q-name').value = d.name;
             document.getElementById('q-phone').value = d.phone;
         }
@@ -197,11 +215,10 @@
             document.getElementById('p-' + id).classList.add('active');
             if(el) el.classList.add('active');
             window.scrollTo(0,0);
-
             if(id === 'citas') renderAppointmentPage();
         }
 
-        /* --- LOGICA DE CITAS DINÁMICA --- */
+        /* --- LOGICA DE CITAS --- */
         function renderAppointmentPage() {
             const data = localStorage.getItem('renault_appointment');
             const container = document.getElementById('appointment-content');
@@ -221,8 +238,7 @@
                         </div>
                         <button class="btn-action btn-yellow" onclick="window.open('https://wa.me/522311234567?text=Hola, quiero confirmar mi cita para el día ${app.fecha}', '_blank')">CONFIRMAR POR WHATSAPP</button>
                         <button class="btn-cancel" style="margin-top:15px;" onclick="cancelAppointment()">CANCELAR ESTA CITA</button>
-                    </div>
-                `;
+                    </div>`;
             } else {
                 const user = JSON.parse(localStorage.getItem('renault_user') || '{}');
                 container.innerHTML = `
@@ -231,19 +247,17 @@
                         <label class="form-label">Teléfono</label><input type="tel" id="c-phone" class="form-control" value="${user.phone || ''}">
                         <label class="form-label">VIN (Número de Serie)</label><input type="text" id="c-vin" class="form-control" placeholder="17 caracteres">
                         <label class="form-label">Kilometraje Actual</label><input type="number" id="c-km" class="form-control" placeholder="Ej: 25000">
-                        <label class="form-label">Detalles o fallas de la unidad</label>
-                        <textarea id="c-obs" class="form-control" rows="3" placeholder="Describe aquí ruidos, fallas..."></textarea>
-                        <label class="form-label">Fecha Preferida</label><input type="date" id="c-date" class="form-control">
-                        <label class="form-label">Hora Preferida</label><input type="time" id="c-time" class="form-control">
+                        <label class="form-label">Fallas o ruidos</label><textarea id="c-obs" class="form-control" rows="3"></textarea>
+                        <label class="form-label">Fecha</label><input type="date" id="c-date" class="form-control">
+                        <label class="form-label">Hora</label><input type="time" id="c-time" class="form-control">
                         <button id="btn-cita" class="btn-action btn-yellow" style="margin-top:15px;" onclick="handleBooking()">ENVIAR SOLICITUD</button>
-                    </div>
-                `;
+                    </div>`;
             }
         }
 
         async function handleBooking() {
             const btn = document.getElementById('btn-cita');
-            const appointment = {
+            const app = {
                 nombre: document.getElementById('c-name').value,
                 telefono: document.getElementById('c-phone').value,
                 vin: document.getElementById('c-vin').value,
@@ -252,38 +266,28 @@
                 fecha: document.getElementById('c-date').value,
                 hora: document.getElementById('c-time').value
             };
-
-            if(!appointment.fecha || !appointment.hora) return alert("Selecciona fecha y hora");
-
+            if(!app.fecha || !app.hora) return alert("Selecciona fecha y hora");
             btn.innerText = "ENVIANDO...";
             btn.disabled = true;
-
             try {
-                const response = await fetch(`${API_BASE}?sheet=citas`, {
+                await fetch(`${API_BASE}?sheet=citas`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({data: [appointment]})
+                    body: JSON.stringify({data: [app]})
                 });
-
-                if (response.ok) {
-                    localStorage.setItem('renault_appointment', JSON.stringify(appointment));
-                    alert("¡Cita enviada con éxito!");
-                    updateAppointmentUI();
-                    showPage('inicio');
-                }
-            } catch(e) { alert("Error al enviar cita."); }
-            finally {
-                btn.innerText = "ENVIAR SOLICITUD";
-                btn.disabled = false;
-            }
+                localStorage.setItem('renault_appointment', JSON.stringify(app));
+                alert("Cita enviada.");
+                updateAppointmentUI();
+                showPage('inicio');
+            } catch(e) { alert("Error al enviar."); }
+            finally { btn.innerText = "ENVIAR SOLICITUD"; btn.disabled = false; }
         }
 
         function cancelAppointment() {
-            if(confirm("¿Estás seguro de que deseas cancelar tu cita?")) {
+            if(confirm("¿Cancelar cita?")) {
                 localStorage.removeItem('renault_appointment');
                 renderAppointmentPage();
                 updateAppointmentUI();
-                alert("Cita cancelada.");
             }
         }
 
@@ -296,13 +300,12 @@
                     <div id="appointment-reminder">
                         <div style="color:#d4af37; font-weight:900; font-size:0.8rem; margin-bottom:10px;">PRÓXIMA CITA</div>
                         <div style="font-size:1.2rem; font-weight:bold;">${app.fecha} | ${app.hora} hrs</div>
-                        <div style="color:#888; font-size:0.85rem; margin-top:5px;">${app.falla || 'Revisión'}</div>
                         <button class="btn-cancel" style="border:1px solid var(--danger-red); margin-top:10px;" onclick="cancelAppointment()">CANCELAR CITA</button>
                     </div>`;
-            } else { container.innerHTML = ''; }
+            } else container.innerHTML = '';
         }
 
-        /* --- CARGA DE EXCEL --- */
+        /* --- CARGA EXCEL --- */
         async function loadCat() {
             try {
                 const res = await fetch(`${API_BASE}?sheet=nuevos`);
@@ -313,9 +316,8 @@
                         <h3 style="margin:15px 0 5px">${c.modelo}</h3>
                         <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${c.precio}</div>
                         <button class="btn-action btn-yellow" onclick="openM('${c.modelo}')">COTIZAR</button>
-                    </div>
-                `).join('');
-            } catch(e) { document.getElementById('cat-container').innerText = "Error."; }
+                    </div>`).join('');
+            } catch(e) { }
         }
 
         async function loadSemi() {
@@ -328,9 +330,8 @@
                         <p style="margin:0; font-size:0.8rem; color:#888;">${s.Transmisión} | ${s.KM} KM</p>
                         <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${s.Precio}</div>
                         <button class="btn-action btn-yellow" style="padding:10px; font-size:0.8rem;" onclick="openM('${s.Versión || s.modelo}')">ME INTERESA</button>
-                    </div>
-                `).join('');
-            } catch(e) { document.getElementById('semi-container').innerText = "Error."; }
+                    </div>`).join('');
+            } catch(e) { }
         }
 
         async function handleQuote() {
@@ -350,9 +351,9 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({data: [quote]})
                 });
-                alert("Cotización enviada.");
+                alert("Enviado.");
                 closeM();
-            } catch(e) { alert("Error."); }
+            } catch(e) { }
             btn.innerText = "SOLICITAR";
         }
 
