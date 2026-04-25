@@ -2,130 +2,189 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Renault Teziutlán - App Oficial</title>
     <style>
-        :root { --accent: #FFCC00; --bg: #000000; --card: #1c1c1e; --text: #ffffff; --muted: #a1a1a6; }
-        body { font-family: -apple-system, sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 110px; }
-        header { background: #000; padding: 20px; text-align: center; border-bottom: 1px solid #333; }
-        .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; }
-        .logo span { color: var(--accent); }
+        :root { --accent: #FFCC00; --accent-dark: #b89400; --bg: #000000; --card: #1c1c1e; --text: #ffffff; --muted: #a1a1a6; --green: #25D366; --green-dark: #1da851; }
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 120px; -webkit-font-smoothing: antialiased; }
         
-        /* Animación 3D Avatar en Inicio */
-        .car-avatar { width: 100%; height: 180px; display: flex; justify-content: center; align-items: center; margin: 15px 0; perspective: 1000px; }
-        .car-3d { width: 240px; filter: drop-shadow(0 15px 25px rgba(255,204,0,0.4)); animation: float 3s ease-in-out infinite; }
+        header { background: #000; padding: 25px 20px; text-align: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-weight: 800; font-size: 1.3rem; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
+        .logo span { color: var(--accent); }
+
+        .page { display: none; padding: 20px; animation: fadeIn 0.3s ease-out; box-sizing: border-box; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { background: var(--card); border-radius: 24px; padding: 25px; margin-bottom: 20px; border: 1px solid #2c2c2e; box-sizing: border-box; }
+        .hero-card { background: linear-gradient(145deg, var(--accent), var(--accent-dark)); color: black; border: none; text-align: center; position: relative; }
+        
+        /* Contenedor del Auto 3D en Inicio */
+        .car-avatar { width: 100%; height: 210px; display: flex; justify-content: center; align-items: center; margin: 10px 0; perspective: 1000px; }
+        .car-3d { width: 280px; max-width: 90%; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.3)); animation: float 3.5s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0) rotateY(-5deg); } 50% { transform: translateY(-20px) rotateY(15deg); } }
 
-        .page { display: none; padding: 20px; animation: fadeIn 0.3s ease-out; }
-        .active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        h2 { font-size: 1.5rem; color: var(--accent); margin: 0 0 20px 0; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; }
+        h3 { font-size: 1.2rem; margin: 0 0 10px 0; }
         
-        .card { background: var(--card); border-radius: 24px; padding: 20px; margin-bottom: 20px; border: 1px solid #2c2c2e; }
-        .hero-card { background: linear-gradient(145deg, #FFCC00, #b89400); color: black; border: none; text-align: center; }
-        
-        h2 { font-size: 1.4rem; color: var(--accent); margin-bottom: 20px; text-transform: uppercase; }
-        input, select, textarea { width: 100%; padding: 16px; margin: 10px 0; border: 1px solid #333; border-radius: 14px; background: #121212; color: white; font-size: 16px; box-sizing: border-box; }
-        
-        button { background: var(--accent); border: none; padding: 18px; width: 100%; border-radius: 16px; font-weight: 800; cursor: pointer; font-size: 1rem; color: black; margin-top: 10px; }
+        /* Estilos de Formulario (Citas) */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--muted); padding-left: 5px; font-weight: 500; }
+        input, select, textarea { width: 100%; padding: 18px; border: 1px solid #333; border-radius: 16px; background: #121212; color: white; font-size: 16px; box-sizing: border-box; transition: 0.2s; -webkit-appearance: none; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); background: #1a1a1a; }
+        textarea { resize: none; height: 120px; }
 
-        /* Barra de Navegación con 4 Iconos */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 95px; background: rgba(20, 20, 20, 0.95); backdrop-filter: blur(15px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #333; z-index: 1000; padding-bottom: 10px; }
-        .nav-item { text-align: center; font-size: 0.7rem; color: var(--muted); font-weight: 600; text-transform: uppercase; flex: 1; }
-        .nav-item span { font-size: 1.8rem; display: block; margin-bottom: 5px; }
+        /* Botones */
+        button { border: none; padding: 20px; width: 100%; border-radius: 18px; font-weight: 800; cursor: pointer; font-size: 1.1rem; transition: 0.2s; -webkit-tap-highlight-color: transparent; }
+        button:active { transform: scale(0.97); }
+        .btn-accent { background: var(--accent); color: black; }
+        .btn-accent:hover { background: #ffe066; }
+        .btn-green { background: linear-gradient(145deg, var(--green), var(--green-dark)); color: white; margin-top: 10px; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.2); }
+        .btn-green:hover { background: var(--green); }
+
+        /* Barra de Navegación (4 Iconos) */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 105px; background: rgba(18, 18, 18, 0.96); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #333; z-index: 1000; padding-bottom: env(safe-area-inset-bottom); box-sizing: border-box; }
+        .nav-item { text-align: center; font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase; text-decoration: none; flex: 1; -webkit-tap-highlight-color: transparent; transition: 0.2s; padding: 10px 0; }
+        .nav-item span { font-size: 2.1rem; display: block; margin-bottom: 6px; transition: 0.2s; }
         .nav-item.active-nav { color: var(--accent); }
+        .nav-item.active-nav span { transform: scale(1.1); }
         
-        .img-car { width: 100%; border-radius: 15px; margin-bottom: 15px; background: #000; min-height: 140px; object-fit: contain; }
-        .price-tag { color: var(--accent); font-weight: bold; font-size: 1.2rem; display: block; margin-bottom: 15px; }
+        .img-car { width: 100%; border-radius: 18px; margin-bottom: 15px; background: #000; min-height: 160px; object-fit: contain; }
+        .price-tag { color: var(--accent); font-weight: 800; font-size: 1.3rem; display: block; margin-bottom: 15px; }
 
-        #pantalla-registro { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 3000; display: flex; flex-direction: column; justify-content: center; padding: 40px; box-sizing: border-box; }
+        /* Pantalla de Registro */
+        #pantalla-registro { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 3000; display: flex; flex-direction: column; justify-content: center; padding: 40px; box-sizing: border-box; overflow-y: auto; }
     </style>
 </head>
 <body>
 
     <div id="pantalla-registro">
         <div class="logo" style="margin-bottom: 30px; text-align: center;">RENAULT | <span>TEZIUTLÁN</span></div>
-        <input type="text" id="reg-nombre" placeholder="Nombre completo">
-        <select id="reg-modelo-u">
-            <option value="Duster">¿Qué Renault manejas?</option>
-            <option value="Kwid">Kwid</option>
-            <option value="Duster">Duster</option>
-            <option value="Kardian">Kardian</option>
-            <option value="Stepway">Stepway</option>
-            <option value="Oroch">Oroch</option>
-        </select>
-        <button onclick="guardarUsuario()">ENTRAR A MI APP</button>
+        <div class="form-group">
+            <input type="text" id="reg-nombre" placeholder="Nombre completo">
+        </div>
+        <div class="form-group">
+            <input type="tel" id="reg-tel" placeholder="Teléfono de contacto">
+        </div>
+        <div class="form-group">
+            <select id="reg-modelo-u">
+                <option value="">¿Qué Renault manejas?</option>
+                <option value="Kwid">Kwid</option><option value="Duster">Duster</option>
+                <option value="Kardian">Kardian</option><option value="Stepway">Stepway</option>
+                <option value="Oroch">Oroch</option><option value="Boreal">Boreal</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="text" id="reg-placa" placeholder="Número de Placa">
+        </div>
+        <div class="form-group">
+            <input type="text" id="reg-vin" placeholder="VIN (Niv - 17 dígitos)">
+        </div>
+        <button class="btn-accent" onclick="guardarUsuario()" style="margin-top: 20px;">ENTRAR A LA APP</button>
     </div>
 
     <header><div class="logo">RENAULT | <span>TEZIUTLÁN</span></div></header>
 
     <div id="inicio" class="page active">
         <div class="card hero-card">
-            <h2 id="txt-bienvenida" style="color: black; margin: 0;">¡Hola!</h2>
+            <h2 id="txt-bienvenida" style="color: black; margin: 0; font-size: 1.8rem;">¡Bienvenido!</h2>
             <div class="car-avatar" id="car-container"></div>
-            <p id="txt-info-auto" style="font-weight: bold; opacity: 0.9;">Cargando tu unidad...</p>
+            <p id="txt-info-auto" style="font-weight: bold; margin-top: 5px; font-size: 1rem;"></p>
         </div>
-        <div class="card">
-            <button onclick="window.location.href='tel:2311234567'" style="background: #25D366; color: white;">📞 LLAMAR A AGENCIA</button>
+        <div class="card" style="padding: 15px;">
+            <button class="btn-green" onclick="solicitarCotizacion()">📄 SOLICITAR COTIZACIÓN</button>
+            <button onclick="window.location.href='tel:2311234567'" style="background: #333; color: white; margin-top: 10px;">Llamar a Agencia</button>
         </div>
     </div>
 
     <div id="catalogo" class="page">
-        <h2>Modelos 2026</h2>
+        <h2>Catálogo de Nuevos</h2>
         <div id="contenedor-catalogo"></div>
     </div>
 
     <div id="citas" class="page">
-        <h2>Agendar Cita</h2>
+        <h2>Agendar Servicio</h2>
         <div class="card">
-            <input type="text" id="cita-auto" placeholder="Modelo del auto">
-            <input type="date" id="cita-fecha">
-            <select id="cita-hora">
-                <option>09:00 AM</option><option>10:00 AM</option><option>11:00 AM</option>
-                <option>12:00 PM</option><option>01:00 PM</option><option>02:00 PM</option>
-                <option>03:00 PM</option><option>04:00 PM</option><option>05:00 PM</option>
-                <option>06:00 PM</option><option>07:00 PM</option>
-            </select>
-            <textarea id="cita-motivo" placeholder="¿Qué servicio necesita?"></textarea>
-            <button onclick="alert('Cita solicitada exitosamente')">CONFIRMAR CITA</button>
+            <div class="form-group">
+                <label>Nombre del Cliente</label>
+                <input type="text" id="cita-nombre">
+            </div>
+            <div class="form-group">
+                <label>Teléfono</label>
+                <input type="tel" id="cita-tel">
+            </div>
+            <div class="form-group">
+                <label>Unidad y Modelo</label>
+                <input type="text" id="cita-unidad">
+            </div>
+            <div class="form-group">
+                <label>Placa</label>
+                <input type="text" id="cita-placa">
+            </div>
+            <div class="form-group">
+                <label>VIN (Niv)</label>
+                <input type="text" id="cita-vin">
+            </div>
+            <div class="form-group">
+                <label>Kilometraje Actual</label>
+                <input type="number" id="cita-km">
+            </div>
+            <div class="form-group">
+                <label>Fecha del Servicio</label>
+                <input type="date" id="cita-fecha">
+            </div>
+            <div class="form-group">
+                <label>Hora Preferida (9am - 7pm)</label>
+                <input type="time" id="cita-hora" min="09:00" max="19:00">
+            </div>
+            <div class="form-group">
+                <label>Motivo del Servicio o Falla</label>
+                <textarea id="cita-fallas" placeholder="Describe brevemente lo que necesita tu auto..."></textarea>
+            </div>
+            <button class="btn-accent" onclick="enviarCita()">CONFIRMAR CITA</button>
         </div>
     </div>
 
     <div id="perfil" class="page">
-        <h2>Mi Perfil</h2>
+        <h2>Seminuevos Garantizados</h2>
         <div class="card">
-            <p id="perfil-datos"></p>
-            <button onclick="localStorage.clear(); location.reload();" style="background:#444; color:white;">CERRAR SESIÓN</button>
+            <h3>Inventario Disponible</h3>
+            <p style="color: var(--muted); font-size: 0.95rem;">Próximamente podrás ver nuestro inventario de seminuevos certificados directamente aquí.</p>
+            <button onclick="localStorage.clear(); location.reload();" style="background:#333; color:white; margin-top: 20px;">Cerrar Sesión / Re-registrar</button>
         </div>
     </div>
 
     <nav class="nav-bar">
-        <div class="nav-item active-nav" onclick="nav('inicio', 0)"><span>🏠</span>Inicio</div>
-        <div class="nav-item" onclick="nav('catalogo', 1)"><span>🚗</span>Nuevos</div>
-        <div class="nav-item" onclick="nav('citas', 2)"><span>🔧</span>Citas</div>
-        <div class="nav-item" onclick="nav('perfil', 3)"><span>👤</span>Perfil</div>
+        <a href="#" class="nav-item active-nav" onclick="nav('inicio', 0)"><span>🏠</span>Inicio</a>
+        <a href="#" class="nav-item" onclick="nav('catalogo', 1)"><span>🚗</span>Nuevos</a>
+        <a href="#" class="nav-item" onclick="nav('citas', 2)"><span>🔧</span>Citas</a>
+        <a href="#" class="nav-item" onclick="nav('perfil', 3)"><span>🔑</span>Seminuevos</a>
     </nav>
 
     <script>
-        const API_URL = "https://sheetdb.io/api/v1/eyx5rh2dow3oj";
+        const API_CATALOGO = "https://sheetdb.io/api/v1/eyx5rh2dow3oj";
+        // Reemplaza ESTA constante con la URL de SheetDB para tu hoja de CITAS
+        const API_CITAS = "https://sheetdb.io/api/v1/eyx5rh2dow3oj?sheet=Citas"; 
 
         const modelos3D = {
             "Kwid": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/kwid-bwj-ph2/kwid-card.png",
             "Duster": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/duster-hjd/duster-lanzamiento/duster-card.png",
             "Kardian": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/kardian-hjf/kardian-card.png",
             "Stepway": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/stepway-b52-ph2/stepway-card.png",
-            "Oroch": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/oroch-hjd-ph2/oroch-card.png"
+            "Oroch": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/oroch-hjd-ph2/oroch-card.png",
+            "Boreal": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/boreal-card.png"
         };
 
         window.onload = function() {
-            cargarDatos();
+            cargarCatalogo();
             if (localStorage.getItem('u_nombre')) {
-                mostrarApp();
+                configurarHome();
             }
         };
 
-        async function cargarDatos() {
+        async function cargarCatalogo() {
             try {
-                const res = await fetch(API_URL);
+                const res = await fetch(API_CATALOGO);
                 const data = await res.json();
                 const cont = document.getElementById('contenedor-catalogo');
                 cont.innerHTML = "";
@@ -135,28 +194,38 @@
                             <img src="${item.imagen}" class="img-car">
                             <h3>${item.modelo}</h3>
                             <span class="price-tag">Desde ${item.precio}</span>
-                            <button onclick="nav('citas', 2)">COTIZAR UNIDAD</button>
+                            <button class="btn-accent" onclick="solicitarCotizacionModelo('${item.modelo}')">COTIZAR AHORA</button>
                         </div>`;
                 });
-            } catch(e) { console.log("Error API"); }
+            } catch(e) {}
         }
 
         function guardarUsuario() {
-            localStorage.setItem('u_nombre', document.getElementById('reg-nombre').value);
-            localStorage.setItem('u_modelo', document.getElementById('reg-modelo-u').value);
-            mostrarApp();
+            const campos = ['reg-nombre', 'reg-tel', 'reg-modelo-u', 'reg-placa', 'reg-vin'];
+            for(let id of campos) {
+                if(!document.getElementById(id).value) { alert("Por favor llena todos los campos."); return; }
+                localStorage.setItem(id.replace('reg-', 'u_'), document.getElementById(id).value);
+            }
+            configurarHome();
         }
 
-        function mostrarApp() {
+        function configurarHome() {
             document.getElementById('pantalla-registro').style.display = 'none';
             const n = localStorage.getItem('u_nombre');
             const m = localStorage.getItem('u_modelo');
+            const p = localStorage.getItem('u_placa');
+            
             document.getElementById('txt-bienvenida').innerText = "¡Hola, " + n.split(' ')[0] + "!";
-            document.getElementById('txt-info-auto').innerText = "Tu " + m + " en mantenimiento";
-            document.getElementById('perfil-datos').innerText = `Propietario: ${n}\nVehículo: ${m}`;
+            document.getElementById('txt-info-auto').innerText = `${m} | ${p}`;
             
             const img = modelos3D[m] || modelos3D["Duster"];
             document.getElementById('car-container').innerHTML = `<img src="${img}" class="car-3d">`;
+            
+            document.getElementById('cita-nombre').value = n;
+            document.getElementById('cita-tel').value = localStorage.getItem('u_tel');
+            document.getElementById('cita-unidad').value = m;
+            document.getElementById('cita-placa').value = p;
+            document.getElementById('cita-vin').value = localStorage.getItem('u_vin');
         }
 
         function nav(p, i) {
@@ -165,6 +234,38 @@
             document.getElementById(p).classList.add('active');
             document.querySelectorAll('.nav-item')[i].classList.add('active-nav');
             window.scrollTo(0,0);
+        }
+
+        async function enviarCita() {
+            const cita = {
+                data: {
+                    nombre: document.getElementById('cita-nombre').value,
+                    telefono: document.getElementById('cita-tel').value,
+                    unidad: document.getElementById('cita-unidad').value,
+                    placa: document.getElementById('cita-placa').value,
+                    vin: document.getElementById('cita-vin').value,
+                    kilometraje: document.getElementById('cita-km').value,
+                    fecha: document.getElementById('cita-fecha').value,
+                    hora: document.getElementById('cita-hora').value,
+                    motivo: document.getElementById('cita-fallas').value
+                }
+            };
+            try {
+                const res = await fetch(API_CITAS, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(cita)
+                });
+                if(res.ok) { alert("Solicitud de cita enviada. Nos comunicaremos para confirmar."); nav('inicio', 0); }
+            } catch(e) { alert("Error de conexión. Inténtalo más tarde."); }
+        }
+
+        function solicitarCotizacion() {
+            alert("Un asesor se pondrá en contacto contigo para ofrecerte una cotización personalizada para renovar tu Renault.");
+        }
+
+        function solicitarCotizacionModelo(modelo) {
+            alert("Has solicitado una cotización para el " + modelo + ". Un asesor te contactará pronto.");
         }
     </script>
 </body>
