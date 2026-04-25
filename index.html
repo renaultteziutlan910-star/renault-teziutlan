@@ -234,7 +234,7 @@
                             <strong>Servicio:</strong> ${app.falla || 'Revisión'}
                         </div>
                         <button class="btn-action btn-yellow" onclick="window.open('https://wa.me/522311234567?text=Hola, confirmo mi cita para el día ${app.fecha} a las ${app.hora}', '_blank')">WHATSAPP</button>
-                        <button class="btn-cancel" id="btn-cancel-action" onclick="cancelAppointment()">CANCELAR cita </button>
+                        <button class="btn-cancel" id="btn-cancel-action" onclick="cancelAppointment()">CANCELAR CITA </button>
                     </div>`;
             } else {
                 const user = JSON.parse(localStorage.getItem('renault_user') || '{}');
