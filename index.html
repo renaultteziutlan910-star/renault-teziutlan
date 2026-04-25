@@ -56,6 +56,8 @@
 
         .card-white { background: var(--white); color: #000; border-radius: 30px; padding: 25px; margin-top: 10px; }
         .form-label { display: block; font-size: 0.7rem; font-weight: 800; color: #666; margin: 12px 0 5px 5px; text-transform: uppercase; }
+        .optional { color: #aaa; font-weight: 400; text-transform: lowercase; font-style: italic; }
+        
         .form-control, .login-input {
             width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 12px;
             background: #f9f9f9; box-sizing: border-box; font-size: 1rem; margin-bottom: 8px; color: #000;
@@ -68,7 +70,7 @@
         .btn-cancel { background: transparent; border: 1px solid var(--danger-red); color: var(--danger-red); padding: 10px; font-size: 0.8rem; margin-top: 15px; border-radius: 10px; width: 100%; }
 
         .car-card { background: #1a1a1a; border-radius: 25px; padding: 15px; margin-bottom: 25px; border: 1px solid #333; }
-        .car-card img { width: 100%; border-radius: 20px; }
+        .car-card img { width: 100%; border-radius: 20px; min-height: 150px; background: #222; }
 
         .nav-bar {
             position: fixed; bottom: 0; width: 100%; background: #0d0d0d;
@@ -112,7 +114,7 @@
     <div id="p-inicio" class="page active">
         <div class="card-profile">
             <h1 id="greet">¡HOLA!</h1>
-            <img id="main-car" src="" class="car-hero">
+            <img id="main-car" src="" class="car-hero" onerror="this.src='https://via.placeholder.com/300x150?text=Renault'">
             <div id="tag-car" style="font-weight: 800; font-size: 1.3rem;">Tu Renault</div>
         </div>
         <div id="reminder-container"></div>
@@ -139,9 +141,9 @@
             <h3 id="m-title" style="color:#d4af37; margin-top:0;">COTIZAR</h3>
             <label class="form-label">Nombre del Cliente</label><input type="text" id="q-name" class="form-control">
             <label class="form-label">Teléfono</label><input type="tel" id="q-phone" class="form-control">
-            <label class="form-label">CURP</label><input type="text" id="q-curp" class="form-control">
-            <label class="form-label">RFC</label><input type="text" id="q-rfc" class="form-control">
-            <label class="form-label">Enganche ($)</label><input type="number" id="q-down" class="form-control">
+            <label class="form-label">CURP <span class="optional">(opcional)</span></label><input type="text" id="q-curp" class="form-control" placeholder="Opcional">
+            <label class="form-label">RFC <span class="optional">(opcional)</span></label><input type="text" id="q-rfc" class="form-control" placeholder="Opcional">
+            <label class="form-label">Enganche ($)</label><input type="number" id="q-down" class="form-control" placeholder="Ej: 50000">
             <button id="btn-quote" class="btn-action btn-yellow" onclick="handleQuote()" style="margin-top:15px;">SOLICITAR</button>
             <button onclick="closeM()" style="width:100%; background:none; border:none; color:#999; margin-top:10px;">Cancelar</button>
         </div>
@@ -204,7 +206,6 @@
             document.getElementById('greet').innerText = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
             document.getElementById('main-car').src = CARS[d.unit] || CARS["Kwid"];
             document.getElementById('tag-car').innerText = `Tu ${d.unit}`;
-            // Pre-llenar formularios
             document.getElementById('q-name').value = d.name;
             document.getElementById('q-phone').value = d.phone;
         }
@@ -218,7 +219,7 @@
             if(id === 'citas') renderAppointmentPage();
         }
 
-        /* --- LOGICA DE CITAS --- */
+        /* --- CITAS --- */
         function renderAppointmentPage() {
             const data = localStorage.getItem('renault_appointment');
             const container = document.getElementById('appointment-content');
@@ -227,17 +228,18 @@
                 const app = JSON.parse(data);
                 container.innerHTML = `
                     <div class="card-white" style="text-align:center;">
-                        <div style="font-size: 3rem; margin-bottom: 10px;">📅</div>
-                        <h3 style="margin:0; color:#000;">TIENES UNA CITA ACTIVA</h3>
+                        <div style="font-size: 3.5rem; margin-bottom: 10px;">📅</div>
+                        <h3 style="margin:0; color:#000; font-weight:900;">CITA ACTIVA</h3>
                         <p style="color:#666; margin: 10px 0;">Tu unidad está programada para servicio.</p>
-                        <div style="background:#f0f0f0; padding:15px; border-radius:15px; margin:15px 0; text-align:left;">
-                            <small style="color:#888; font-weight:bold;">DETALLES:</small><br>
+                        <div style="background:#f7f7f7; padding:20px; border-radius:20px; margin:20px 0; text-align:left; border: 1px solid #eee;">
+                            <div style="color:#d4af37; font-size:0.7rem; font-weight:800; margin-bottom:5px;">DETALLES</div>
                             <strong>Fecha:</strong> ${app.fecha}<br>
                             <strong>Hora:</strong> ${app.hora} hrs<br>
-                            <strong>Servicio:</strong> ${app.falla || 'Mantenimiento General'}
+                            <strong>Unidad:</strong> ${app.vin || 'No especificado'}<br>
+                            <strong>Servicio:</strong> ${app.falla || 'Revisión'}
                         </div>
-                        <button class="btn-action btn-yellow" onclick="window.open('https://wa.me/522311234567?text=Hola, quiero confirmar mi cita para el día ${app.fecha}', '_blank')">CONFIRMAR POR WHATSAPP</button>
-                        <button class="btn-cancel" style="margin-top:15px;" onclick="cancelAppointment()">CANCELAR ESTA CITA</button>
+                        <button class="btn-action btn-yellow" onclick="window.open('https://wa.me/522311234567?text=Hola, confirmo mi cita para el día ${app.fecha} a las ${app.hora}', '_blank')">WHATSAPP</button>
+                        <button class="btn-cancel" onclick="cancelAppointment()">CANCELAR CITA</button>
                     </div>`;
             } else {
                 const user = JSON.parse(localStorage.getItem('renault_user') || '{}');
@@ -246,8 +248,8 @@
                         <label class="form-label">Nombre</label><input type="text" id="c-name" class="form-control" value="${user.name || ''}">
                         <label class="form-label">Teléfono</label><input type="tel" id="c-phone" class="form-control" value="${user.phone || ''}">
                         <label class="form-label">VIN (Número de Serie)</label><input type="text" id="c-vin" class="form-control" placeholder="17 caracteres">
-                        <label class="form-label">Kilometraje Actual</label><input type="number" id="c-km" class="form-control" placeholder="Ej: 25000">
-                        <label class="form-label">Fallas o ruidos</label><textarea id="c-obs" class="form-control" rows="3"></textarea>
+                        <label class="form-label">Kilometraje Actual</label><input type="number" id="c-km" class="form-control" placeholder="Ej: 45000">
+                        <label class="form-label">Fallas o ruidos</label><textarea id="c-obs" class="form-control" rows="3" placeholder="Describe el problema..."></textarea>
                         <label class="form-label">Fecha</label><input type="date" id="c-date" class="form-control">
                         <label class="form-label">Hora</label><input type="time" id="c-time" class="form-control">
                         <button id="btn-cita" class="btn-action btn-yellow" style="margin-top:15px;" onclick="handleBooking()">ENVIAR SOLICITUD</button>
@@ -276,15 +278,15 @@
                     body: JSON.stringify({data: [app]})
                 });
                 localStorage.setItem('renault_appointment', JSON.stringify(app));
-                alert("Cita enviada.");
+                alert("Cita registrada.");
                 updateAppointmentUI();
                 showPage('inicio');
-            } catch(e) { alert("Error al enviar."); }
+            } catch(e) { alert("Error."); }
             finally { btn.innerText = "ENVIAR SOLICITUD"; btn.disabled = false; }
         }
 
         function cancelAppointment() {
-            if(confirm("¿Cancelar cita?")) {
+            if(confirm("¿Deseas cancelar la cita?")) {
                 localStorage.removeItem('renault_appointment');
                 renderAppointmentPage();
                 updateAppointmentUI();
@@ -300,19 +302,19 @@
                     <div id="appointment-reminder">
                         <div style="color:#d4af37; font-weight:900; font-size:0.8rem; margin-bottom:10px;">PRÓXIMA CITA</div>
                         <div style="font-size:1.2rem; font-weight:bold;">${app.fecha} | ${app.hora} hrs</div>
-                        <button class="btn-cancel" style="border:1px solid var(--danger-red); margin-top:10px;" onclick="cancelAppointment()">CANCELAR CITA</button>
+                        <button class="btn-cancel" style="margin-top:10px;" onclick="cancelAppointment()">CANCELAR</button>
                     </div>`;
             } else container.innerHTML = '';
         }
 
-        /* --- CARGA EXCEL --- */
+        /* --- CATALOGO --- */
         async function loadCat() {
             try {
                 const res = await fetch(`${API_BASE}?sheet=nuevos`);
                 const data = await res.json();
                 document.getElementById('cat-container').innerHTML = data.map(c => `
                     <div class="car-card">
-                        <img src="${c.imagen || 'https://via.placeholder.com/300x150?text=Renault'}">
+                        <img src="${c.imagen}" onerror="this.src='https://via.placeholder.com/300x150?text=Renault'">
                         <h3 style="margin:15px 0 5px">${c.modelo}</h3>
                         <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${c.precio}</div>
                         <button class="btn-action btn-yellow" onclick="openM('${c.modelo}')">COTIZAR</button>
@@ -340,10 +342,13 @@
                 nombre: document.getElementById('q-name').value,
                 telefono: document.getElementById('q-phone').value,
                 modelo: document.getElementById('m-title').innerText,
-                curp: document.getElementById('q-curp').value,
-                rfc: document.getElementById('q-rfc').value,
+                curp: document.getElementById('q-curp').value || "No proporcionado",
+                rfc: document.getElementById('q-rfc').value || "No proporcionado",
                 enganche: document.getElementById('q-down').value
             };
+            
+            if(!quote.nombre || !quote.telefono) return alert("Nombre y Teléfono son obligatorios");
+
             btn.innerText = "ENVIANDO...";
             try {
                 await fetch(`${API_BASE}?sheet=cotizaciones`, {
@@ -351,7 +356,7 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({data: [quote]})
                 });
-                alert("Enviado.");
+                alert("Solicitud enviada.");
                 closeM();
             } catch(e) { }
             btn.innerText = "SOLICITAR";
