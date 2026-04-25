@@ -10,20 +10,21 @@
             --renault-yellow: #FFCC00;
             --success-green: #28a745;
             --dark-bg: #000000;
+            --card-bg: #1a1a1a;
             --white: #ffffff;
             --gray-text: #8e8e93;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, system-ui, sans-serif;
             background-color: var(--dark-bg);
             color: var(--white);
             margin: 0;
             padding: 0;
-            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- PANTALLA DE INICIO DE SESIÓN --- */
+        /* --- LOGIN OPTIMIZADO --- */
         #login-screen {
             position: fixed;
             inset: 0;
@@ -32,32 +33,13 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 40px;
+            padding: 30px;
             text-align: center;
         }
-        .login-input {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            padding: 18px;
-            border-radius: 15px;
-            color: white;
-            margin-bottom: 15px;
-            font-size: 1rem;
-            outline: none;
-        }
-        .login-input:focus { border-color: var(--renault-yellow); }
 
-        /* --- ESTRUCTURA GENERAL --- */
-        .status-bar {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 20px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
+        /* --- HEADER LIMPIO (Sin batería/hora) --- */
         header {
-            padding: 15px 0;
+            padding: 20px 0;
             text-align: center;
             border-bottom: 1px solid #222;
         }
@@ -72,108 +54,98 @@
         .v-line { width: 1px; height: 20px; background: #d4af37; }
         .gold-text { color: #d4af37; }
 
-        .page { display: none; padding: 20px 20px 120px 20px; animation: fadeIn 0.3s ease; }
-        .active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* --- NAVEGACIÓN FLUIDA --- */
+        .page { 
+            display: none; 
+            padding: 20px 20px 140px 20px; 
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+        .page.active { display: block; opacity: 1; }
 
-        /* --- PÁGINA 1: INICIO (CARD DORADA) --- */
+        /* --- TARJETAS --- */
         .card-profile {
             background: var(--gold-gradient);
             border-radius: 35px;
-            padding: 40px 20px;
+            padding: 35px 20px;
             text-align: center;
             color: #000;
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
         }
-        .card-profile h1 { font-size: 2.2rem; margin: 0; font-weight: 800; }
         .car-img-main {
             width: 100%;
-            max-width: 280px;
-            margin: 20px 0;
+            max-width: 260px;
+            margin: 15px 0;
             filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2));
         }
-        .btn-green {
-            background: var(--success-green);
-            color: white;
-            width: 100%;
-            padding: 20px;
-            border: none;
-            border-radius: 18px;
-            font-weight: 900;
-            font-size: 1.2rem;
-            margin-top: 25px;
-            text-transform: uppercase;
-        }
 
-        /* --- PÁGINA 2: CITAS (CARD BLANCA) --- */
+        /* --- FORMULARIOS --- */
         .card-white {
             background: var(--white);
             color: #000;
-            border-radius: 30px;
-            padding: 25px;
+            border-radius: 25px;
+            padding: 20px;
         }
         .form-label {
             display: block;
             font-size: 0.7rem;
             font-weight: 800;
             color: #666;
-            margin: 10px 0 5px 5px;
+            margin: 8px 0 4px 5px;
             text-transform: uppercase;
         }
-        .form-control {
+        .form-control, .login-input {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: 1px solid #ddd;
-            border-radius: 10px;
+            border-radius: 12px;
             background: #f9f9f9;
             box-sizing: border-box;
             font-size: 1rem;
-            margin-bottom: 10px;
-        }
-        .btn-yellow {
-            background: var(--renault-yellow);
+            margin-bottom: 8px;
             color: #000;
+        }
+        .login-input { background: #222; border: 1px solid #444; color: #fff; }
+
+        .btn-action {
             width: 100%;
             padding: 18px;
             border: none;
-            border-radius: 12px;
+            border-radius: 15px;
             font-weight: 900;
             font-size: 1.1rem;
             text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 10px;
         }
+        .btn-yellow { background: var(--renault-yellow); color: #000; }
+        .btn-green { background: var(--success-green); color: #fff; }
 
-        /* --- PÁGINA 3: CATÁLOGO (NUEVOS) --- */
+        /* --- CATÁLOGO --- */
         .car-card {
-            background: #1a1a1a;
-            border-radius: 25px;
+            background: var(--card-bg);
+            border-radius: 20px;
             padding: 15px;
             margin-bottom: 20px;
             border: 1px solid #333;
         }
-        .car-card img { width: 100%; border-radius: 20px; }
-        .car-card h3 { margin: 15px 0 5px 0; font-size: 1.3rem; }
-        .car-card .price { color: var(--d4af37); font-weight: bold; font-size: 1.1rem; margin-bottom: 15px; }
+        .car-card img { width: 100%; border-radius: 15px; }
 
-        /* --- NAV INFERIOR --- */
+        /* --- NAVBAR INFERIOR --- */
         .nav-bar {
             position: fixed;
             bottom: 0;
             width: 100%;
-            background: #0d0d0d;
+            background: rgba(13, 13, 13, 0.95);
+            backdrop-filter: blur(10px);
             display: flex;
             justify-content: space-around;
-            padding: 15px 0 30px 0;
+            padding: 15px 0 35px 0;
             border-top: 1px solid #222;
             z-index: 1000;
         }
-        .nav-item {
-            text-align: center;
-            color: #555;
-            text-decoration: none;
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
-        .nav-item svg { width: 24px; height: 24px; fill: currentColor; margin-bottom: 4px; display: block; margin-left: auto; margin-right: auto; }
+        .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 0.7rem; flex: 1; }
+        .nav-item svg { width: 24px; height: 24px; fill: currentColor; margin-bottom: 4px; display: block; margin: 0 auto; }
         .nav-item.active { color: #d4af37; }
 
         /* --- MODAL --- */
@@ -188,12 +160,14 @@
             padding: 20px;
         }
         .modal-content {
-            background: #1a1a1a;
-            padding: 30px;
-            border-radius: 30px;
+            background: #fff;
+            padding: 25px;
+            border-radius: 25px;
             width: 100%;
             max-width: 400px;
-            border: 1px solid #d4af37;
+            color: #000;
+            max-height: 85vh;
+            overflow-y: auto;
         }
     </style>
 </head>
@@ -203,15 +177,21 @@
         <div class="logo-area" style="margin-bottom: 30px;">
             <span>RENAULT</span><div class="v-line"></div><span class="gold-text">TEZIUTLÁN</span>
         </div>
-        <input type="text" id="user-name" class="login-input" placeholder="Tu nombre">
+        <input type="text" id="user-name" class="login-input" placeholder="Tu nombre completo">
         <input type="tel" id="user-phone" class="login-input" placeholder="Tu número de teléfono">
-        <button class="btn-yellow" onclick="login()">INICIAR SESIÓN</button>
-    </div>
-
-    <div class="status-bar">
-        <div>9:41</div>
-        <div class="gold-text">RENAULT PREMIUM</div>
-        <div>🔋 100%</div>
+        
+        <label class="form-label" style="color:#aaa; text-align:left;">Selecciona tu Unidad</label>
+        <select id="user-unit-select" class="login-input">
+            <option value="Duster">Renault Duster</option>
+            <option value="Kwid">Renault Kwid</option>
+            <option value="Kardian">Renault Kardian</option>
+            <option value="Oroch">Renault Oroch</option>
+            <option value="Stepway">Renault Stepway</option>
+            <option value="Logan">Renault Logan</option>
+            <option value="Koleos">Renault Koleos</option>
+        </select>
+        
+        <button class="btn-action btn-yellow" onclick="login()">INGRESAR</button>
     </div>
 
     <header>
@@ -223,63 +203,79 @@
     <div id="p-inicio" class="page active">
         <div class="card-profile">
             <h1 id="greeting">¡HOLA!</h1>
-            <img src="https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/duster-hjd/duster-lanzamiento/duster-card.png" class="car-img-main">
-            <div style="font-weight: 700; font-size: 1.2rem;">Tu Renault | UFX-1234</div>
+            <img id="main-car-view" src="https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/duster-hjd/duster-lanzamiento/duster-card.png" class="car-img-main">
+            <div id="unit-tag" style="font-weight: 700; font-size: 1.2rem;">Tu Unidad | Renault</div>
         </div>
-        <button class="btn-green" onclick="showPage('nuevos')">COTIZACIÓN</button>
+        <button class="btn-action btn-green" onclick="showPage('nuevos')">VER CATÁLOGO</button>
     </div>
 
     <div id="p-citas" class="page">
         <div style="text-align: center; color: #d4af37; font-weight: 800; margin-bottom: 15px;">AGENDAR SERVICIO</div>
         <div class="card-white">
-            <label class="form-label">Nombre del Cliente</label>
-            <input type="text" id="c-name" class="form-control">
+            <label class="form-label">Nombre</label>
+            <input type="text" id="c-name" class="form-control" readonly>
             
             <label class="form-label">Teléfono</label>
-            <input type="tel" id="c-phone" class="form-control">
+            <input type="tel" id="c-phone" class="form-control" readonly>
 
-            <label class="form-label">Unidad</label>
-            <select class="form-control"><option>Duster</option><option>Kwid</option><option>Kardian</option></select>
+            <label class="form-label">VIN (Número de Serie)</label>
+            <input type="text" id="c-vin" class="form-control" placeholder="17 dígitos de tu unidad">
 
-            <label class="form-label">Fecha Preferida</label>
-            <input type="date" class="form-control" value="2026-05-01">
+            <label class="form-label">Describe el detalle o falla</label>
+            <textarea id="c-detail" class="form-control" rows="3" placeholder="Ej: Ruidos en suspensión, cambio de aceite..."></textarea>
 
-            <label class="form-label">Motivo del Servicio</label>
-            <input type="text" class="form-control" placeholder="Mantenimiento 10K">
+            <label class="form-label">Fecha de Cita</label>
+            <input type="date" class="form-control">
 
-            <button class="btn-yellow">ENVIAR SOLICITUD</button>
+            <button class="btn-action btn-yellow">AGENDAR CITA</button>
         </div>
     </div>
 
     <div id="p-nuevos" class="page">
-        <div style="text-align: center; color: #d4af37; font-weight: 800; margin-bottom: 15px;">UNIDADES NUEVAS</div>
-        <div id="catalog-container">
-            <p style="text-align:center;">Cargando catálogo...</p>
-        </div>
+        <div style="text-align: center; color: #d4af37; font-weight: 800; margin-bottom: 15px;">NUEVAS UNIDADES</div>
+        <div id="catalog-container"></div>
     </div>
 
     <div id="modal-quote" class="modal">
         <div class="modal-content">
             <h3 id="modal-car-title" style="color:#d4af37; margin-top:0;">COTIZAR</h3>
-            <input type="text" class="login-input" placeholder="Enganche deseado $" style="width:100%; box-sizing:border-box;">
-            <select class="login-input" style="width:100%; box-sizing:border-box;">
-                <option>12 meses</option><option>24 meses</option><option>48 meses</option>
+            
+            <label class="form-label">Nombre completo</label>
+            <input type="text" id="q-name" class="form-control">
+            
+            <label class="form-label">Teléfono</label>
+            <input type="tel" id="q-phone" class="form-control">
+
+            <label class="form-label">CURP</label>
+            <input type="text" id="q-curp" class="form-control" placeholder="18 caracteres">
+
+            <label class="form-label">RFC</label>
+            <input type="text" id="q-rfc" class="form-control" placeholder="13 caracteres">
+
+            <label class="form-label">Enganche Deseado ($)</label>
+            <input type="number" id="q-down" class="form-control" placeholder="Ej: 50000">
+
+            <label class="form-label">Plazo (Meses)</label>
+            <select id="q-months" class="form-control">
+                <option>12 meses</option><option>24 meses</option><option>36 meses</option><option>48 meses</option><option>60 meses</option><option>72 meses</option>
             </select>
-            <button class="btn-yellow" onclick="closeModal()" style="width:100%;">SOLICITAR COTIZACIÓN</button>
+
+            <button class="btn-action btn-yellow" onclick="closeModal()">ENVIAR SOLICITUD</button>
+            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#999; margin-top:10px;">Cancelar</button>
         </div>
     </div>
 
     <nav class="nav-bar">
-        <a href="#" class="nav-item active" onclick="showPage('inicio', this)">
+        <a href="javascript:void(0)" class="nav-item active" onclick="showPage('inicio', this)">
             <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Inicio
         </a>
-        <a href="#" class="nav-item" onclick="showPage('nuevos', this)">
+        <a href="javascript:void(0)" class="nav-item" onclick="showPage('nuevos', this)">
             <svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99z"/></svg>Nuevos
         </a>
-        <a href="#" class="nav-item" onclick="showPage('citas', this)">
-            <svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>Citas
+        <a href="javascript:void(0)" class="nav-item" onclick="showPage('citas', this)">
+            <svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>Servicio
         </a>
-        <a href="#" class="nav-item">
+        <a href="javascript:void(0)" class="nav-item">
             <svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65z"/></svg>Seminuevos
         </a>
     </nav>
@@ -290,11 +286,18 @@
         function login() {
             const name = document.getElementById('user-name').value;
             const phone = document.getElementById('user-phone').value;
-            if(!name || !phone) return alert("Por favor llena tus datos");
+            const unit = document.getElementById('user-unit-select').value;
+            
+            if(!name || !phone) return alert("Por favor completa tus datos");
 
-            document.getElementById('greeting').innerText = `¡HOLA, ${name.toUpperCase()}!`;
+            // Personalizar app
+            document.getElementById('greeting').innerText = `¡HOLA, ${name.split(' ')[0].toUpperCase()}!`;
+            document.getElementById('unit-tag').innerText = `Tu Unidad | Renault ${unit}`;
             document.getElementById('c-name').value = name;
             document.getElementById('c-phone').value = phone;
+            document.getElementById('q-name').value = name;
+            document.getElementById('q-phone').value = phone;
+
             document.getElementById('login-screen').style.display = 'none';
             loadCatalog();
         }
@@ -304,27 +307,27 @@
                 const res = await fetch(API_SHEETDB);
                 const data = await res.json();
                 const container = document.getElementById('catalog-container');
-                container.innerHTML = "";
-                data.forEach(car => {
-                    container.innerHTML += `
-                        <div class="car-card">
-                            <img src="${car.imagen}" onerror="this.src='https://via.placeholder.com/300x150?text=Renault'">
-                            <h3>${car.modelo}</h3>
-                            <div class="price">Desde ${car.precio}</div>
-                            <button class="btn-yellow" onclick="openModal('${car.modelo}')">COTIZAR UNIDAD</button>
-                        </div>
-                    `;
-                });
+                container.innerHTML = data.map(car => `
+                    <div class="car-card">
+                        <img src="${car.imagen}" onerror="this.src='https://via.placeholder.com/400x200?text=Renault'">
+                        <h3>${car.modelo}</h3>
+                        <div style="color:#d4af37; font-weight:bold; margin-bottom:12px;">Desde ${car.precio}</div>
+                        <button class="btn-action btn-yellow" onclick="openModal('${car.modelo}')">COTIZAR AHORA</button>
+                    </div>
+                `).join('');
             } catch(e) {
-                document.getElementById('catalog-container').innerText = "Error cargando catálogo.";
+                console.error("Error cargando catálogo");
             }
         }
 
         function showPage(pageId, el) {
+            // Cambio de pestaña instantáneo
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
             document.getElementById('p-' + pageId).classList.add('active');
             if(el) el.classList.add('active');
+            window.scrollTo(0,0);
         }
 
         function openModal(title) {
@@ -334,7 +337,6 @@
 
         function closeModal() {
             document.getElementById('modal-quote').style.display = 'none';
-            alert("Solicitud recibida. Un asesor te contactará.");
         }
     </script>
 </body>
