@@ -202,38 +202,28 @@
         }
 
         /* --- LOGICA DE CITAS DINÁMICA --- */
-       function renderAppointmentPage() {
+        function renderAppointmentPage() {
             const data = localStorage.getItem('renault_appointment');
             const container = document.getElementById('appointment-content');
             
             if(data) {
                 const app = JSON.parse(data);
-                // Diseño mejorado para que coincida con la estética de la app
                 container.innerHTML = `
-                    <div class="card-white" style="text-align:center; margin-top: 20px;">
-                        <div style="font-size: 3.5rem; margin-bottom: 10px;">📅</div>
-                        <h3 style="margin:0; color:#000; font-weight: 900;">CITA CONFIRMADA</h3>
-                        <p style="color:#666; font-size: 0.9rem; margin: 10px 0 20px 0;">Hemos recibido tu solicitud para el taller.</p>
-                        
-                        <div style="background:#f7f7f7; padding:20px; border-radius:20px; margin-bottom:20px; text-align:left; border: 1px solid #eee;">
-                            <div style="color:#d4af37; font-size:0.7rem; font-weight:800; letter-spacing:1px; margin-bottom:5px;">DETALLES DEL SERVICIO</div>
-                            <div style="font-size: 1.1rem; font-weight:bold; color:#000;">${app.fecha} a las ${app.hora} hrs</div>
-                            <div style="color:#444; font-size:0.85rem; margin-top:8px; line-height:1.4;">
-                                <strong>Motivo:</strong> ${app.falla || 'Revisión General'}
-                            </div>
+                    <div class="card-white" style="text-align:center;">
+                        <div style="font-size: 3rem; margin-bottom: 10px;">📅</div>
+                        <h3 style="margin:0; color:#000;">TIENES UNA CITA ACTIVA</h3>
+                        <p style="color:#666; margin: 10px 0;">Tu unidad está programada para servicio.</p>
+                        <div style="background:#f0f0f0; padding:15px; border-radius:15px; margin:15px 0; text-align:left;">
+                            <small style="color:#888; font-weight:bold;">DETALLES:</small><br>
+                            <strong>Fecha:</strong> ${app.fecha}<br>
+                            <strong>Hora:</strong> ${app.hora} hrs<br>
+                            <strong>Servicio:</strong> ${app.falla || 'Mantenimiento General'}
                         </div>
-
-                        <button class="btn-action btn-yellow" style="padding:15px; font-size:1rem;" 
-                            onclick="window.open('https://wa.me/522311234567?text=Hola, confirmo mi cita para el día ${app.fecha} a las ${app.hora}', '_blank')">
-                            CONFIRMAR POR WHATSAPP
-                        </button>
-                        
-                        <button class="btn-cancel" style="margin-top:20px; border:none; text-decoration:underline; font-weight:bold;" 
-                            onclick="cancelAppointment()">CANCELAR ESTA CITA</button>
+                        <button class="btn-action btn-yellow" onclick="window.open('https://wa.me/522311234567?text=Hola, quiero confirmar mi cita para el día ${app.fecha}', '_blank')">CONFIRMAR POR WHATSAPP</button>
+                        <button class="btn-cancel" style="margin-top:15px;" onclick="cancelAppointment()">CANCELAR ESTA CITA</button>
                     </div>
                 `;
             } else {
-                // Formulario original si no hay cita
                 const user = JSON.parse(localStorage.getItem('renault_user') || '{}');
                 container.innerHTML = `
                     <div class="card-white">
