@@ -249,18 +249,65 @@
             if(!appointment.fecha || !appointment.hora) return alert("Selecciona fecha y hora");
 
             btn.innerText = "ENVIANDO...";
+            btn.disabled = true; // Evita doble envío
+
             try {
-                await fetch(`${API_BASE}?sheet=citas`, {
+                const response = await fetch(`${API_BASE}?sheet=citas`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({data: [appointment]})
                 });
-                localStorage.setItem('renault_appointment', JSON.stringify(appointment));
-                alert("¡Cita enviada con éxito!");
+
+                if (response.ok) {
+                    // 1. Guardamos en memoria local para que aparezca el recordatorio
+                    localStorage.setItem('renault_appointment', JSON.stringify(appointment));
+                    
+                    alert("¡Cita enviada con éxito!");
+                    
+                    // 2. Actualizamos la interfaz para que aparezca el botón de cancelar
+                    updateAppointmentUI();
+                    
+                    // 3. Limpiamos el formulario y regresamos al inicio
+                    document.getElementById('c-vin').value = "";
+                    document.getElementById('c-obs').value = "";
+                    showPage('inicio');
+                }
+            } catch(e) { 
+                alert("Error al enviar cita. Revisa tu conexión."); 
+            } finally {
+                btn.innerText = "ENVIAR SOLICITUD";
+                btn.disabled = false;
+            }
+        }
+
+        function updateAppointmentUI() {
+            const data = localStorage.getItem('renault_appointment');
+            const container = document.getElementById('reminder-container');
+            
+            if(data) {
+                const app = JSON.parse(data);
+                // Aquí es donde se genera la tarjeta con el botón de cancelar
+                container.innerHTML = `
+                    <div id="appointment-reminder">
+                        <div style="color:#d4af37; font-weight:900; font-size:0.8rem; letter-spacing:1px; margin-bottom:10px;">PRÓXIMA CITA</div>
+                        <div style="font-size:1.2rem; font-weight:bold;">${app.fecha} | ${app.hora} hrs</div>
+                        <div style="color:#888; font-size:0.85rem; margin-top:5px;">Detalle: ${app.falla || 'Revisión General'}</div>
+                        <button class="btn-cancel" onclick="cancelAppointment()">CANCELAR CITA</button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = '';
+            }
+        }
+
+        function cancelAppointment() {
+            if(confirm("¿Estás seguro de que deseas cancelar tu cita en el sistema?")) {
+                // Borramos de la memoria del teléfono
+                localStorage.removeItem('renault_appointment');
+                // Limpiamos la pantalla
                 updateAppointmentUI();
-                showPage('inicio');
-            } catch(e) { alert("Error al enviar cita."); }
-            btn.innerText = "ENVIAR SOLICITUD";
+                alert("Cita cancelada localmente.");
+            }
         }
 
         /* --- ESCRIBIR EN EXCEL (COTIZACIONES) --- */
