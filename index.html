@@ -56,7 +56,6 @@
 
         .card-white { background: var(--white); color: #000; border-radius: 30px; padding: 25px; margin-top: 10px; }
         .form-label { display: block; font-size: 0.7rem; font-weight: 800; color: #666; margin: 12px 0 5px 5px; text-transform: uppercase; }
-        .optional { color: #aaa; font-weight: 400; text-transform: lowercase; font-style: italic; }
         
         .form-control, .login-input {
             width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 12px;
@@ -67,7 +66,22 @@
         .btn-action { width: 100%; padding: 20px; border: none; border-radius: 18px; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; cursor: pointer; }
         .btn-yellow { background: var(--renault-yellow); color: #000; }
         .btn-green { background: var(--success-green); color: #fff; margin-top: 25px; }
-        .btn-cancel { background: transparent; border: 1px solid var(--danger-red); color: var(--danger-red); padding: 10px; font-size: 0.8rem; margin-top: 15px; border-radius: 10px; width: 100%; }
+        
+        /* BOTÓN CANCELAR MEJORADO */
+        .btn-cancel-modern { 
+            background: transparent; 
+            border: 1.5px solid var(--danger-red); 
+            color: var(--danger-red); 
+            padding: 12px; 
+            font-size: 0.85rem; 
+            font-weight: 700;
+            margin-top: 15px; 
+            border-radius: 15px; 
+            width: 100%; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
 
         .car-card { background: #1a1a1a; border-radius: 25px; padding: 15px; margin-bottom: 25px; border: 1px solid #333; }
         .car-card img { width: 100%; border-radius: 20px; min-height: 120px; background: #222; object-fit: contain; }
@@ -139,13 +153,38 @@
     <div id="modal-quote" class="modal">
         <div class="modal-content">
             <h3 id="m-title" style="color:#d4af37; margin-top:0;">COTIZAR</h3>
-            <label class="form-label">Nombre del Cliente</label><input type="text" id="q-name" class="form-control">
-            <label class="form-label">Teléfono</label><input type="tel" id="q-phone" class="form-control">
-            <label class="form-label">CURP <span class="optional">(opcional)</span></label><input type="text" id="q-curp" class="form-control" placeholder="Opcional">
-            <label class="form-label">RFC <span class="optional">(opcional)</span></label><input type="text" id="q-rfc" class="form-control" placeholder="Opcional">
-            <label class="form-label">Enganche ($)</label><input type="number" id="q-down" class="form-control" placeholder="Ej: 50000">
+            
+            <label class="form-label">Nombre del Cliente</label>
+            <input type="text" id="q-name" class="form-control">
+            
+            <label class="form-label">Teléfono</label>
+            <input type="tel" id="q-phone" class="form-control">
+
+            <label class="form-label">Código Postal</label>
+            <input type="number" id="q-cp" class="form-control" placeholder="Ej: 73800">
+
+            <label class="form-label">Método de Pago</label>
+            <select id="q-metodo" class="form-control" onchange="toggleFinanzas()">
+                <option value="Contado">A Contado</option>
+                <option value="Financiado">Financiado</option>
+            </select>
+
+            <div id="campo-finanzas" style="display:none;">
+                <label class="form-label">Monto de Enganche ($)</label>
+                <input type="number" id="q-down" class="form-control" placeholder="Ej: 50000">
+                
+                <label class="form-label">Plazo (Meses)</label>
+                <select id="q-meses" class="form-control">
+                    <option value="12">12 Meses</option>
+                    <option value="24">24 Meses</option>
+                    <option value="36">36 Meses</option>
+                    <option value="48">48 Meses</option>
+                    <option value="60">60 Meses</option>
+                </select>
+            </div>
+
             <button id="btn-quote" class="btn-action btn-yellow" onclick="handleQuote()" style="margin-top:15px;">SOLICITAR</button>
-            <button onclick="closeM()" style="width:100%; background:none; border:none; color:#999; margin-top:10px;">Cancelar</button>
+            <button onclick="closeM()" style="width:100%; background:none; border:none; color:#999; margin-top:15px; font-weight:bold;">Cerrar</button>
         </div>
     </div>
 
@@ -159,7 +198,6 @@
     <script>
         const API_BASE = "https://sheetdb.io/api/v1/eyx5rh2dow3oj";
         
-        // URLs Reforzadas
         const CARS = {
             "Kwid": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/kwid-bwj-ph2/kwid-card.png",
             "Kardian": "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/kardian-hjf/kardian-card.png",
@@ -234,7 +272,7 @@
                             <strong>Servicio:</strong> ${app.falla || 'Revisión'}
                         </div>
                         <button class="btn-action btn-yellow" onclick="window.open('https://wa.me/522311234567?text=Hola, confirmo mi cita para el día ${app.fecha} a las ${app.hora}', '_blank')">WHATSAPP</button>
-                        <button class="btn-cancel" id="btn-cancel-action" onclick="cancelAppointment()">CANCELAR CITA </button>
+                        <button class="btn-cancel-modern" id="btn-cancel-action" onclick="cancelAppointment()">Cancelar Cita</button>
                     </div>`;
             } else {
                 const user = JSON.parse(localStorage.getItem('renault_user') || '{}');
@@ -254,34 +292,26 @@
 
         async function cancelAppointment() {
             if(!confirm("¿Deseas eliminar permanentemente tu cita de nuestro sistema?")) return;
-            
             const btn = document.getElementById('btn-cancel-action');
             const data = JSON.parse(localStorage.getItem('renault_appointment'));
             if(!data) return;
-
-            btn.innerText = "BORRANDO DE EXCEL...";
+            btn.innerText = "BORRANDO...";
             btn.disabled = true;
-
             try {
-                // ESTA ES LA PARTE QUE BORRA EN EL EXCEL (Usa el teléfono como llave)
-                const res = await fetch(`${API_BASE}/telefono/${data.telefono}?sheet=citas`, {
-                    method: 'DELETE'
-                });
-                
+                const res = await fetch(`${API_BASE}/telefono/${data.telefono}?sheet=citas`, { method: 'DELETE' });
                 if(res.ok) {
                     localStorage.removeItem('renault_appointment');
-                    alert("Cita eliminada correctamente de la base de datos.");
+                    alert("Cita eliminada.");
                     renderAppointmentPage();
                     updateAppointmentUI();
                 } else {
-                    alert("No pudimos borrar la cita del Excel, pero se quitará de tu pantalla.");
                     localStorage.removeItem('renault_appointment');
                     renderAppointmentPage();
                 }
             } catch(e) {
-                alert("Error de conexión. Inténtalo más tarde.");
+                alert("Error de conexión.");
             } finally {
-                if(btn) btn.disabled = false;
+                if(btn) { btn.innerText = "CANCELAR CITA"; btn.disabled = false; }
             }
         }
 
@@ -306,10 +336,10 @@
                     body: JSON.stringify({data: [app]})
                 });
                 localStorage.setItem('renault_appointment', JSON.stringify(app));
-                alert("¡Cita agendada con éxito!");
+                alert("¡Cita agendada!");
                 updateAppointmentUI();
                 showPage('inicio');
-            } catch(e) { alert("Error al registrar."); }
+            } catch(e) { alert("Error."); }
             finally { btn.innerText = "ENVIAR SOLICITUD"; btn.disabled = false; }
         }
 
@@ -326,6 +356,40 @@
             } else container.innerHTML = '';
         }
 
+        /* --- LÓGICA DE COTIZACIÓN --- */
+        function toggleFinanzas() {
+            const div = document.getElementById('campo-finanzas');
+            div.style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none';
+        }
+
+        async function handleQuote() {
+            const btn = document.getElementById('btn-quote');
+            const quote = {
+                nombre: document.getElementById('q-name').value,
+                telefono: document.getElementById('q-phone').value,
+                modelo: document.getElementById('m-title').innerText,
+                cp: document.getElementById('q-cp').value,
+                metodo_pago: document.getElementById('q-metodo').value,
+                enganche: document.getElementById('q-down').value || "N/A",
+                meses: document.getElementById('q-meses').value || "N/A"
+            };
+            
+            if(!quote.nombre || !quote.telefono || !quote.cp) return alert("Nombre, Teléfono y CP son obligatorios.");
+
+            btn.innerText = "ENVIANDO...";
+            btn.disabled = true;
+            try {
+                await fetch(`${API_BASE}?sheet=cotizaciones`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({data: [quote]})
+                });
+                alert("Solicitud de cotización enviada.");
+                closeM();
+            } catch(e) { alert("Error al enviar."); }
+            finally { btn.innerText = "SOLICITAR"; btn.disabled = false; }
+        }
+
         async function loadCat() {
             try {
                 const res = await fetch(`${API_BASE}?sheet=nuevos`);
@@ -337,7 +401,7 @@
                         <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${c.precio}</div>
                         <button class="btn-action btn-yellow" onclick="openM('${c.modelo}')">COTIZAR</button>
                     </div>`).join('');
-            } catch(e) { document.getElementById('cat-container').innerText = "Error al cargar catálogo."; }
+            } catch(e) {}
         }
 
         async function loadSemi() {
@@ -351,31 +415,7 @@
                         <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${s.Precio}</div>
                         <button class="btn-action btn-yellow" style="padding:10px; font-size:0.8rem;" onclick="openM('${s.Versión || s.modelo}')">ME INTERESA</button>
                     </div>`).join('');
-            } catch(e) { document.getElementById('semi-container').innerText = "Error al cargar inventario."; }
-        }
-
-        async function handleQuote() {
-            const btn = document.getElementById('btn-quote');
-            const quote = {
-                nombre: document.getElementById('q-name').value,
-                telefono: document.getElementById('q-phone').value,
-                modelo: document.getElementById('m-title').innerText,
-                curp: document.getElementById('q-curp').value || "No proporcionado",
-                rfc: document.getElementById('q-rfc').value || "No proporcionado",
-                enganche: document.getElementById('q-down').value
-            };
-            if(!quote.nombre || !quote.telefono) return alert("Datos obligatorios faltantes.");
-            btn.innerText = "ENVIANDO...";
-            try {
-                await fetch(`${API_BASE}?sheet=cotizaciones`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({data: [quote]})
-                });
-                alert("Solicitud enviada.");
-                closeM();
-            } catch(e) { alert("Error al enviar."); }
-            btn.innerText = "SOLICITAR";
+            } catch(e) {}
         }
 
         function openM(t) { document.getElementById('m-title').innerText = t; document.getElementById('modal-quote').style.display = 'flex'; }
