@@ -3,268 +3,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Renault Premium</title>
+    <title>Renault Teziutlán App</title>
     <style>
         :root {
-            --accent: #FFCC00;
-            --bg: #000000;
-            --card: #1C1C1E;
-            --text-gray: #8E8E93;
-            --ios-blue: #007AFF;
+            --gold: #D4AF37;
+            --bright-yellow: #FFCC00;
+            --renault-gray: #121212;
+            --white: #FFFFFF;
+            --black: #000000;
+            --green-success: #28a745;
         }
 
         body {
-            font-family: -apple-system, system-ui, sans-serif;
-            background: var(--bg);
-            color: white;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--black);
+            color: var(--white);
             margin: 0;
-            padding-bottom: 110px;
-            -webkit-tap-highlight-color: transparent;
+            padding: 0;
+            overflow-x: hidden;
         }
 
-        /* --- ESTILO EXACTO DE TUS IMÁGENES --- */
-        .header-minimal {
-            padding: 20px;
-            text-align: center;
-            font-size: 0.9rem;
-            letter-spacing: 3px;
-            font-weight: 300;
-            border-bottom: 0.5px solid #333;
-        }
-
-        .container { padding: 20px; }
-
-        /* Tarjeta Dorada de tu Imagen */
-        .hero-gold {
-            background: linear-gradient(180deg, #FAD961 0%, #F76B1C 100%);
-            border-radius: 35px;
-            padding: 40px 20px;
-            text-align: center;
-            color: black;
-            position: relative;
-            box-shadow: 0 10px 20px rgba(247, 107, 28, 0.2);
-        }
-
-        .hero-gold h1 { font-size: 2.5rem; margin: 0; font-weight: 800; }
-        .hero-gold p { font-size: 1.1rem; margin: 5px 0; font-weight: 500; opacity: 0.8; }
-
-        .car-display {
-            width: 100%;
-            height: 180px;
-            object-fit: contain;
-            margin: 20px 0;
-            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3));
-        }
-
-        /* Botón Verde Cotizar */
-        .btn-main {
-            background: #28CD41;
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 20px;
-            border-radius: 22px;
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-top: 20px;
-            box-shadow: 0 5px 15px rgba(40, 205, 65, 0.3);
-        }
-
-        /* Sección de Info (Oculta por defecto) */
-        .info-panel {
-            background: var(--card);
-            border-radius: 25px;
-            padding: 20px;
-            margin-top: 20px;
-            display: none;
-        }
-
-        /* GRID DE INVENTARIO */
-        .car-item {
-            background: var(--card);
-            border-radius: 28px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 0.5px solid #333;
-        }
-
-        .car-item img { width: 100%; border-radius: 20px; }
-        .car-item h3 { margin: 10px 0 5px 0; font-size: 1.2rem; }
-        .car-item .price { color: var(--accent); font-weight: bold; }
-
-        /* CITAS ESTILO BLANCO LIMPIO */
-        .white-card {
-            background: white;
-            color: black;
-            border-radius: 35px;
-            padding: 30px;
-        }
-
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 0.8rem; color: #666; margin-bottom: 5px; font-weight: 600; }
-        .input-group input, .input-group select {
-            width: 100%; padding: 15px; border: 1px solid #E5E5E5; border-radius: 15px; background: #F9F9F9; font-size: 1rem; box-sizing: border-box;
-        }
-
-        /* SISTEMA DE HORAS BLOQUEADAS */
-        .hours-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .hour-btn {
-            padding: 12px;
-            background: #F2F2F7;
-            border-radius: 12px;
-            text-align: center;
+        /* --- Barra de Estado del Teléfono (Realismo) --- */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            font-size: 12px;
             font-weight: 600;
-            font-size: 0.9rem;
+            background: var(--black);
         }
 
-        .hour-btn.booked { background: #FF3B30; color: white; opacity: 0.4; pointer-events: none; }
-        .hour-btn.selected { background: black; color: white; }
+        /* --- Encabezado General --- */
+        header {
+            text-align: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #222;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+        .line-v { width: 1px; height: 20px; background: var(--gold); }
+        .agency-name { color: var(--gold); }
+        .page-title {
+            color: var(--gold);
+            font-size: 1.1rem;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
 
-        /* NAVBAR IDÉNTICA A TU IMAGEN */
-        .tab-bar {
+        .container { padding: 20px; padding-bottom: 120px; }
+
+        /* --- PÁGINA 1: AGENDAR SERVICIO (FONDO BLANCO) --- */
+        .card-white {
+            background-color: var(--white);
+            color: var(--black);
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .form-group { margin-bottom: 15px; }
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #555;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #f9f9f9;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .btn-yellow {
+            background-color: var(--bright-yellow);
+            color: var(--black);
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 1rem;
+            margin-top: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* --- PÁGINA 2: INICIO / PERFIL (DEGRADADO DORADO) --- */
+        .card-profile {
+            background: linear-gradient(135deg, #f5d17a 0%, #d4af37 50%, #b8860b 100%);
+            border-radius: 30px;
+            padding: 30px 20px;
+            text-align: center;
+            color: var(--black);
+            position: relative;
+            overflow: hidden;
+        }
+        .card-profile h2 { font-size: 2.2rem; margin: 0; font-weight: 800; }
+        .car-floating {
+            width: 100%;
+            max-width: 280px;
+            margin: 20px auto;
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .car-id { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; opacity: 0.9; }
+
+        .btn-green {
+            background-color: var(--green-success);
+            color: white;
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 15px;
+            font-weight: 900;
+            font-size: 1.2rem;
+            margin-top: 25px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* --- MENÚ NAVEGACIÓN INFERIOR --- */
+        .nav-bottom {
             position: fixed;
             bottom: 0;
             width: 100%;
-            height: 90px;
-            background: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(20px);
+            background: #0a0a0a;
             display: flex;
             justify-content: space-around;
-            align-items: center;
-            border-top: 0.5px solid #333;
-            z-index: 1000;
+            padding: 15px 0 25px 0;
+            border-top: 1px solid #222;
+            z-index: 100;
+        }
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 700;
+            flex: 1;
+        }
+        .nav-item svg { width: 24px; height: 24px; fill: currentColor; margin-bottom: 5px; }
+        .nav-item.active { color: var(--gold); }
+        .active-bg {
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 15px;
+            padding: 5px;
         }
 
-        .tab-item { text-align: center; color: var(--text-gray); font-size: 0.7rem; font-weight: 500; }
-        .tab-item.active { color: var(--accent); }
-        .tab-item svg { width: 26px; height: 26px; display: block; margin: 0 auto 5px; fill: currentColor; }
-
+        /* Control de páginas */
         .page { display: none; }
-        .active-page { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
+        .active-page { display: block; }
     </style>
 </head>
 <body>
 
-    <div class="header-minimal">RENAULT | TEZIUTLÁN</div>
-
-    <div id="p-inicio" class="page active-page container">
-        <div class="hero-gold">
-            <h1 id="usr-name">HOLA</h1>
-            <p id="usr-car-txt">Kwid | Mtz05</p>
-            <img id="main-car-img" src="https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/kwid-bwj-ph2/kwid-card.png" class="car-display">
-        </div>
-        
-        <button class="btn-main" onclick="nav('nuevos')">COTIZACIÓN</button>
-        
-        <div class="info-panel" id="unit-info">
-            <h4 style="margin:0">Información de la Unidad</h4>
-            <p style="font-size: 0.8rem; color: var(--text-gray)">Motor: 1.0L | Rendimiento: 20km/L | Frenos ABS</p>
-        </div>
+    <div class="status-bar">
+        <div>9:26</div>
+        <div>🔋 85%</div>
     </div>
 
-    <div id="p-nuevos" class="page container">
-        <h2 style="font-weight: 300;">Modelos 2026</h2>
-        <div id="lista-autos"></div>
-    </div>
+    <header>
+        <div class="logo-container">
+            <span>RENAULT</span>
+            <div class="line-v"></div>
+            <span class="agency-name">TEZIUTLÁN</span>
+        </div>
+    </header>
 
-    <div id="p-citas" class="page container">
-        <div class="white-card">
-            <h2 style="margin-top:0">Agendar Cita</h2>
-            <div class="input-group">
-                <label>FECHA</label>
-                <input type="date" onchange="renderHours()">
+    <div id="page-citas" class="page active-page">
+        <header><div class="page-title">Agendar Servicio</div></header>
+        <div class="container">
+            <div class="card-white">
+                <div class="form-group">
+                    <label>Nombre del Cliente</label>
+                    <input type="text" placeholder="Alejandro Ramírez">
+                </div>
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="tel" placeholder="222-123-4567">
+                </div>
+                <div class="form-group">
+                    <label>Unidad</label>
+                    <select><option>Duster</option><option>Kwid</option><option>Kardian</option></select>
+                </div>
+                <div class="form-group">
+                    <label>Placa</label>
+                    <select><option>UFX-1234</option></select>
+                </div>
+                <div class="form-group">
+                    <label>Kilometraje Actual</label>
+                    <input type="text" placeholder="28,500 km">
+                </div>
+                <div class="form-group">
+                    <label>Fecha Preferida</label>
+                    <input type="date" value="2026-05-01">
+                </div>
+                <div class="form-group">
+                    <label>Hora Flexible</label>
+                    <input type="time" value="10:30">
+                </div>
+                <div class="form-group">
+                    <label>Motivo del Servicio</label>
+                    <input type="text" placeholder="Mantenimiento Preventivo (10K)">
+                </div>
+                <button class="btn-yellow">ENVIAR SOLICITUD</button>
             </div>
-            <div class="input-group">
-                <label>HORARIOS DISPONIBLES</label>
-                <div class="hours-grid" id="hours-container"></div>
-            </div>
-            <button class="btn-main" style="background: black; margin-top:30px;">CONFIRMAR CITA</button>
         </div>
     </div>
 
-    <nav class="tab-bar">
-        <div class="tab-item active" onclick="nav('inicio')">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>INICIO
+    <div id="page-inicio" class="page">
+        <div class="container">
+            <div class="card-profile">
+                <h2>¡Hola, Alejandro!</h2>
+                <img src="https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/duster-hjd/duster-lanzamiento/duster-card.png" alt="Renault Duster" class="car-floating">
+                <div class="car-id">Tu Duster | UFX-1234</div>
+            </div>
+            <button class="btn-green">COTIZACIÓN</button>
         </div>
-        <div class="tab-item" onclick="nav('nuevos')">
-            <svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>NUEVOS
-        </div>
-        <div class="tab-item" onclick="nav('citas')">
-            <svg viewBox="0 0 24 24"><path d="M17 12h-5V7h5v5zm3.33-7H19V3h-2v2H7V3H5v2H3.67C2.75 5 2 5.75 2 6.67v12.66C2 20.25 2.75 21 3.67 21h16.66c.92 0 1.67-.75 1.67-1.67V6.67C22 5.75 21.25 5 20.33 5z"/></svg>CITAS
-        </div>
-        <div class="tab-item">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>INFO
-        </div>
+    </div>
+
+    <nav class="nav-bottom">
+        <a href="#" class="nav-item" onclick="showPage('inicio', this)">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <div>Inicio</div>
+        </a>
+        <a href="#" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99z"/></svg>
+            <div>Nuevos</div>
+        </a>
+        <a href="#" class="nav-item active" onclick="showPage('citas', this)">
+            <svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+            <div>Citas</div>
+        </a>
+        <a href="#" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2.9 2 2 2-.9 2-2 2z"/></svg>
+            <div>SEMINUEVOS</div>
+        </a>
     </nav>
 
     <script>
-        const API = "https://sheetdb.io/api/v1/eyx5rh2dow3oj";
-
-        function nav(page) {
+        function showPage(pageId, element) {
+            // Ocultar todas las páginas
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
-            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-            document.getElementById('p-' + page).classList.add('active-page');
-            event.currentTarget.classList.add('active');
+            // Quitar clase active de nav
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            // Mostrar seleccionada
+            document.getElementById('page-' + pageId).classList.add('active-page');
+            element.classList.add('active');
         }
-
-        async function loadInventory() {
-            try {
-                const res = await fetch(API);
-                const data = await res.json();
-                const container = document.getElementById('lista-autos');
-                container.innerHTML = "";
-                data.forEach(car => {
-                    container.innerHTML += `
-                        <div class="car-item" onclick="showCarDetail('${car.modelo}')">
-                            <img src="${car.imagen}">
-                            <h3>${car.modelo}</h3>
-                            <p class="price">Desde ${car.precio}</p>
-                            <p style="font-size:0.7rem; color:#888">Toca para ver especificaciones técnica</p>
-                        </div>
-                    `;
-                });
-            } catch(e) { console.error("Error cargando inventario"); }
-        }
-
-        function renderHours() {
-            const container = document.getElementById('hours-container');
-            container.innerHTML = "";
-            const hours = ["09:00", "10:00", "11:00", "12:00", "13:00", "16:00", "17:00", "18:00"];
-            const booked = ["10:00", "17:00"]; // Esto simula horas ya ocupadas
-
-            hours.forEach(h => {
-                const isBooked = booked.includes(h);
-                const div = document.createElement('div');
-                div.className = `hour-btn ${isBooked ? 'booked' : ''}`;
-                div.innerText = h;
-                if(!isBooked) {
-                    div.onclick = () => {
-                        document.querySelectorAll('.hour-btn').forEach(b => b.classList.remove('selected'));
-                        div.classList.add('selected');
-                    }
-                }
-                container.appendChild(div);
-            });
-        }
-
-        function showCarDetail(modelo) {
-            nav('inicio');
-            document.getElementById('unit-info').style.display = 'block';
-            document.getElementById('unit-info').scrollIntoView();
-        }
-
-        window.onload = () => {
-            loadInventory();
-            renderHours();
-        };
     </script>
 </body>
 </html>
