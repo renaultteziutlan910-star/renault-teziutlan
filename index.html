@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renault Teziutlán - Premium Service</title>
+    <style>
+        :root { --accent: #FFCC00; --bg: #000000; --card: #1c1c1e; --text: #ffffff; --muted: #a1a1a6; }
+        body { font-family: -apple-system, sans-serif; margin: 0; background: var(--bg); color: var(--text); padding-bottom: 90px; overflow-x: hidden; }
+        header { background: #000; padding: 25px; text-align: center; border-bottom: 1px solid #333; }
+        .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: 2px; text-transform: uppercase; }
+        .logo span { color: var(--accent); }
+        .page { display: none; padding: 20px; animation: fadeIn 0.4s ease-out; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid #2c2c2e; }
+        .hero-card { background: linear-gradient(145deg, #FFCC00, #b89400); color: black; border: none; }
+        h2 { font-size: 1.5rem; margin-bottom: 20px; color: var(--accent); border-left: 4px solid var(--accent); padding-left: 15px; }
+        label { display: block; margin-top: 15px; color: var(--muted); font-size: 0.85rem; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 15px; margin: 8px 0; border: 1px solid #333; border-radius: 12px; background: #121212; color: white; font-size: 16px; box-sizing: border-box; }
+        button { background: var(--accent); border: none; padding: 16px; width: 100%; border-radius: 14px; font-weight: bold; cursor: pointer; font-size: 1rem; color: black; margin-top: 10px; }
+        .grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .menu-btn { background: var(--card); padding: 20px 10px; border-radius: 20px; text-align: center; border: 1px solid #2c2c2e; cursor: pointer; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #333; z-index: 100; }
+        .nav-item { text-align: center; font-size: 0.75rem; color: var(--muted); flex: 1; cursor: pointer; }
+        .nav-item.active-nav { color: var(--accent); }
+        .img-car { width: 100%; border-radius: 15px; margin-bottom: 10px; min-height: 150px; object-fit: contain; background: #111; }
+        .price-tag { color: var(--accent); font-weight: bold; display: block; margin-bottom: 10px; font-size: 1.1rem; }
+        #pantalla-registro { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 2000; display: flex; flex-direction: column; justify-content: center; padding: 40px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+    <div id="pantalla-registro">
+        <div class="logo" style="margin-bottom: 30px; text-align: center;">RENAULT | <span>TEZIUTLÁN</span></div>
+        <input type="text" id="reg-nombre" placeholder="Nombre completo">
+        <select id="reg-modelo-u">
+            <option value="">¿Qué Renault manejas?</option>
+            <option>Kwid</option><option>Duster</option><option>Kardian</option><option>Stepway</option><option>Koleos</option>
+        </select>
+        <input type="text" id="reg-placa" placeholder="Número de Placa">
+        <input type="number" id="reg-serie" placeholder="VIN (Últimos 6 dígitos)">
+        <button onclick="guardarUsuario()">ENTRAR A LA APP</button>
+    </div>
+
+    <header><div class="logo">RENAULT | <span>TEZIUTLÁN</span></div></header>
+
+    <div id="inicio" class="page active">
+        <div class="card hero-card">
+            <h1 id="txt-bienvenida" style="margin:0">¡Hola!</h1>
+            <p id="txt-info-auto" style="margin:10px 0 0 0;">Configurando unidad...</p>
+        </div>
+        <div class="grid-menu">
+            <div class="menu-btn" onclick="nav('catalogo', 1)"><div>🚗</div><span>Nuevos</span></div>
+            <div class="menu-btn" onclick="nav('valuacion', 2)"><div>💰</div><span>Valuar Auto</span></div>
+            <div class="menu-btn" onclick="nav('citas', 3)"><div>🔧</div><span>Citas</span></div>
+            <div class="menu-btn" onclick="nav('refacciones', -1)"><div>📦</div><span>Refacciones</span></div>
+        </div>
+    </div>
+
+    <div id="catalogo" class="page">
+        <h2>Modelos 2026</h2>
+        <div id="contenedor-catalogo">
+            </div>
+    </div>
+
+    <div id="valuacion" class="page">
+        <h2>Evaluación de Unidad</h2>
+        <div class="card">
+            <input type="text" id="val-auto" placeholder="Marca y Modelo">
+            <input type="number" id="val-año" placeholder="Año">
+            <input type="number" id="val-km" placeholder="Kilometraje">
+            <textarea id="val-estado" placeholder="Estado general"></textarea>
+            <button onclick="enviarExcel('valuacion')">SOLICITAR VALUACIÓN</button>
+        </div>
+    </div>
+
+    <div id="citas" class="page">
+        <h2>Cita de Servicio</h2>
+        <div class="card">
+            <label>Confirmar Datos:</label>
+            <input type="text" id="cita-nombre">
+            <input type="text" id="cita-placa">
+            <input type="text" id="cita-vin">
+            <label>Kilometraje Actual:</label>
+            <input type="number" id="cita-km" placeholder="Km actual">
+            <label>Seleccionar Fecha:</label>
+            <input type="date" id="cita-fecha">
+            <label>Seleccionar Hora:</label>
+            <select id="cita-hora">
+                <option>09:00 AM</option><option>11:00 AM</option><option>01:00 PM</option><option>04:00 PM</option><option>06:00 PM</option>
+            </select>
+            <textarea id="cita-fallas" placeholder="¿Algún ruido o detalle?"></textarea>
+            <button onclick="enviarExcel('cita')">AGENDAR CITA</button>
+        </div>
+    </div>
+
+    <nav class="nav-bar">
+        <div class="nav-item active-nav" onclick="nav('inicio', 0)"><div>🏠</div>Inicio</div>
+        <div class="nav-item" onclick="nav('catalogo', 1)"><div>🚗</div>Nuevos</div>
+        <div class="nav-item" onclick="nav('valuacion', 2)"><div>💰</div>Valuar</div>
+        <div class="nav-item" onclick="nav('citas', 3)"><div>🔧</div>Citas</div>
+    </nav>
+
+    <script>
+        const API_URL = "https://sheetdb.io/api/v1/eyx5rh2dow3oj";
+        
+        // DATOS DE RESPALDO (Si el Excel falla, se muestran estos)
+        const inventarioRespaldo = [
+            {modelo: "Kwid", precio: "$235,200", imagen: "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/kwid-bwj-ph2/kwid-card.png"},
+            {modelo: "Duster", precio: "$379,400", imagen: "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/duster-hjd/duster-lanzamiento/duster-card.png"},
+            {modelo: "Kardian", precio: "$355,900", imagen: "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/kardian-hjf/kardian-card.png"},
+            {modelo: "Stepway", precio: "$354,300", imagen: "https://www.renault.com.mx/content/dam/Renault/MX/master/vehiculos/stepway-b52-ph2/stepway-card.png"}
+        ];
+
+        window.onload = function() {
+            dibujarInventario(inventarioRespaldo); // Primero mostramos los de respaldo
+            cargarDesdeExcel(); // Intentamos actualizar con el Excel
+            if (localStorage.getItem('u_nombre')) {
+                aplicarDatos();
+                document.getElementById('pantalla-registro').style.display = 'none';
+            }
+        };
+
+        function dibujarInventario(lista) {
+            const contenedor = document.getElementById('contenedor-catalogo');
+            contenedor.innerHTML = "";
+            lista.forEach(item => {
+                contenedor.innerHTML += `
+                    <div class="card">
+                        <img src="${item.imagen}" class="img-car">
+                        <h3>${item.modelo}</h3>
+                        <span class="price-tag">Desde ${item.precio} MXN</span>
+                        <button onclick="nav('valuacion', 2)">VALUAR PARA CAMBIO</button>
+                    </div>`;
+            });
+        }
+
+        async function cargarDesdeExcel() {
+            try {
+                const res = await fetch(API_URL);
+                if(res.ok) {
+                    const data = await res.json();
+                    if(data.length > 0) dibujarInventario(data);
+                }
+            } catch(e) { console.log("Usando datos de respaldo..."); }
+        }
+
+        async function enviarExcel(tipo) {
+            let payload = tipo === 'cita' ? {
+                nombre: document.getElementById('cita-nombre').value,
+                placa: document.getElementById('cita-placa').value,
+                serie: document.getElementById('cita-vin').value,
+                fecha: document.getElementById('cita-fecha').value,
+                tipo_servicio: `CITA ${document.getElementById('cita-hora').value} | KM: ${document.getElementById('cita-km').value} | FALLA: ${document.getElementById('cita-fallas').value}`
+            } : {
+                nombre: localStorage.getItem('u_nombre'),
+                modelo: "VALUACIÓN: " + document.getElementById('val-auto').value,
+                precio: "AÑO: " + document.getElementById('val-año').value,
+                tipo_servicio: `KM: ${document.getElementById('val-km').value} | ${document.getElementById('val-estado').value}`
+            };
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({data: [payload]})
+                });
+                if(res.ok) alert("¡Enviado con éxito a la agencia!");
+                else alert("Límite de envíos alcanzado, pero el asesor te contactará.");
+            } catch(e) { alert("Error al enviar."); }
+        }
+
+        function guardarUsuario() {
+            localStorage.setItem('u_nombre', document.getElementById('reg-nombre').value);
+            localStorage.setItem('u_modelo', document.getElementById('reg-modelo-u').value);
+            localStorage.setItem('u_placa', document.getElementById('reg-placa').value);
+            localStorage.setItem('u_serie', document.getElementById('reg-serie').value);
+            aplicarDatos();
+            document.getElementById('pantalla-registro').style.display = 'none';
+        }
+
+        function aplicarDatos() {
+            const n = localStorage.getItem('u_nombre') || "Usuario";
+            document.getElementById('txt-bienvenida').innerText = "¡Hola, " + n.split(' ')[0] + "!";
+            document.getElementById('txt-info-auto').innerText = `${localStorage.getItem('u_modelo')} (${localStorage.getItem('u_placa')})`;
+            document.getElementById('cita-nombre').value = n;
+            document.getElementById('cita-placa').value = localStorage.getItem('u_placa');
+            document.getElementById('cita-vin').value = localStorage.getItem('u_serie');
+        }
+
+        function nav(p, i) {
+            document.querySelectorAll('.page').forEach(pg => pg.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active-nav'));
+            document.getElementById(p).classList.add('active');
+            if(i>=0) document.querySelectorAll('.nav-item')[i].classList.add('active-nav');
+            window.scrollTo(0,0);
+        }
+    </script>
+</body>
+</html>
