@@ -66,7 +66,7 @@
         .btn-action { width: 100%; padding: 20px; border: none; border-radius: 18px; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; cursor: pointer; }
         .btn-yellow { background: var(--renault-yellow); color: #000; }
         .btn-green { background: var(--success-green); color: #fff; margin-top: 25px; }
-        .btn-cancel { background: transparent; border: 1px solid var(--danger-red); color: var(--danger-red); padding: 10px; font-size: 0.8rem; margin-top: 15px; border-radius: 10px; }
+        .btn-cancel { background: transparent; border: 1px solid var(--danger-red); color: var(--danger-red); padding: 10px; font-size: 0.8rem; margin-top: 15px; border-radius: 10px; width: 100%; }
 
         /* --- CATÁLOGO --- */
         .car-card { background: #1a1a1a; border-radius: 25px; padding: 15px; margin-bottom: 25px; border: 1px solid #333; }
@@ -117,18 +117,8 @@
     </div>
 
     <div id="p-citas" class="page">
-        <div style="text-align: center; color: #d4af37; font-weight: 800; margin-bottom: 15px;">AGENDAR SERVICIO</div>
-        <div class="card-white">
-            <label class="form-label">Nombre</label><input type="text" id="c-name" class="form-control">
-            <label class="form-label">Teléfono</label><input type="tel" id="c-phone" class="form-control">
-            <label class="form-label">VIN (Número de Serie)</label><input type="text" id="c-vin" class="form-control" placeholder="17 caracteres">
-            <label class="form-label">Kilometraje Actual</label><input type="number" id="c-km" class="form-control" placeholder="Ej: 25000">
-            <label class="form-label">Detalles o fallas de la unidad</label>
-            <textarea id="c-obs" class="form-control" rows="3" placeholder="Describe aquí ruidos, fallas..."></textarea>
-            <label class="form-label">Fecha Preferida</label><input type="date" id="c-date" class="form-control">
-            <label class="form-label">Hora Preferida</label><input type="time" id="c-time" class="form-control">
-            <button id="btn-cita" class="btn-action btn-yellow" style="margin-top:15px;" onclick="handleBooking()">ENVIAR SOLICITUD</button>
-        </div>
+        <div style="text-align: center; color: #d4af37; font-weight: 800; margin-bottom: 15px;">GESTIÓN DE SERVICIO</div>
+        <div id="appointment-content"></div>
     </div>
 
     <div id="p-nuevos" class="page">
@@ -201,39 +191,56 @@
             document.getElementById('q-phone').value = d.phone;
         }
 
-        /* --- LEER EXCEL (NUEVOS Y SEMINUEVOS) --- */
-        async function loadCat() {
-            try {
-                const res = await fetch(`${API_BASE}?sheet=nuevos`);
-                const data = await res.json();
-                document.getElementById('cat-container').innerHTML = data.map(c => `
-                    <div class="car-card">
-                        <img src="${c.imagen || 'https://via.placeholder.com/300x150?text=Renault'}">
-                        <h3 style="margin:15px 0 5px">${c.modelo}</h3>
-                        <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${c.precio}</div>
-                        <button class="btn-action btn-yellow" onclick="openM('${c.modelo}')">COTIZAR</button>
-                    </div>
-                `).join('');
-            } catch(e) { document.getElementById('cat-container').innerText = "Error al cargar catálogo."; }
+        function showPage(id, el) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('p-' + id).classList.add('active');
+            if(el) el.classList.add('active');
+            window.scrollTo(0,0);
+
+            if(id === 'citas') renderAppointmentPage();
         }
 
-        async function loadSemi() {
-            try {
-                const res = await fetch(`${API_BASE}?sheet=seminuevos`);
-                const data = await res.json();
-                document.getElementById('semi-container').innerHTML = data.map(s => `
-                    <div class="car-card">
-                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${s.Versión} ${s.Modelo}</h3>
-                        <p style="margin:0; font-size:0.8rem; color:#888;">${s.Transmisión} | ${s.KM} KM | ${s.Color}</p>
-                        <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${s.Precio}</div>
-                        <p style="font-size:0.7rem; margin-bottom:10px;">📍 Ubicación: ${s.Ubicación}</p>
-                        <button class="btn-action btn-yellow" style="padding:10px; font-size:0.8rem;" onclick="openM('${s.Versión}')">ME INTERESA</button>
+        /* --- LOGICA DE CITAS DINÁMICA --- */
+        function renderAppointmentPage() {
+            const data = localStorage.getItem('renault_appointment');
+            const container = document.getElementById('appointment-content');
+            
+            if(data) {
+                const app = JSON.parse(data);
+                container.innerHTML = `
+                    <div class="card-white" style="text-align:center;">
+                        <div style="font-size: 3rem; margin-bottom: 10px;">📅</div>
+                        <h3 style="margin:0; color:#000;">TIENES UNA CITA ACTIVA</h3>
+                        <p style="color:#666; margin: 10px 0;">Tu unidad está programada para servicio.</p>
+                        <div style="background:#f0f0f0; padding:15px; border-radius:15px; margin:15px 0; text-align:left;">
+                            <small style="color:#888; font-weight:bold;">DETALLES:</small><br>
+                            <strong>Fecha:</strong> ${app.fecha}<br>
+                            <strong>Hora:</strong> ${app.hora} hrs<br>
+                            <strong>Servicio:</strong> ${app.falla || 'Mantenimiento General'}
+                        </div>
+                        <button class="btn-action btn-yellow" onclick="window.open('https://wa.me/522311234567?text=Hola, quiero confirmar mi cita para el día ${app.fecha}', '_blank')">CONFIRMAR POR WHATSAPP</button>
+                        <button class="btn-cancel" style="margin-top:15px;" onclick="cancelAppointment()">CANCELAR ESTA CITA</button>
                     </div>
-                `).join('');
-            } catch(e) { document.getElementById('semi-container').innerText = "Error al cargar seminuevos."; }
+                `;
+            } else {
+                const user = JSON.parse(localStorage.getItem('renault_user') || '{}');
+                container.innerHTML = `
+                    <div class="card-white">
+                        <label class="form-label">Nombre</label><input type="text" id="c-name" class="form-control" value="${user.name || ''}">
+                        <label class="form-label">Teléfono</label><input type="tel" id="c-phone" class="form-control" value="${user.phone || ''}">
+                        <label class="form-label">VIN (Número de Serie)</label><input type="text" id="c-vin" class="form-control" placeholder="17 caracteres">
+                        <label class="form-label">Kilometraje Actual</label><input type="number" id="c-km" class="form-control" placeholder="Ej: 25000">
+                        <label class="form-label">Detalles o fallas de la unidad</label>
+                        <textarea id="c-obs" class="form-control" rows="3" placeholder="Describe aquí ruidos, fallas..."></textarea>
+                        <label class="form-label">Fecha Preferida</label><input type="date" id="c-date" class="form-control">
+                        <label class="form-label">Hora Preferida</label><input type="time" id="c-time" class="form-control">
+                        <button id="btn-cita" class="btn-action btn-yellow" style="margin-top:15px;" onclick="handleBooking()">ENVIAR SOLICITUD</button>
+                    </div>
+                `;
+            }
         }
 
-        /* --- ESCRIBIR EN EXCEL (CITAS) --- */
         async function handleBooking() {
             const btn = document.getElementById('btn-cita');
             const appointment = {
@@ -249,7 +256,7 @@
             if(!appointment.fecha || !appointment.hora) return alert("Selecciona fecha y hora");
 
             btn.innerText = "ENVIANDO...";
-            btn.disabled = true; // Evita doble envío
+            btn.disabled = true;
 
             try {
                 const response = await fetch(`${API_BASE}?sheet=citas`, {
@@ -259,80 +266,25 @@
                 });
 
                 if (response.ok) {
-                    // 1. Guardamos en memoria local para que aparezca el recordatorio
                     localStorage.setItem('renault_appointment', JSON.stringify(appointment));
-                    
                     alert("¡Cita enviada con éxito!");
-                    
-                    // 2. Actualizamos la interfaz para que aparezca el botón de cancelar
                     updateAppointmentUI();
-                    
-                    // 3. Limpiamos el formulario y regresamos al inicio
-                    document.getElementById('c-vin').value = "";
-                    document.getElementById('c-obs').value = "";
                     showPage('inicio');
                 }
-            } catch(e) { 
-                alert("Error al enviar cita. Revisa tu conexión."); 
-            } finally {
+            } catch(e) { alert("Error al enviar cita."); }
+            finally {
                 btn.innerText = "ENVIAR SOLICITUD";
                 btn.disabled = false;
             }
         }
 
-        function updateAppointmentUI() {
-            const data = localStorage.getItem('renault_appointment');
-            const container = document.getElementById('reminder-container');
-            
-            if(data) {
-                const app = JSON.parse(data);
-                // Aquí es donde se genera la tarjeta con el botón de cancelar
-                container.innerHTML = `
-                    <div id="appointment-reminder">
-                        <div style="color:#d4af37; font-weight:900; font-size:0.8rem; letter-spacing:1px; margin-bottom:10px;">PRÓXIMA CITA</div>
-                        <div style="font-size:1.2rem; font-weight:bold;">${app.fecha} | ${app.hora} hrs</div>
-                        <div style="color:#888; font-size:0.85rem; margin-top:5px;">Detalle: ${app.falla || 'Revisión General'}</div>
-                        <button class="btn-cancel" onclick="cancelAppointment()">CANCELAR CITA</button>
-                    </div>
-                `;
-            } else {
-                container.innerHTML = '';
-            }
-        }
-
         function cancelAppointment() {
-            if(confirm("¿Estás seguro de que deseas cancelar tu cita en el sistema?")) {
-                // Borramos de la memoria del teléfono
+            if(confirm("¿Estás seguro de que deseas cancelar tu cita?")) {
                 localStorage.removeItem('renault_appointment');
-                // Limpiamos la pantalla
+                renderAppointmentPage();
                 updateAppointmentUI();
-                alert("Cita cancelada localmente.");
+                alert("Cita cancelada.");
             }
-        }
-
-        /* --- ESCRIBIR EN EXCEL (COTIZACIONES) --- */
-        async function handleQuote() {
-            const btn = document.getElementById('btn-quote');
-            const quote = {
-                nombre: document.getElementById('q-name').value,
-                telefono: document.getElementById('q-phone').value,
-                modelo: document.getElementById('m-title').innerText,
-                curp: document.getElementById('q-curp').value,
-                rfc: document.getElementById('q-rfc').value,
-                enganche: document.getElementById('q-down').value
-            };
-
-            btn.innerText = "ENVIANDO...";
-            try {
-                await fetch(`${API_BASE}?sheet=cotizaciones`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({data: [quote]})
-                });
-                alert("Solicitud de cotización enviada.");
-                closeM();
-            } catch(e) { alert("Error al enviar cotización."); }
-            btn.innerText = "SOLICITAR";
         }
 
         function updateAppointmentUI() {
@@ -345,30 +297,66 @@
                         <div style="color:#d4af37; font-weight:900; font-size:0.8rem; margin-bottom:10px;">PRÓXIMA CITA</div>
                         <div style="font-size:1.2rem; font-weight:bold;">${app.fecha} | ${app.hora} hrs</div>
                         <div style="color:#888; font-size:0.85rem; margin-top:5px;">${app.falla || 'Revisión'}</div>
-                        <button class="btn-cancel" onclick="cancelAppointment()">CANCELAR CITA</button>
+                        <button class="btn-cancel" style="border:1px solid var(--danger-red); margin-top:10px;" onclick="cancelAppointment()">CANCELAR CITA</button>
                     </div>`;
             } else { container.innerHTML = ''; }
         }
 
-        function cancelAppointment() {
-            if(confirm("¿Cancelar cita?")) {
-                localStorage.removeItem('renault_appointment');
-                updateAppointmentUI();
-            }
+        /* --- CARGA DE EXCEL --- */
+        async function loadCat() {
+            try {
+                const res = await fetch(`${API_BASE}?sheet=nuevos`);
+                const data = await res.json();
+                document.getElementById('cat-container').innerHTML = data.map(c => `
+                    <div class="car-card">
+                        <img src="${c.imagen || 'https://via.placeholder.com/300x150?text=Renault'}">
+                        <h3 style="margin:15px 0 5px">${c.modelo}</h3>
+                        <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${c.precio}</div>
+                        <button class="btn-action btn-yellow" onclick="openM('${c.modelo}')">COTIZAR</button>
+                    </div>
+                `).join('');
+            } catch(e) { document.getElementById('cat-container').innerText = "Error."; }
         }
 
-        function showPage(id, el) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById('p-' + id).classList.add('active');
-            if(el) el.classList.add('active');
-            window.scrollTo(0,0);
+        async function loadSemi() {
+            try {
+                const res = await fetch(`${API_BASE}?sheet=seminuevos`);
+                const data = await res.json();
+                document.getElementById('semi-container').innerHTML = data.map(s => `
+                    <div class="car-card">
+                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${s.Versión || s.modelo}</h3>
+                        <p style="margin:0; font-size:0.8rem; color:#888;">${s.Transmisión} | ${s.KM} KM</p>
+                        <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${s.Precio}</div>
+                        <button class="btn-action btn-yellow" style="padding:10px; font-size:0.8rem;" onclick="openM('${s.Versión || s.modelo}')">ME INTERESA</button>
+                    </div>
+                `).join('');
+            } catch(e) { document.getElementById('semi-container').innerText = "Error."; }
         }
 
-        function openM(t) { 
-            document.getElementById('m-title').innerText = t; 
-            document.getElementById('modal-quote').style.display = 'flex'; 
+        async function handleQuote() {
+            const btn = document.getElementById('btn-quote');
+            const quote = {
+                nombre: document.getElementById('q-name').value,
+                telefono: document.getElementById('q-phone').value,
+                modelo: document.getElementById('m-title').innerText,
+                curp: document.getElementById('q-curp').value,
+                rfc: document.getElementById('q-rfc').value,
+                enganche: document.getElementById('q-down').value
+            };
+            btn.innerText = "ENVIANDO...";
+            try {
+                await fetch(`${API_BASE}?sheet=cotizaciones`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({data: [quote]})
+                });
+                alert("Cotización enviada.");
+                closeM();
+            } catch(e) { alert("Error."); }
+            btn.innerText = "SOLICITAR";
         }
+
+        function openM(t) { document.getElementById('m-title').innerText = t; document.getElementById('modal-quote').style.display = 'flex'; }
         function closeM() { document.getElementById('modal-quote').style.display = 'none'; }
     </script>
 </body>
