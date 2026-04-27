@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -71,9 +72,13 @@
         }
         .btn-whatsapp-float svg { width: 30px; height: 30px; fill: currentColor; }
 
+        /* PESTAÑAS MODAL */
+        .tab-container { display: flex; border-bottom: 1px solid #eee; margin-bottom: 15px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: none; font-weight: 800; font-size: 0.7rem; color: #999; cursor: pointer; text-transform: uppercase; }
+        .tab-btn.active { color: #d4af37; border-bottom: 2px solid #d4af37; }
+
         .car-card { background: #1a1a1a; border-radius: 25px; padding: 15px; margin-bottom: 25px; border: 1px solid #333; }
         .car-card img { width: 100%; border-radius: 20px; cursor: pointer; transition: transform 0.2s; }
-        .car-card img:active { transform: scale(0.98); }
 
         .nav-bar {
             position: fixed; bottom: 0; width: 100%; background: #0d0d0d;
@@ -88,7 +93,7 @@
         .modal-content { background: #fff; padding: 30px; border-radius: 30px; width: 100%; max-width: 400px; color: #000; max-height: 90vh; overflow-y: auto; position: relative; }
         
         .desc-title { color: #d4af37; font-weight: 900; margin-bottom: 10px; font-size: 1.5rem; text-transform: uppercase; }
-        .desc-text { color: #444; line-height: 1.5; font-size: 0.95rem; margin-bottom: 20px; }
+        .desc-text { color: #444; line-height: 1.5; font-size: 0.95rem; margin-bottom: 20px; min-height: 80px;}
         .feature-tag { display: inline-block; background: #f0f0f0; padding: 5px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin: 3px; color: #555; }
     </style>
 </head>
@@ -164,11 +169,19 @@
 
     <div id="modal-desc" class="modal">
         <div class="modal-content">
-            <button onclick="closeDesc()" style="position:absolute; right:20px; top:20px; border:none; background:none; font-size:1.5rem;">✕</button>
+            <button onclick="closeDesc()" style="position:absolute; right:20px; top:20px; border:none; background:none; font-size:1.5rem; z-index:10;">✕</button>
             <img id="desc-img" src="" style="width:100%; border-radius:20px; margin-bottom:15px;">
             <div id="desc-title" class="desc-title">MODELO</div>
-            <div id="desc-text" class="desc-text">Cargando información...</div>
-            <div id="desc-tags"></div>
+            
+            <div class="tab-container">
+                <button class="tab-btn active" onclick="switchTab('info')">Info</button>
+                <button class="tab-btn" onclick="switchTab('seguridad')">Seguridad</button>
+                <button class="tab-btn" onclick="switchTab('tecnologia')">Tecnología</button>
+            </div>
+
+            <div id="desc-text" class="desc-text">Selecciona una pestaña</div>
+            <div id="desc-tags" style="margin-bottom:20px;"></div>
+            
             <button class="btn-action btn-yellow" id="btn-desc-quote" onclick="">COTIZAR AHORA</button>
         </div>
     </div>
@@ -209,33 +222,32 @@
 
     <script>
         const API_BASE = "https://sheetdb.io/api/v1/eyx5rh2dow3oj";
-        
-        const CARS = {
-            "Kwid": "https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/kwid.jpeg",
-            "Kardian": "https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/kardian.jpeg",
-            "Duster": "https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/duster.jpeg",
-            "Koleos": "https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/koleos.jpeg",
-            "Oroch": "https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/oroch.jpeg",
-            "Megane E-Tech": "https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/megane-tech.jpeg",
-            "Stepway": "https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/stepway.jpeg"
-        };
+        let currentVehicleSelected = "";
 
         const DESC_DATA = {
             "Kardian": {
-                desc: "El nuevo SUV de Renault con motor turbo de 1.0L, transmisión EDC de 6 velocidades y un diseño robusto y sofisticado.",
-                tags: ["Turbo 115hp", "6 Airbags", "Pantalla 8''"]
+                info: "El nuevo SUV de Renault con motor turbo de 1.0L y transmisión EDC. Diseño europeo y robusto.",
+                seguridad: "6 Airbags de serie, frenado autónomo de emergencia y control de estabilidad (ESP).",
+                tecnologia: "Tablero digital de 7'', pantalla multimedia de 8'' con replicación inalámbrica y Multi-sense.",
+                tags: ["Turbo 115hp", "Transmisión EDC", "Nueva Plataforma"]
             },
             "Kwid": {
-                desc: "El SUV de los compactos. Rendimiento excepcional de combustible y la mayor altura al piso de su categoría.",
+                info: "El SUV de los compactos. Rendimiento excepcional y la mayor altura al piso de su categoría.",
+                seguridad: "4 Airbags en todas sus versiones, frenos ABS y asistencia de arranque en pendientes.",
+                tecnologia: "Pantalla táctil de 7'' con Apple CarPlay y Android Auto, cámara de reversa y vidrios eléctricos.",
                 tags: ["Rendimiento 20km/L", "4 Airbags", "Cámara reversa"]
             },
             "Duster": {
-                desc: "La camioneta icónica ahora con motor Turbo 1.3L. Capacidad todoterreno y el espacio más amplio para la familia.",
-                tags: ["Motor 154hp", "Cajuela 475L", "Apple CarPlay"]
+                info: "La camioneta icónica ahora con motor Turbo 1.3L. Capacidad todoterreno real y gran espacio familiar.",
+                seguridad: "Refuerzos estructurales, control de tracción y sensores de punto ciego en versiones tope.",
+                tecnologia: "Cámara 360°, llave inteligente (Card Key) y sistema multimedia de última generación.",
+                tags: ["Motor 154hp", "Cajuela 475L", "Suspensión Reforzada"]
             },
             "Koleos": {
-                desc: "Elegancia y confort Premium. Techo panorámico, sonido Bose y asientos de piel con ventilación.",
-                tags: ["Lujo", "Asistente Estacionamiento", "LED Pure Vision"]
+                info: "Elegancia y confort Premium. El SUV insignia de la marca con acabados de lujo.",
+                seguridad: "Asistente de estacionamiento automático, alerta de colisión y 6 bolsas de aire.",
+                tecnologia: "Sonido Bose Premium, techo panorámico eléctrico y asientos con masaje y ventilación.",
+                tags: ["Lujo", "Sonido Bose", "LED Pure Vision"]
             }
         };
 
@@ -264,7 +276,7 @@
 
         function renderUser(d) {
             document.getElementById('greet').innerText = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
-            document.getElementById('main-car').src = CARS[d.unit] || "https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png";
+            document.getElementById('main-car').src = `https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/${d.unit.toLowerCase().replace(' ', '-')}.jpeg`;
             document.getElementById('tag-car').innerText = `Tu ${d.unit}`;
             document.getElementById('q-name').value = d.name;
             document.getElementById('q-phone').value = d.phone;
@@ -279,19 +291,41 @@
             if(id === 'citas') renderAppointmentPage();
         }
 
-        /* --- DETALLES DE UNIDAD --- */
+        /* --- DETALLES DE UNIDAD CON PESTAÑAS --- */
         function openDesc(modelo, img) {
-            const info = DESC_DATA[modelo] || { desc: "Solicita información detallada con un asesor sobre el nuevo Renault " + modelo, tags: ["Seguridad", "Tecnología"] };
+            currentVehicleSelected = modelo;
             document.getElementById('desc-img').src = img;
             document.getElementById('desc-title').innerText = modelo;
-            document.getElementById('desc-text').innerText = info.desc;
-            document.getElementById('desc-tags').innerHTML = info.tags.map(t => `<span class="feature-tag">${t}</span>`).join('');
+            switchTab('info');
             document.getElementById('btn-desc-quote').onclick = () => { closeDesc(); openM(modelo); };
             document.getElementById('modal-desc').style.display = 'flex';
         }
+
+        function switchTab(tabType) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            const clickedBtn = document.querySelector(`.tab-btn[onclick="switchTab('${tabType}')"]`);
+            if(clickedBtn) clickedBtn.classList.add('active');
+
+            const info = DESC_DATA[currentVehicleSelected] || { 
+                info: "Consulta con un asesor las especificaciones de " + currentVehicleSelected,
+                seguridad: "Sistemas avanzados de seguridad Renault.",
+                tecnologia: "Conectividad total Renault."
+            };
+
+            document.getElementById('desc-text').innerText = info[tabType];
+            
+            // Solo mostrar tags en la pestaña de Info
+            if(tabType === 'info') {
+                const tags = info.tags || ["Renault", "Calidad"];
+                document.getElementById('desc-tags').innerHTML = tags.map(t => `<span class="feature-tag">${t}</span>`).join('');
+            } else {
+                document.getElementById('desc-tags').innerHTML = "";
+            }
+        }
+
         function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
 
-        /* --- GESTIÓN DE CITAS (CON AUTORELLENO) --- */
+        /* --- GESTIÓN DE CITAS --- */
         function renderAppointmentPage() {
             const data = localStorage.getItem('renault_appointment');
             const container = document.getElementById('appointment-content');
@@ -301,22 +335,22 @@
                 const app = JSON.parse(data);
                 container.innerHTML = `<div class="card-white" style="text-align:center;">
                     <div style="font-size: 3.5rem;">📅</div><h3>CITA ACTIVA</h3>
-                    <div style="background:#f7f7f7; padding:20px; border-radius:20px; text-align:left; border: 1px solid #eee;">
+                    <div style="background:#f7f7f7; padding:20px; border-radius:20px; text-align:left;">
                         <strong>Unidad:</strong> ${app.unidad}<br><strong>Fecha:</strong> ${app.fecha}<br><strong>Hora:</strong> ${app.hora} hrs
                     </div>
                     <button class="btn-action btn-yellow" style="margin-top:20px;" onclick="window.open('https://wa.me/522311234567?text=Confirmo mi cita')">WHATSAPP</button>
-                    <button class="btn-cancel-modern" onclick="cancelAppointment()">Cancelar Cita</button>
+                    <button class="btn-cancel-modern" onclick="localStorage.removeItem('renault_appointment'); renderAppointmentPage();">Cancelar Cita</button>
                 </div>`;
             } else {
+                // Generar lista de unidades completa (igual al login)
+                const units = ["Kwid", "Kardian", "Duster", "Stepway", "Oroch", "Koleos", "Master", "Kangoo", "Megane E-Tech", "Clio", "Sandero", "Logan", "Captur", "Fluence", "Safrane", "Scala", "Megane", "Scenic"];
+                const options = units.map(u => `<option value="${u}" ${user.unit === u ? 'selected' : ''}>${u}</option>`).join('');
+
                 container.innerHTML = `<div class="card-white">
                     <label class="form-label">Nombre</label><input type="text" id="c-name" class="form-control" value="${user.name || ''}">
                     <label class="form-label">Teléfono</label><input type="tel" id="c-phone" class="form-control" value="${user.phone || ''}">
                     <label class="form-label">Tu Unidad</label>
-                    <select id="c-unit" class="form-control">
-                        <option value="${user.unit || 'Kwid'}">${user.unit || 'Seleccionar'}</option>
-                        <option value="Kwid">Kwid</option><option value="Kardian">Kardian</option><option value="Duster">Duster</option>
-                        <option value="Oroch">Oroch</option><option value="Stepway">Stepway</option><option value="Sandero">Sandero</option>
-                    </select>
+                    <select id="c-unit" class="form-control">${options}</select>
                     <label class="form-label">Kilometraje</label><input type="number" id="c-km" class="form-control" placeholder="Ej: 10000">
                     <label class="form-label">Fecha</label><input type="date" id="c-date" class="form-control">
                     <label class="form-label">Hora</label><input type="time" id="c-time" class="form-control">
