@@ -225,8 +225,14 @@
         const API_BASE = "https://sheetdb.io/api/v1/eyx5rh2dow3oj";
         let currentVehicleSelected = "";
 
-        // DATA EXTENDIDA Y DETALLADA
+        // DATA EXTENDIDA Y DETALLADA (CORREGIDA CON BOREAL)
         const DESC_DATA = {
+            "boreal Iconic Hybrid 2026": {
+                info: "La nueva Boreal Iconic Hybrid 2026 introduce la avanzada tecnología E-Tech de Renault. Este sistema combina un motor de combustión con propulsión eléctrica para un ahorro de combustible de hasta un 40% en ciudad, ideal para el relieve de Teziutlán.",
+                seguridad: "Máxima protección con 6 bolsas de aire, frenado autónomo de emergencia (AEB), alerta de colisión frontal y control de crucero adaptativo para viajes largos más seguros.",
+                tecnologia: "Equipada con el nuevo sistema e-Shifter (palanca de cambios electrónica), tablero digital de alta definición de 10'', pantalla vertical y múltiples modos de conducción Eco, Sport y MySense.",
+                tags: ["Híbrido E-Tech", "Tablero 10''", "Ahorro 40%"]
+            },
             "Kardian": {
                 info: "Renault Kardian redefine el segmento con su nuevo motor turbo de 1.0L que entrega 115hp. Es el primer vehículo fabricado sobre la nueva plataforma modular de Renault Group, ofreciendo un diseño robusto, moderno y una posición de manejo elevada tipo SUV.",
                 seguridad: "Líder en protección: cuenta con 6 bolsas de aire de serie, Frenado Autónomo de Emergencia (AEW), Alerta de Colisión Frontal y control electrónico de estabilidad (ESP) para máxima confianza en carretera.",
@@ -345,7 +351,7 @@
             document.getElementById('desc-text').innerText = info[tabType];
             
             if(tabType === 'info') {
-                document.getElementById('desc-tags').innerHTML = info.tags.map(t => `<span class="feature-tag">${t}</span>`).join('');
+                document.getElementById('desc-tags').innerHTML = (info.tags || []).map(t => `<span class="feature-tag">${t}</span>`).join('');
             } else {
                 document.getElementById('desc-tags').innerHTML = "";
             }
