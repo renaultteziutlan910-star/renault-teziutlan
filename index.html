@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -62,7 +61,6 @@
         .btn-yellow { background: var(--renault-yellow); color: #000; }
         .btn-green { background: var(--success-green); color: #fff; margin-top: 25px; }
 
-        /* WHATSAPP FLOTANTE */
         .btn-whatsapp-float {
             position: fixed; bottom: 100px; right: 20px;
             background: #25d366; color: white; width: 60px; height: 60px;
@@ -93,8 +91,11 @@
         .modal-content { background: #fff; padding: 30px; border-radius: 30px; width: 100%; max-width: 400px; color: #000; max-height: 90vh; overflow-y: auto; position: relative; }
         
         .desc-title { color: #d4af37; font-weight: 900; margin-bottom: 10px; font-size: 1.5rem; text-transform: uppercase; }
-        .desc-text { color: #444; line-height: 1.5; font-size: 0.95rem; margin-bottom: 20px; min-height: 80px;}
+        .desc-text { color: #444; line-height: 1.6; font-size: 0.95rem; margin-bottom: 20px; min-height: 100px; text-align: justify;}
         .feature-tag { display: inline-block; background: #f0f0f0; padding: 5px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin: 3px; color: #555; }
+        
+        #appointment-reminder { background: rgba(255,255,255,0.1); border: 1px solid #d4af37; padding: 15px; border-radius: 20px; margin-top: 20px; text-align: center; }
+        .btn-cancel-modern { background: none; border: 1px solid #ff4444; color: #ff4444; padding: 10px; border-radius: 10px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -174,9 +175,9 @@
             <div id="desc-title" class="desc-title">MODELO</div>
             
             <div class="tab-container">
-                <button class="tab-btn active" onclick="switchTab('info')">Info</button>
-                <button class="tab-btn" onclick="switchTab('seguridad')">Seguridad</button>
-                <button class="tab-btn" onclick="switchTab('tecnologia')">Tecnología</button>
+                <button id="btn-tab-info" class="tab-btn active" onclick="switchTab('info')">Info</button>
+                <button id="btn-tab-seguridad" class="tab-btn" onclick="switchTab('seguridad')">Seguridad</button>
+                <button id="btn-tab-tecnologia" class="tab-btn" onclick="switchTab('tecnologia')">Tecnología</button>
             </div>
 
             <div id="desc-text" class="desc-text">Selecciona una pestaña</div>
@@ -224,30 +225,43 @@
         const API_BASE = "https://sheetdb.io/api/v1/eyx5rh2dow3oj";
         let currentVehicleSelected = "";
 
+        // DATA EXTENDIDA Y DETALLADA
         const DESC_DATA = {
             "Kardian": {
-                info: "El nuevo SUV de Renault con motor turbo de 1.0L y transmisión EDC. Diseño europeo y robusto.",
-                seguridad: "6 Airbags de serie, frenado autónomo de emergencia y control de estabilidad (ESP).",
-                tecnologia: "Tablero digital de 7'', pantalla multimedia de 8'' con replicación inalámbrica y Multi-sense.",
-                tags: ["Turbo 115hp", "Transmisión EDC", "Nueva Plataforma"]
+                info: "Renault Kardian redefine el segmento con su nuevo motor turbo de 1.0L que entrega 115hp. Es el primer vehículo fabricado sobre la nueva plataforma modular de Renault Group, ofreciendo un diseño robusto, moderno y una posición de manejo elevada tipo SUV.",
+                seguridad: "Líder en protección: cuenta con 6 bolsas de aire de serie, Frenado Autónomo de Emergencia (AEW), Alerta de Colisión Frontal y control electrónico de estabilidad (ESP) para máxima confianza en carretera.",
+                tecnologia: "Experiencia digital completa con tablero de 7'' personalizable y pantalla táctil de 8'' compatible con Android Auto y Apple CarPlay inalámbrico. Incluye sistema Multi-Sense para ajustar el modo de conducción.",
+                tags: ["Turbo 115hp", "6 Airbags", "Pantalla 8'' Wireless"]
             },
             "Kwid": {
-                info: "El SUV de los compactos. Rendimiento excepcional y la mayor altura al piso de su categoría.",
-                seguridad: "4 Airbags en todas sus versiones, frenos ABS y asistencia de arranque en pendientes.",
-                tecnologia: "Pantalla táctil de 7'' con Apple CarPlay y Android Auto, cámara de reversa y vidrios eléctricos.",
-                tags: ["Rendimiento 20km/L", "4 Airbags", "Cámara reversa"]
+                info: "El SUV de los compactos es ideal para la ciudad. Ofrece el mejor consumo de combustible del mercado con una altura al piso líder en su clase (18.5 cm), permitiendo sortear baches y topes con total facilidad y economía.",
+                seguridad: "Seguridad garantizada con 4 bolsas de aire desde la versión de entrada, frenos ABS con EBD, asistente de arranque en pendientes (HSA) y control de estabilidad para maniobras seguras.",
+                tecnologia: "Conectividad total con Media Evolution de 7'', cámara de reversa integrada y dirección eléctrica que hace que estacionarse sea una tarea sin esfuerzo.",
+                tags: ["Consumo 22km/L", "Altura SUV", "Dirección Eléctrica"]
             },
             "Duster": {
-                info: "La camioneta icónica ahora con motor Turbo 1.3L. Capacidad todoterreno real y gran espacio familiar.",
-                seguridad: "Refuerzos estructurales, control de tracción y sensores de punto ciego en versiones tope.",
-                tecnologia: "Cámara 360°, llave inteligente (Card Key) y sistema multimedia de última generación.",
-                tags: ["Motor 154hp", "Cajuela 475L", "Suspensión Reforzada"]
+                info: "La camioneta más icónica ahora es más potente. Con su nuevo motor Turbo 1.3L de 154hp, Duster ofrece un desempeño excepcional tanto en ciudad como en terrenos difíciles, manteniendo su amplio espacio interior.",
+                seguridad: "Estructura reforzada, sensores de punto ciego, cámara 360° (Multiview) y asistencia de frenado de emergencia para proteger a toda la familia en cualquier trayecto.",
+                tecnologia: "Llave inteligente tipo tarjeta, encendido por botón y sistema multimedia con replicación de smartphone. Su suspensión está calibrada para los caminos de México.",
+                tags: ["Motor Turbo 154hp", "Cajuela 475L", "Cámara 360°"]
+            },
+            "Oroch": {
+                info: "La pickup que combina la comodidad de una SUV con la versatilidad de una caja de carga. Equipada con motor Turbo de 1.3L, es la herramienta perfecta para el trabajo y el estilo de vida activo.",
+                seguridad: "Cuenta con control de tracción, control de estabilidad, asistente de arranque en pendientes y sensores de reversa para facilitar las maniobras con carga.",
+                tecnologia: "Pantalla flotante de 8'', conectividad inalámbrica y modo ECO para optimizar el consumo de combustible sin sacrificar la potencia de carga.",
+                tags: ["Carga 650kg", "Suspensión Multilink", "Motor Turbo"]
+            },
+            "Stepway": {
+                info: "El aventurero de Renault. Con un diseño exterior robusto y barras de techo funcionales, Stepway es perfecto para quienes buscan un hatchback con alma de SUV y gran espacio interior.",
+                seguridad: "4 bolsas de aire, estructura de acero de alta resistencia, frenos ABS y control de estabilidad para un manejo firme y seguro.",
+                tecnologia: "Sistema Media Evolution con pantalla táctil, sensores de luz y lluvia, y climatizador automático para el máximo confort a bordo.",
+                tags: ["Barras de Techo", "Altura 20cm", "Amplio Interior"]
             },
             "Koleos": {
-                info: "Elegancia y confort Premium. El SUV insignia de la marca con acabados de lujo.",
-                seguridad: "Asistente de estacionamiento automático, alerta de colisión y 6 bolsas de aire.",
-                tecnologia: "Sonido Bose Premium, techo panorámico eléctrico y asientos con masaje y ventilación.",
-                tags: ["Lujo", "Sonido Bose", "LED Pure Vision"]
+                info: "El tope de gama en refinamiento. Koleos ofrece una experiencia Premium con materiales de alta calidad, un diseño elegante con luces LED Pure Vision y un espacio interior de clase ejecutiva.",
+                seguridad: "Asistente de estacionamiento automático 'Easy Park', alerta de punto ciego, 6 bolsas de aire y frenado de emergencia avanzado.",
+                tecnologia: "Sonido Bose® de 12 bocinas, pantalla vertical de 8.7'' tipo Tablet, asientos con calefacción, ventilación y masaje para el conductor.",
+                tags: ["Sonido Bose", "Lujo Premium", "LED Pure Vision"]
             }
         };
 
@@ -291,33 +305,47 @@
             if(id === 'citas') renderAppointmentPage();
         }
 
-        /* --- DETALLES DE UNIDAD CON PESTAÑAS --- */
+        /* --- DETALLES DE UNIDAD --- */
         function openDesc(modelo, img) {
             currentVehicleSelected = modelo;
             document.getElementById('desc-img').src = img;
             document.getElementById('desc-title').innerText = modelo;
+            
+            // Forzar reinicio de pestañas
             switchTab('info');
+            
             document.getElementById('btn-desc-quote').onclick = () => { closeDesc(); openM(modelo); };
             document.getElementById('modal-desc').style.display = 'flex';
         }
 
         function switchTab(tabType) {
+            // Actualizar UI de botones
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            const clickedBtn = document.querySelector(`.tab-btn[onclick="switchTab('${tabType}')"]`);
-            if(clickedBtn) clickedBtn.classList.add('active');
+            document.getElementById('btn-tab-' + tabType).classList.add('active');
 
-            const info = DESC_DATA[currentVehicleSelected] || { 
-                info: "Consulta con un asesor las especificaciones de " + currentVehicleSelected,
-                seguridad: "Sistemas avanzados de seguridad Renault.",
-                tecnologia: "Conectividad total Renault."
-            };
+            // Buscar info (con respaldo por si el nombre varía un poco)
+            let info = DESC_DATA[currentVehicleSelected];
+            
+            // Si no lo encuentra directo, intenta una búsqueda parcial (ej: "Oroch Outsider" -> "Oroch")
+            if(!info) {
+                const key = Object.keys(DESC_DATA).find(k => currentVehicleSelected.includes(k));
+                info = DESC_DATA[key];
+            }
+
+            // Failsafe final
+            if(!info) {
+                info = {
+                    info: `La unidad ${currentVehicleSelected} destaca por su confiabilidad y diseño Renault. Para detalles específicos de motorización y capacidad de carga, consulta con nuestros asesores certificados en Teziutlán.`,
+                    seguridad: "Equipada con sistemas de seguridad activa y pasiva Renault, incluyendo frenos ABS, bolsas de aire y estructura reforzada de fábrica.",
+                    tecnologia: "Cuenta con sistemas de entretenimiento y conectividad Renault para que tus viajes sean siempre placenteros y seguros.",
+                    tags: ["Renault", "Calidad", "Garantía"]
+                };
+            }
 
             document.getElementById('desc-text').innerText = info[tabType];
             
-            // Solo mostrar tags en la pestaña de Info
             if(tabType === 'info') {
-                const tags = info.tags || ["Renault", "Calidad"];
-                document.getElementById('desc-tags').innerHTML = tags.map(t => `<span class="feature-tag">${t}</span>`).join('');
+                document.getElementById('desc-tags').innerHTML = info.tags.map(t => `<span class="feature-tag">${t}</span>`).join('');
             } else {
                 document.getElementById('desc-tags').innerHTML = "";
             }
@@ -325,7 +353,7 @@
 
         function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
 
-        /* --- GESTIÓN DE CITAS --- */
+        /* --- CITAS Y CATÁLOGO --- */
         function renderAppointmentPage() {
             const data = localStorage.getItem('renault_appointment');
             const container = document.getElementById('appointment-content');
@@ -342,7 +370,6 @@
                     <button class="btn-cancel-modern" onclick="localStorage.removeItem('renault_appointment'); renderAppointmentPage();">Cancelar Cita</button>
                 </div>`;
             } else {
-                // Generar lista de unidades completa (igual al login)
                 const units = ["Kwid", "Kardian", "Duster", "Stepway", "Oroch", "Koleos", "Master", "Kangoo", "Megane E-Tech", "Clio", "Sandero", "Logan", "Captur", "Fluence", "Safrane", "Scala", "Megane", "Scenic"];
                 const options = units.map(u => `<option value="${u}" ${user.unit === u ? 'selected' : ''}>${u}</option>`).join('');
 
