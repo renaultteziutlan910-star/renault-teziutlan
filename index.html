@@ -290,13 +290,15 @@
             initAppData();
         }
 
-        function initAppData() { loadCat(); loadSemi(); updateAppointmentUI(); }
+        function initAppData() { 
+            loadCat(); 
+            loadSemi(); 
+            updateAppointmentUI(); 
+        }
 
         function renderUser(d) {
             document.getElementById('greet').innerText = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
-            // Corrección de URL de imagen para el home
-            const cleanUnit = d.unit.toLowerCase().replace(/\s+/g, '-');
-            document.getElementById('main-car').src = `https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/${cleanUnit}.jpeg`;
+            document.getElementById('main-car').src = `https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/${d.unit.toLowerCase().replace(' ', '-')}.jpeg`;
             document.getElementById('tag-car').innerText = `Tu ${d.unit}`;
             document.getElementById('q-name').value = d.name;
             document.getElementById('q-phone').value = d.phone;
@@ -334,7 +336,7 @@
                     tags: ["Renault", "Garantía"]
                 };
             }
-            document.getElementById('desc-text').innerText = info[tabType];
+            document.getElementById('desc-text').innerText = info[tabType] || "Información no disponible";
             document.getElementById('desc-tags').innerHTML = tabType === 'info' ? 
                 (info.tags || []).map(t => `<span class="feature-tag">${t}</span>`).join('') : "";
         }
@@ -343,12 +345,18 @@
 
         async function loadCat() {
             try {
+                // Se agrega el parámetro de hoja explícito en la URL
                 const res = await fetch(`${API_BASE}?sheet=nuevos`);
                 const data = await res.json();
-                if(data.error) throw new Error();
+                
+                if(!data || data.error || !Array.isArray(data)) {
+                    document.getElementById('cat-container').innerHTML = "Error al cargar catálogo.";
+                    return;
+                }
+
                 document.getElementById('cat-container').innerHTML = data.map(c => {
                     const nombre = c.modelo || c.Modelo || "Unidad Renault";
-                    const img = c.imagen || c.Imagen || "";
+                    const img = c.imagen || c.Imagen || "https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png";
                     const precio = c.precio || c.Precio || "Ver precio";
                     return `
                     <div class="car-card">
@@ -361,7 +369,8 @@
                     </div>`;
                 }).join('');
             } catch(e) { 
-                document.getElementById('cat-container').innerHTML = "<p style='text-align:center'>No se pudo conectar con el inventario de Nuevos.</p>";
+                console.error(e);
+                document.getElementById('cat-container').innerHTML = "Sin conexión al catálogo.";
             }
         }
 
@@ -369,9 +378,14 @@
             try {
                 const res = await fetch(`${API_BASE}?sheet=seminuevos`);
                 const data = await res.json();
-                if(data.error) throw new Error();
+
+                if(!data || data.error || !Array.isArray(data)) {
+                    document.getElementById('semi-container').innerHTML = "Error al cargar seminuevos.";
+                    return;
+                }
+
                 document.getElementById('semi-container').innerHTML = data.map(s => {
-                    const vNombre = s.Versión || s.version || s.modelo || s.Modelo || "Seminuevo";
+                    const vNombre = s.Versión || s.modelo || s.Modelo || "Seminuevo";
                     const vPrecio = s.Precio || s.precio || "Consultar";
                     const vKM = s.KM || s.km || "0";
                     const vTrans = s.Transmisión || s.transmision || "N/A";
@@ -388,7 +402,8 @@
                     </div>`;
                 }).join('');
             } catch(e) { 
-                document.getElementById('semi-container').innerHTML = "<p style='text-align:center'>No se pudo conectar con el inventario de Seminuevos.</p>";
+                console.error(e); 
+                document.getElementById('semi-container').innerHTML = "Sin conexión a seminuevos.";
             }
         }
 
@@ -459,7 +474,10 @@
             } else container.innerHTML = '';
         }
 
-        function openM(t) { document.getElementById('m-title').innerText = t; document.getElementById('modal-quote').style.display = 'flex'; }
+        function openM(t) { 
+            document.getElementById('m-title').innerText = t; 
+            document.getElementById('modal-quote').style.display = 'flex'; 
+        }
         function closeM() { document.getElementById('modal-quote').style.display = 'none'; }
         function toggleFinanzas() { document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none'; }
 
@@ -482,7 +500,7 @@
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({data: [quote]})
                 });
-                alert("Solicitud enviada correctamente.");
+                alert("Solicitud enviada.");
                 closeM();
             } catch(e) { alert("Error al enviar cotización."); }
             finally { btn.innerText = "SOLICITAR"; btn.disabled = false; }
