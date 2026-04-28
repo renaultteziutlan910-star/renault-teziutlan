@@ -70,7 +70,6 @@
         }
         .btn-whatsapp-float svg { width: 30px; height: 30px; fill: currentColor; }
 
-        /* PESTAÑAS MODAL */
         .tab-container { display: flex; border-bottom: 1px solid #eee; margin-bottom: 15px; }
         .tab-btn { flex: 1; padding: 10px; border: none; background: none; font-weight: 800; font-size: 0.7rem; color: #999; cursor: pointer; text-transform: uppercase; }
         .tab-btn.active { color: #d4af37; border-bottom: 2px solid #d4af37; }
@@ -225,45 +224,44 @@
         const API_BASE = "https://sheetdb.io/api/v1/eyx5rh2dow3oj";
         let currentVehicleSelected = "";
 
-        // DATA EXTENDIDA Y DETALLADA (CORREGIDA CON BOREAL)
         const DESC_DATA = {
-            "boreal Iconic Hybrid 2026": {
+            "boreal": {
                 info: "La nueva Boreal Iconic Hybrid 2026 introduce la avanzada tecnología E-Tech de Renault. Este sistema combina un motor de combustión con propulsión eléctrica para un ahorro de combustible de hasta un 40% en ciudad, ideal para el relieve de Teziutlán.",
                 seguridad: "Máxima protección con 6 bolsas de aire, frenado autónomo de emergencia (AEB), alerta de colisión frontal y control de crucero adaptativo para viajes largos más seguros.",
                 tecnologia: "Equipada con el nuevo sistema e-Shifter (palanca de cambios electrónica), tablero digital de alta definición de 10'', pantalla vertical y múltiples modos de conducción Eco, Sport y MySense.",
                 tags: ["Híbrido E-Tech", "Tablero 10''", "Ahorro 40%"]
             },
-            "Kardian": {
+            "kardian": {
                 info: "Renault Kardian redefine el segmento con su nuevo motor turbo de 1.0L que entrega 115hp. Es el primer vehículo fabricado sobre la nueva plataforma modular de Renault Group, ofreciendo un diseño robusto, moderno y una posición de manejo elevada tipo SUV.",
                 seguridad: "Líder en protección: cuenta con 6 bolsas de aire de serie, Frenado Autónomo de Emergencia (AEW), Alerta de Colisión Frontal y control electrónico de estabilidad (ESP) para máxima confianza en carretera.",
                 tecnologia: "Experiencia digital completa con tablero de 7'' personalizable y pantalla táctil de 8'' compatible con Android Auto y Apple CarPlay inalámbrico. Incluye sistema Multi-Sense para ajustar el modo de conducción.",
                 tags: ["Turbo 115hp", "6 Airbags", "Pantalla 8'' Wireless"]
             },
-            "Kwid": {
+            "kwid": {
                 info: "El SUV de los compactos es ideal para la ciudad. Ofrece el mejor consumo de combustible del mercado con una altura al piso líder en su clase (18.5 cm), permitiendo sortear baches y topes con total facilidad y economía.",
                 seguridad: "Seguridad garantizada con 4 bolsas de aire desde la versión de entrada, frenos ABS con EBD, asistente de arranque en pendientes (HSA) y control de estabilidad para maniobras seguras.",
                 tecnologia: "Conectividad total con Media Evolution de 7'', cámara de reversa integrada y dirección eléctrica que hace que estacionarse sea una tarea sin esfuerzo.",
                 tags: ["Consumo 22km/L", "Altura SUV", "Dirección Eléctrica"]
             },
-            "Duster": {
+            "duster": {
                 info: "La camioneta más icónica ahora es más potente. Con su nuevo motor Turbo 1.3L de 154hp, Duster ofrece un desempeño excepcional tanto en ciudad como en terrenos difíciles, manteniendo su amplio espacio interior.",
                 seguridad: "Estructura reforzada, sensores de punto ciego, cámara 360° (Multiview) y asistencia de frenado de emergencia para proteger a toda la familia en cualquier trayecto.",
                 tecnologia: "Llave inteligente tipo tarjeta, encendido por botón y sistema multimedia con replicación de smartphone. Su suspensión está calibrada para los caminos de México.",
                 tags: ["Motor Turbo 154hp", "Cajuela 475L", "Cámara 360°"]
             },
-            "Oroch": {
+            "oroch": {
                 info: "La pickup que combina la comodidad de una SUV con la versatilidad de una caja de carga. Equipada con motor Turbo de 1.3L, es la herramienta perfecta para el trabajo y el estilo de vida activo.",
                 seguridad: "Cuenta con control de tracción, control de estabilidad, asistente de arranque en pendientes y sensores de reversa para facilitar las maniobras con carga.",
                 tecnologia: "Pantalla flotante de 8'', conectividad inalámbrica y modo ECO para optimizar el consumo de combustible sin sacrificar la potencia de carga.",
                 tags: ["Carga 650kg", "Suspensión Multilink", "Motor Turbo"]
             },
-            "Stepway": {
+            "stepway": {
                 info: "El aventurero de Renault. Con un diseño exterior robusto y barras de techo funcionales, Stepway es perfecto para quienes buscan un hatchback con alma de SUV y gran espacio interior.",
                 seguridad: "4 bolsas de aire, estructura de acero de alta resistencia, frenos ABS y control de estabilidad para un manejo firme y seguro.",
                 tecnologia: "Sistema Media Evolution con pantalla táctil, sensores de luz y lluvia, y climatizador automático para el máximo confort a bordo.",
                 tags: ["Barras de Techo", "Altura 20cm", "Amplio Interior"]
             },
-            "Koleos": {
+            "koleos": {
                 info: "El tope de gama en refinamiento. Koleos ofrece una experiencia Premium con materiales de alta calidad, un diseño elegante con luces LED Pure Vision y un espacio interior de clase ejecutiva.",
                 seguridad: "Asistente de estacionamiento automático 'Easy Park', alerta de punto ciego, 6 bolsas de aire y frenado de emergencia avanzado.",
                 tecnologia: "Sonido Bose® de 12 bocinas, pantalla vertical de 8.7'' tipo Tablet, asientos con calefacción, ventilación y masaje para el conductor.",
@@ -311,13 +309,13 @@
             if(id === 'citas') renderAppointmentPage();
         }
 
-        /* --- DETALLES DE UNIDAD --- */
+        /* --- DETALLES DE UNIDAD (CORREGIDO) --- */
         function openDesc(modelo, img) {
             currentVehicleSelected = modelo;
             document.getElementById('desc-img').src = img;
             document.getElementById('desc-title').innerText = modelo;
             
-            // Forzar reinicio de pestañas
+            // Forzar reinicio a pestaña 'info'
             switchTab('info');
             
             document.getElementById('btn-desc-quote').onclick = () => { closeDesc(); openM(modelo); };
@@ -325,41 +323,72 @@
         }
 
         function switchTab(tabType) {
-            // Actualizar UI de botones
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-tab-' + tabType).classList.add('active');
 
-            // Buscar info (con respaldo por si el nombre varía un poco)
-            let info = DESC_DATA[currentVehicleSelected];
+            // Buscador inteligente que ignora mayúsculas y espacios para encontrar el modelo en DESC_DATA
+            const slug = currentVehicleSelected.toLowerCase();
+            const key = Object.keys(DESC_DATA).find(k => slug.includes(k));
             
-            // Si no lo encuentra directo, intenta una búsqueda parcial (ej: "Oroch Outsider" -> "Oroch")
-            if(!info) {
-                const key = Object.keys(DESC_DATA).find(k => currentVehicleSelected.includes(k));
-                info = DESC_DATA[key];
-            }
+            let info = DESC_DATA[key];
 
-            // Failsafe final
             if(!info) {
                 info = {
-                    info: `La unidad ${currentVehicleSelected} destaca por su confiabilidad y diseño Renault. Para detalles específicos de motorización y capacidad de carga, consulta con nuestros asesores certificados en Teziutlán.`,
-                    seguridad: "Equipada con sistemas de seguridad activa y pasiva Renault, incluyendo frenos ABS, bolsas de aire y estructura reforzada de fábrica.",
-                    tecnologia: "Cuenta con sistemas de entretenimiento y conectividad Renault para que tus viajes sean siempre placenteros y seguros.",
-                    tags: ["Renault", "Calidad", "Garantía"]
+                    info: `La unidad ${currentVehicleSelected} destaca por su confiabilidad Renault. Consulta detalles con un asesor.`,
+                    seguridad: "Sistemas de seguridad activa y pasiva Renault de última generación.",
+                    tecnologia: "Conectividad total y confort diseñado para el camino.",
+                    tags: ["Renault", "Calidad"]
                 };
             }
 
             document.getElementById('desc-text').innerText = info[tabType];
-            
-            if(tabType === 'info') {
-                document.getElementById('desc-tags').innerHTML = (info.tags || []).map(t => `<span class="feature-tag">${t}</span>`).join('');
-            } else {
-                document.getElementById('desc-tags').innerHTML = "";
-            }
+            document.getElementById('desc-tags').innerHTML = tabType === 'info' ? 
+                (info.tags || []).map(t => `<span class="feature-tag">${t}</span>`).join('') : "";
         }
 
         function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
 
-        /* --- CITAS Y CATÁLOGO --- */
+        /* --- CARGA DE CATÁLOGO (CORREGIDO) --- */
+        async function loadCat() {
+            try {
+                const res = await fetch(`${API_BASE}?sheet=nuevos`);
+                const data = await res.json();
+                
+                document.getElementById('cat-container').innerHTML = data.map(c => {
+                    const nombre = c.modelo || c.Modelo || "Unidad Renault";
+                    const img = c.imagen || c.Imagen || "";
+                    const precio = c.precio || c.Precio || "Ver precio";
+
+                    return `
+                    <div class="car-card">
+                        <img src="${img}" 
+                             onclick="openDesc('${nombre}', '${img}')" 
+                             style="cursor:pointer;"
+                             onerror="this.src='https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png'">
+                        <h3 style="margin:15px 0 5px">${nombre}</h3>
+                        <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${precio}</div>
+                        <button class="btn-action btn-yellow" onclick="openM('${nombre}')">COTIZAR</button>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                document.getElementById('cat-container').innerText = "Error al conectar con el inventario.";
+            }
+        }
+
+        async function loadSemi() {
+            try {
+                const res = await fetch(`${API_BASE}?sheet=seminuevos`);
+                const data = await res.json();
+                document.getElementById('semi-container').innerHTML = data.map(s => `
+                    <div class="car-card">
+                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${s.Versión || s.modelo || s.Modelo}</h3>
+                        <p style="margin:0; font-size:0.8rem; color:#888;">${s.Transmisión} | ${s.KM} KM</p>
+                        <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${s.Precio}</div>
+                        <button class="btn-action btn-yellow" style="padding:10px; font-size:0.8rem;" onclick="openM('${s.Versión || s.modelo}')">ME INTERESA</button>
+                    </div>`).join('');
+            } catch(e) {}
+        }
+
         function renderAppointmentPage() {
             const data = localStorage.getItem('renault_appointment');
             const container = document.getElementById('appointment-content');
@@ -416,34 +445,6 @@
                 showPage('inicio');
             } catch(e) { alert("Error."); }
             finally { btn.innerText = "AGENDAR CITA"; btn.disabled = false; }
-        }
-
-        async function loadCat() {
-            try {
-                const res = await fetch(`${API_BASE}?sheet=nuevos`);
-                const data = await res.json();
-                document.getElementById('cat-container').innerHTML = data.map(c => `
-                    <div class="car-card">
-                        <img src="${c.imagen}" onclick="openDesc('${c.modelo}', '${c.imagen}')" onerror="this.src='https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png'">
-                        <h3 style="margin:15px 0 5px">${c.modelo}</h3>
-                        <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${c.precio}</div>
-                        <button class="btn-action btn-yellow" onclick="openM('${c.modelo}')">COTIZAR</button>
-                    </div>`).join('');
-            } catch(e) {}
-        }
-
-        async function loadSemi() {
-            try {
-                const res = await fetch(`${API_BASE}?sheet=seminuevos`);
-                const data = await res.json();
-                document.getElementById('semi-container').innerHTML = data.map(s => `
-                    <div class="car-card">
-                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${s.Versión || s.modelo}</h3>
-                        <p style="margin:0; font-size:0.8rem; color:#888;">${s.Transmisión} | ${s.KM} KM</p>
-                        <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${s.Precio}</div>
-                        <button class="btn-action btn-yellow" style="padding:10px; font-size:0.8rem;" onclick="openM('${s.Versión || s.modelo}')">ME INTERESA</button>
-                    </div>`).join('');
-            } catch(e) {}
         }
 
         function updateAppointmentUI() {
