@@ -57,6 +57,17 @@
         }
         .login-input { background: #1a1a1a; border: 1px solid #333; color: #fff; }
 
+        /* Estilo para el área de descripción del cliente (Tipo Cita) */
+        .client-note {
+            border-left: 4px solid var(--renault-yellow);
+            background: #fdfdfd;
+            padding: 10px 15px;
+            font-style: italic;
+            color: #555;
+            margin-bottom: 15px;
+            border-radius: 0 12px 12px 0;
+        }
+
         .btn-action { width: 100%; padding: 20px; border: none; border-radius: 18px; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; cursor: pointer; }
         .btn-yellow { background: var(--renault-yellow); color: #000; }
         .btn-green { background: var(--success-green); color: #fff; margin-top: 25px; }
@@ -314,7 +325,7 @@
             currentVehicleSelected = modelo;
             document.getElementById('desc-img').src = img;
             document.getElementById('desc-title').innerText = modelo;
-            switchTab('info'); // Reinicia a la pestaña de info
+            switchTab('info'); 
             document.getElementById('btn-desc-quote').onclick = () => { closeDesc(); openM(modelo); };
             document.getElementById('modal-desc').style.display = 'flex';
         }
@@ -324,6 +335,7 @@
             document.getElementById('btn-tab-' + tabType).classList.add('active');
 
             const modelNameLower = currentVehicleSelected.toLowerCase();
+            // Corregido: Ahora busca si alguna de las llaves (boreal, kardian, etc) está contenida en el nombre
             const key = Object.keys(DESC_DATA).find(k => modelNameLower.includes(k));
             
             let info = key ? DESC_DATA[key] : {
@@ -383,13 +395,16 @@
                 container.innerHTML = `<div class="card-white" style="text-align:center;">
                     <div style="font-size: 3.5rem;">📅</div><h3>CITA ACTIVA</h3>
                     <div style="background:#f7f7f7; padding:20px; border-radius:20px; text-align:left;">
-                        <strong>Unidad:</strong> ${app.unidad}<br><strong>Fecha:</strong> ${app.fecha}<br><strong>Hora:</strong> ${app.hora} hrs
+                        <strong>Unidad:</strong> ${app.unidad}<br>
+                        <strong>Fecha:</strong> ${app.fecha}<br>
+                        <strong>Hora:</strong> ${app.hora} hrs<br>
+                        <div class="client-note" style="margin-top:10px;">"${app.descripcion || 'Sin detalles adicionales'}"</div>
                     </div>
-                    <button class="btn-action btn-yellow" style="margin-top:20px;" onclick="window.open('https://wa.me/522311234567?text=Confirmo mi cita')">WHATSAPP</button>
+                    <button class="btn-action btn-yellow" style="margin-top:20px;" onclick="window.open('https://wa.me/522311234567?text=Confirmo mi cita para mi ${app.unidad} el día ${app.fecha}')">CONFIRMAR WHATSAPP</button>
                     <button class="btn-cancel-modern" onclick="localStorage.removeItem('renault_appointment'); renderAppointmentPage();">Cancelar Cita</button>
                 </div>`;
             } else {
-                const units = ["Kwid", "Kardian", "Boreal", "Duster", "Stepway", "Oroch", "Koleos"];
+                const units = ["Kwid", "Kardian", "Boreal", "Duster", "Stepway", "Oroch", "Koleos", "Captur", "Logan", "Sandero"];
                 const options = units.map(u => `<option value="${u}" ${user.unit === u ? 'selected' : ''}>${u}</option>`).join('');
                 container.innerHTML = `<div class="card-white">
                     <label class="form-label">Nombre</label><input type="text" id="c-name" class="form-control" value="${user.name || ''}">
@@ -399,6 +414,10 @@
                     <label class="form-label">Kilometraje</label><input type="number" id="c-km" class="form-control" placeholder="Ej: 10000">
                     <label class="form-label">Fecha</label><input type="date" id="c-date" class="form-control">
                     <label class="form-label">Hora</label><input type="time" id="c-time" class="form-control">
+                    
+                    <label class="form-label">¿Qué detalle o ruido presenta tu auto?</label>
+                    <textarea id="c-desc" class="form-control" style="height:80px; font-style:italic;" placeholder="Ej: Ruido en suspensión delantera derecha al pasar baches..."></textarea>
+                    
                     <button id="btn-cita" class="btn-action btn-yellow" style="margin-top:15px;" onclick="handleBooking()">AGENDAR CITA</button>
                 </div>`;
             }
@@ -412,7 +431,8 @@
                 unidad: document.getElementById('c-unit').value,
                 kilometraje: document.getElementById('c-km').value,
                 fecha: document.getElementById('c-date').value,
-                hora: document.getElementById('c-time').value
+                hora: document.getElementById('c-time').value,
+                descripcion: document.getElementById('c-desc').value // Se guarda la descripción
             };
             if(!app.fecha || !app.hora) return alert("Selecciona fecha y hora");
             btn.innerText = "AGENDANDO..."; btn.disabled = true;
