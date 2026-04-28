@@ -90,8 +90,7 @@
         .desc-text { color: #444; line-height: 1.5; font-size: 0.95rem; margin-bottom: 20px; }
         .feature-tag { display: inline-block; background: #f0f0f0; padding: 5px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin: 3px; color: #555; }
         
-        #appointment-reminder { background: rgba(255,255,255,0.1); border: 1px solid #d4af37; padding: 15px; border-radius: 20px; margin-top: 20px; text-align: center; }
-        .btn-cancel-modern { background: none; border: 1px solid #ff4444; color: #ff4444; padding: 10px; border-radius: 10px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; }
+        .btn-cancel-modern { width:100%; background:none; border:none; color:#999; margin-top:15px; font-weight:bold; cursor:pointer; }
     </style>
 </head>
 <body>
@@ -106,28 +105,13 @@
         <input type="tel" id="user-phone" class="login-input" placeholder="Número de teléfono">
         <label class="form-label" style="color:#888; text-align:left;">Selecciona tu Renault actual:</label>
         <select id="user-unit" class="login-input">
-            <optgroup label="Modelos Actuales">
-                <option value="Kwid">Kwid</option>
-                <option value="Kardian">Kardian</option>
-                <option value="Duster">Duster</option>
-                <option value="Stepway">Stepway</option>
-                <option value="Oroch">Oroch</option>
-                <option value="Koleos">Koleos</option>
-                <option value="Master">Master</option>
-                <option value="Kangoo">Kangoo</option>
-                <option value="Megane E-Tech">Megane E-Tech</option>
-            </optgroup>
-            <optgroup label="Modelos Anteriores">
-                <option value="Clio">Clio</option>
-                <option value="Sandero">Sandero</option>
-                <option value="Logan">Logan</option>
-                <option value="Captur">Captur</option>
-                <option value="Fluence">Fluence</option>
-                <option value="Safrane">Safrane</option>
-                <option value="Scala">Scala</option>
-                <option value="Megane">Megane (Gasolina)</option>
-                <option value="Scenic">Scenic</option>
-            </optgroup>
+            <option value="Kwid">Kwid</option>
+            <option value="Kardian">Kardian</option>
+            <option value="Duster">Duster</option>
+            <option value="Stepway">Stepway</option>
+            <option value="Oroch">Oroch</option>
+            <option value="Koleos">Koleos</option>
+            <option value="Megane E-Tech">Megane E-Tech</option>
         </select>
         <button class="btn-action btn-yellow" onclick="saveData()">INGRESAR</button>
     </div>
@@ -169,36 +153,27 @@
             <button onclick="closeDesc()" style="position:absolute; right:20px; top:20px; border:none; background:none; font-size:1.5rem;">✕</button>
             <img id="desc-img" src="" style="width:100%; border-radius:20px; margin-bottom:15px;">
             <div id="desc-title" class="desc-title">MODELO</div>
-            <div id="desc-text" class="desc-text">Cargando información...</div>
+            <div id="desc-text" class="desc-text">Cargando...</div>
             <div id="desc-tags"></div>
-            <button class="btn-action btn-yellow" id="btn-desc-quote" onclick="">COTIZAR AHORA</button>
+            <button class="btn-action btn-yellow" id="btn-desc-quote">COTIZAR AHORA</button>
         </div>
     </div>
 
     <div id="modal-quote" class="modal">
         <div class="modal-content">
             <h3 id="m-title" style="color:#d4af37; margin-top:0;">COTIZAR</h3>
-            <label class="form-label">Nombre del Cliente</label>
-            <input type="text" id="q-name" class="form-control">
-            <label class="form-label">Teléfono</label>
-            <input type="tel" id="q-phone" class="form-control">
-            <label class="form-label">Código Postal</label>
-            <input type="number" id="q-cp" class="form-control" placeholder="Ej: 73800">
+            <label class="form-label">Nombre</label><input type="text" id="q-name" class="form-control">
+            <label class="form-label">Teléfono</label><input type="tel" id="q-phone" class="form-control">
             <label class="form-label">Método de Pago</label>
             <select id="q-metodo" class="form-control" onchange="toggleFinanzas()">
                 <option value="Contado">A Contado</option>
                 <option value="Financiado">Financiado</option>
             </select>
             <div id="campo-finanzas" style="display:none;">
-                <label class="form-label">Enganche ($)</label>
-                <input type="number" id="q-down" class="form-control">
-                <label class="form-label">Plazo (Meses)</label>
-                <select id="q-meses" class="form-control">
-                    <option value="12">12 Meses</option><option value="24">24 Meses</option><option value="36">36 Meses</option><option value="48">48 Meses</option><option value="60">60 Meses</option>
-                </select>
+                <label class="form-label">Enganche ($)</label><input type="number" id="q-down" class="form-control">
             </div>
             <button id="btn-quote" class="btn-action btn-yellow" onclick="handleQuote()" style="margin-top:15px;">SOLICITAR</button>
-            <button onclick="closeM()" style="width:100%; background:none; border:none; color:#999; margin-top:15px; font-weight:bold;">Cerrar</button>
+            <button onclick="closeM()" class="btn-cancel-modern">Cerrar</button>
         </div>
     </div>
 
@@ -212,7 +187,7 @@
     <script>
         const API_BASE = "https://sheetdb.io/api/v1/eyx5rh2dow3oj";
         
-        // Corregido: Se añade %20 para manejar el espacio en la carpeta del servidor
+        // Corregido con %20 para los espacios
         const CARS = {
             "Kwid": "https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/kwid.jpeg",
             "Kardian": "https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/kardian.jpeg",
@@ -221,17 +196,6 @@
             "Oroch": "https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/oroch.jpeg",
             "Megane E-Tech": "https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/megane-tech.jpeg",
             "Stepway": "https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/stepway.jpeg"
-        };
-
-        const DESC_DATA = {
-            "Kardian": {
-                desc: "El nuevo SUV de Renault con motor turbo de 1.0L, transmisión EDC de 6 velocidades y un diseño robusto.",
-                tags: ["Turbo 115hp", "6 Airbags", "Pantalla 8''"]
-            },
-            "Kwid": {
-                desc: "El SUV de los compactos. Rendimiento excepcional y la mayor altura al piso de su categoría.",
-                tags: ["Rendimiento 20km/L", "4 Airbags", "Cámara reversa"]
-            }
         };
 
         window.onload = () => {
@@ -247,7 +211,7 @@
             const name = document.getElementById('user-name').value;
             const phone = document.getElementById('user-phone').value;
             const unit = document.getElementById('user-unit').value;
-            if(!name || !phone) return alert("Por favor completa tus datos");
+            if(!name || !phone) return alert("Completa los datos");
             const userData = { name, phone, unit };
             localStorage.setItem('renault_user', JSON.stringify(userData));
             renderUser(userData);
@@ -255,55 +219,37 @@
             initAppData();
         }
 
-        function initAppData() { loadCat(); loadSemi(); updateAppointmentUI(); }
-
         function renderUser(d) {
             document.getElementById('greet').innerText = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
-            // Aseguramos que la imagen principal se cargue correctamente
-            document.getElementById('main-car').src = CARS[d.unit] || "https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png";
+            document.getElementById('main-car').src = CARS[d.unit] || "";
             document.getElementById('tag-car').innerText = `Tu ${d.unit}`;
             document.getElementById('q-name').value = d.name;
             document.getElementById('q-phone').value = d.phone;
         }
+
+        function initAppData() { loadCat(); loadSemi(); updateAppointmentUI(); }
 
         function showPage(id, el) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById('p-' + id).classList.add('active');
             if(el) el.classList.add('active');
-            window.scrollTo(0,0);
             if(id === 'citas') renderAppointmentPage();
         }
-
-        function openDesc(modelo, img) {
-            const info = DESC_DATA[modelo] || { desc: "Solicita información detallada de este Renault.", tags: ["Seguridad", "Garantía"] };
-            document.getElementById('desc-img').src = img;
-            document.getElementById('desc-title').innerText = modelo;
-            document.getElementById('desc-text').innerText = info.desc;
-            document.getElementById('desc-tags').innerHTML = info.tags.map(t => `<span class="feature-tag">${t}</span>`).join('');
-            document.getElementById('btn-desc-quote').onclick = () => { closeDesc(); openM(modelo); };
-            document.getElementById('modal-desc').style.display = 'flex';
-        }
-        function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
 
         async function loadCat() {
             try {
                 const res = await fetch(`${API_BASE}?sheet=nuevos`);
                 const data = await res.json();
-                document.getElementById('cat-container').innerHTML = data.map(c => {
-                    // Validación de columnas de la API
-                    const img = c.imagen || c.Imagen || "";
-                    const mod = c.modelo || c.Modelo || "Unidad";
-                    const pre = c.precio || c.Precio || "Consultar";
-                    return `
+                if(data.error) throw new Error();
+                document.getElementById('cat-container').innerHTML = data.map(c => `
                     <div class="car-card">
-                        <img src="${img}" onclick="openDesc('${mod}', '${img}')" onerror="this.src='https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png'">
-                        <h3 style="margin:15px 0 5px">${mod}</h3>
-                        <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${pre}</div>
-                        <button class="btn-action btn-yellow" onclick="openM('${mod}')">COTIZAR</button>
-                    </div>`;
-                }).join('');
-            } catch(e) { console.log("Error API Nuevos"); }
+                        <img src="${c.imagen}" onclick="openDesc('${c.modelo}', '${c.imagen}')">
+                        <h3 style="margin:15px 0 5px">${c.modelo}</h3>
+                        <div style="color:#d4af37; font-weight:bold;">${c.precio}</div>
+                        <button class="btn-action btn-yellow" style="margin-top:10px" onclick="openM('${c.modelo}')">COTIZAR</button>
+                    </div>`).join('');
+            } catch(e) { document.getElementById('cat-container').innerHTML = "Error al conectar con el inventario."; }
         }
 
         async function loadSemi() {
@@ -312,91 +258,63 @@
                 const data = await res.json();
                 document.getElementById('semi-container').innerHTML = data.map(s => `
                     <div class="car-card">
-                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${s.Versión || s.modelo || s.Modelo}</h3>
-                        <p style="margin:0; font-size:0.8rem; color:#888;">${s.Transmisión || 'N/A'} | ${s.KM || '0'} KM</p>
-                        <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${s.Precio || s.precio}</div>
-                        <button class="btn-action btn-yellow" style="padding:10px; font-size:0.8rem;" onclick="openM('${s.Versión || s.modelo}')">ME INTERESA</button>
+                        <h3 style="color:var(--renault-yellow)">${s.modelo || s.Versión}</h3>
+                        <p style="color:#888;">${s.Precio}</p>
+                        <button class="btn-action btn-yellow" onclick="openM('${s.modelo || s.Versión}')">ME INTERESA</button>
                     </div>`).join('');
-            } catch(e) { console.log("Error API Seminuevos"); }
+            } catch(e) { document.getElementById('semi-container').innerHTML = "Sin conexión."; }
         }
+
+        function openDesc(modelo, img) {
+            document.getElementById('desc-img').src = img;
+            document.getElementById('desc-title').innerText = modelo;
+            document.getElementById('btn-desc-quote').onclick = () => { closeDesc(); openM(modelo); };
+            document.getElementById('modal-desc').style.display = 'flex';
+        }
+        function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
+        function openM(t) { document.getElementById('m-title').innerText = t; document.getElementById('modal-quote').style.display = 'flex'; }
+        function closeM() { document.getElementById('modal-quote').style.display = 'none'; }
+        function toggleFinanzas() { document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none'; }
 
         function renderAppointmentPage() {
             const data = localStorage.getItem('renault_appointment');
             const container = document.getElementById('appointment-content');
             const user = JSON.parse(localStorage.getItem('renault_user') || '{}');
-            
             if(data) {
                 const app = JSON.parse(data);
-                container.innerHTML = `<div class="card-white" style="text-align:center;">
-                    <div style="font-size: 3.5rem;">📅</div><h3>CITA ACTIVA</h3>
-                    <p>${app.fecha} | ${app.hora} hrs</p>
-                    <button class="btn-action btn-yellow" onclick="window.open('https://wa.me/522311234567?text=Confirmo mi cita')">WHATSAPP</button>
-                    <button class="btn-cancel-modern" onclick="localStorage.removeItem('renault_appointment'); renderAppointmentPage();">Cancelar</button>
-                </div>`;
+                container.innerHTML = `<div class="card-white" style="text-align:center;"><h3>CITA ACTIVA</h3><p>${app.fecha} | ${app.hora}</p><button class="btn-action btn-yellow" onclick="window.open('https://wa.me/522311234567')">WHATSAPP</button></div>`;
             } else {
                 container.innerHTML = `<div class="card-white">
-                    <label class="form-label">Tu Unidad</label>
-                    <select id="c-unit" class="form-control"><option value="${user.unit}">${user.unit}</option></select>
+                    <label class="form-label">Unidad</label><input type="text" id="c-unit" class="form-control" value="${user.unit}">
                     <label class="form-label">Fecha</label><input type="date" id="c-date" class="form-control">
                     <label class="form-label">Hora</label><input type="time" id="c-time" class="form-control">
-                    <button id="btn-cita" class="btn-action btn-yellow" style="margin-top:15px;" onclick="handleBooking()">AGENDAR</button>
+                    <button class="btn-action btn-yellow" style="margin-top:15px;" onclick="handleBooking()">AGENDAR</button>
                 </div>`;
             }
         }
 
         async function handleBooking() {
-            const app = {
-                nombre: JSON.parse(localStorage.getItem('renault_user')).name,
-                telefono: JSON.parse(localStorage.getItem('renault_user')).phone,
-                unidad: document.getElementById('c-unit').value,
-                fecha: document.getElementById('c-date').value,
-                hora: document.getElementById('c-time').value
-            };
-            if(!app.fecha || !app.hora) return alert("Completa los campos");
-            try {
-                await fetch(`${API_BASE}?sheet=citas`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({data: [app]})
-                });
-                localStorage.setItem('renault_appointment', JSON.stringify(app));
-                updateAppointmentUI();
-                showPage('inicio');
-            } catch(e) { alert("Error al conectar."); }
+            const user = JSON.parse(localStorage.getItem('renault_user'));
+            const app = { nombre: user.name, telefono: user.phone, unidad: document.getElementById('c-unit').value, fecha: document.getElementById('c-date').value, hora: document.getElementById('c-time').value };
+            await fetch(`${API_BASE}?sheet=citas`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({data: [app]}) });
+            localStorage.setItem('renault_appointment', JSON.stringify(app));
+            updateAppointmentUI();
+            showPage('inicio');
         }
 
         function updateAppointmentUI() {
             const data = localStorage.getItem('renault_appointment');
-            const container = document.getElementById('reminder-container');
             if(data) {
                 const app = JSON.parse(data);
-                container.innerHTML = `<div id="appointment-reminder">
-                    <div style="color:#d4af37; font-weight:900; font-size:0.8rem;">PRÓXIMA CITA</div>
-                    <div style="font-size:1.2rem; font-weight:bold;">${app.fecha} | ${app.hora} hrs</div>
-                </div>`;
-            } else container.innerHTML = '';
+                document.getElementById('reminder-container').innerHTML = `<div style="background:rgba(255,255,255,0.1); padding:15px; border-radius:20px; margin-top:20px; border:1px solid #d4af37; text-align:center;">PRÓXIMA CITA: ${app.fecha}</div>`;
+            }
         }
 
-        function openM(t) { document.getElementById('m-title').innerText = t; document.getElementById('modal-quote').style.display = 'flex'; }
-        function closeM() { document.getElementById('modal-quote').style.display = 'none'; }
-        function toggleFinanzas() { document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none'; }
-
         async function handleQuote() {
-            const quote = {
-                nombre: document.getElementById('q-name').value,
-                telefono: document.getElementById('q-phone').value,
-                modelo: document.getElementById('m-title').innerText,
-                metodo_pago: document.getElementById('q-metodo').value
-            };
-            try {
-                await fetch(`${API_BASE}?sheet=cotizaciones`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({data: [quote]})
-                });
-                alert("Enviado.");
-                closeM();
-            } catch(e) { alert("Error."); }
+            const quote = { nombre: document.getElementById('q-name').value, modelo: document.getElementById('m-title').innerText };
+            await fetch(`${API_BASE}?sheet=cotizaciones`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({data: [quote]}) });
+            alert("Enviado");
+            closeM();
         }
     </script>
 </body>
