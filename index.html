@@ -61,7 +61,6 @@
         .btn-yellow { background: var(--renault-yellow); color: #000; }
         .btn-green { background: var(--success-green); color: #fff; margin-top: 25px; }
 
-        /* WHATSAPP FLOTANTE */
         .btn-whatsapp-float {
             position: fixed; bottom: 100px; right: 20px;
             background: #25d366; color: white; width: 60px; height: 60px;
@@ -90,6 +89,9 @@
         .desc-title { color: #d4af37; font-weight: 900; margin-bottom: 10px; font-size: 1.5rem; text-transform: uppercase; }
         .desc-text { color: #444; line-height: 1.5; font-size: 0.95rem; margin-bottom: 20px; }
         .feature-tag { display: inline-block; background: #f0f0f0; padding: 5px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin: 3px; color: #555; }
+        
+        #appointment-reminder { background: rgba(255,255,255,0.1); border: 1px solid #d4af37; padding: 15px; border-radius: 20px; margin-top: 20px; text-align: center; }
+        .btn-cancel-modern { background: none; border: 1px solid #ff4444; color: #ff4444; padding: 10px; border-radius: 10px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -210,6 +212,7 @@
     <script>
         const API_BASE = "https://sheetdb.io/api/v1/eyx5rh2dow3oj";
         
+        // Corregido: Se añade %20 para manejar el espacio en la carpeta del servidor
         const CARS = {
             "Kwid": "https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/kwid.jpeg",
             "Kardian": "https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/kardian.jpeg",
@@ -222,20 +225,12 @@
 
         const DESC_DATA = {
             "Kardian": {
-                desc: "El nuevo SUV de Renault con motor turbo de 1.0L, transmisión EDC de 6 velocidades y un diseño robusto y sofisticado.",
+                desc: "El nuevo SUV de Renault con motor turbo de 1.0L, transmisión EDC de 6 velocidades y un diseño robusto.",
                 tags: ["Turbo 115hp", "6 Airbags", "Pantalla 8''"]
             },
             "Kwid": {
-                desc: "El SUV de los compactos. Rendimiento excepcional de combustible y la mayor altura al piso de su categoría.",
+                desc: "El SUV de los compactos. Rendimiento excepcional y la mayor altura al piso de su categoría.",
                 tags: ["Rendimiento 20km/L", "4 Airbags", "Cámara reversa"]
-            },
-            "Duster": {
-                desc: "La camioneta icónica ahora con motor Turbo 1.3L. Capacidad todoterreno y el espacio más amplio para la familia.",
-                tags: ["Motor 154hp", "Cajuela 475L", "Apple CarPlay"]
-            },
-            "Koleos": {
-                desc: "Elegancia y confort Premium. Techo panorámico, sonido Bose y asientos de piel con ventilación.",
-                tags: ["Lujo", "Asistente Estacionamiento", "LED Pure Vision"]
             }
         };
 
@@ -264,6 +259,7 @@
 
         function renderUser(d) {
             document.getElementById('greet').innerText = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
+            // Aseguramos que la imagen principal se cargue correctamente
             document.getElementById('main-car').src = CARS[d.unit] || "https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png";
             document.getElementById('tag-car').innerText = `Tu ${d.unit}`;
             document.getElementById('q-name').value = d.name;
@@ -279,9 +275,8 @@
             if(id === 'citas') renderAppointmentPage();
         }
 
-        /* --- DETALLES DE UNIDAD --- */
         function openDesc(modelo, img) {
-            const info = DESC_DATA[modelo] || { desc: "Solicita información detallada con un asesor sobre el nuevo Renault " + modelo, tags: ["Seguridad", "Tecnología"] };
+            const info = DESC_DATA[modelo] || { desc: "Solicita información detallada de este Renault.", tags: ["Seguridad", "Garantía"] };
             document.getElementById('desc-img').src = img;
             document.getElementById('desc-title').innerText = modelo;
             document.getElementById('desc-text').innerText = info.desc;
@@ -291,7 +286,40 @@
         }
         function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
 
-        /* --- GESTIÓN DE CITAS (CON AUTORELLENO) --- */
+        async function loadCat() {
+            try {
+                const res = await fetch(`${API_BASE}?sheet=nuevos`);
+                const data = await res.json();
+                document.getElementById('cat-container').innerHTML = data.map(c => {
+                    // Validación de columnas de la API
+                    const img = c.imagen || c.Imagen || "";
+                    const mod = c.modelo || c.Modelo || "Unidad";
+                    const pre = c.precio || c.Precio || "Consultar";
+                    return `
+                    <div class="car-card">
+                        <img src="${img}" onclick="openDesc('${mod}', '${img}')" onerror="this.src='https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png'">
+                        <h3 style="margin:15px 0 5px">${mod}</h3>
+                        <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${pre}</div>
+                        <button class="btn-action btn-yellow" onclick="openM('${mod}')">COTIZAR</button>
+                    </div>`;
+                }).join('');
+            } catch(e) { console.log("Error API Nuevos"); }
+        }
+
+        async function loadSemi() {
+            try {
+                const res = await fetch(`${API_BASE}?sheet=seminuevos`);
+                const data = await res.json();
+                document.getElementById('semi-container').innerHTML = data.map(s => `
+                    <div class="car-card">
+                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${s.Versión || s.modelo || s.Modelo}</h3>
+                        <p style="margin:0; font-size:0.8rem; color:#888;">${s.Transmisión || 'N/A'} | ${s.KM || '0'} KM</p>
+                        <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${s.Precio || s.precio}</div>
+                        <button class="btn-action btn-yellow" style="padding:10px; font-size:0.8rem;" onclick="openM('${s.Versión || s.modelo}')">ME INTERESA</button>
+                    </div>`).join('');
+            } catch(e) { console.log("Error API Seminuevos"); }
+        }
+
         function renderAppointmentPage() {
             const data = localStorage.getItem('renault_appointment');
             const container = document.getElementById('appointment-content');
@@ -301,42 +329,30 @@
                 const app = JSON.parse(data);
                 container.innerHTML = `<div class="card-white" style="text-align:center;">
                     <div style="font-size: 3.5rem;">📅</div><h3>CITA ACTIVA</h3>
-                    <div style="background:#f7f7f7; padding:20px; border-radius:20px; text-align:left; border: 1px solid #eee;">
-                        <strong>Unidad:</strong> ${app.unidad}<br><strong>Fecha:</strong> ${app.fecha}<br><strong>Hora:</strong> ${app.hora} hrs
-                    </div>
-                    <button class="btn-action btn-yellow" style="margin-top:20px;" onclick="window.open('https://wa.me/522311234567?text=Confirmo mi cita')">WHATSAPP</button>
-                    <button class="btn-cancel-modern" onclick="cancelAppointment()">Cancelar Cita</button>
+                    <p>${app.fecha} | ${app.hora} hrs</p>
+                    <button class="btn-action btn-yellow" onclick="window.open('https://wa.me/522311234567?text=Confirmo mi cita')">WHATSAPP</button>
+                    <button class="btn-cancel-modern" onclick="localStorage.removeItem('renault_appointment'); renderAppointmentPage();">Cancelar</button>
                 </div>`;
             } else {
                 container.innerHTML = `<div class="card-white">
-                    <label class="form-label">Nombre</label><input type="text" id="c-name" class="form-control" value="${user.name || ''}">
-                    <label class="form-label">Teléfono</label><input type="tel" id="c-phone" class="form-control" value="${user.phone || ''}">
                     <label class="form-label">Tu Unidad</label>
-                    <select id="c-unit" class="form-control">
-                        <option value="${user.unit || 'Kwid'}">${user.unit || 'Seleccionar'}</option>
-                        <option value="Kwid">Kwid</option><option value="Kardian">Kardian</option><option value="Duster">Duster</option>
-                        <option value="Oroch">Oroch</option><option value="Stepway">Stepway</option><option value="Sandero">Sandero</option>
-                    </select>
-                    <label class="form-label">Kilometraje</label><input type="number" id="c-km" class="form-control" placeholder="Ej: 10000">
+                    <select id="c-unit" class="form-control"><option value="${user.unit}">${user.unit}</option></select>
                     <label class="form-label">Fecha</label><input type="date" id="c-date" class="form-control">
                     <label class="form-label">Hora</label><input type="time" id="c-time" class="form-control">
-                    <button id="btn-cita" class="btn-action btn-yellow" style="margin-top:15px;" onclick="handleBooking()">AGENDAR CITA</button>
+                    <button id="btn-cita" class="btn-action btn-yellow" style="margin-top:15px;" onclick="handleBooking()">AGENDAR</button>
                 </div>`;
             }
         }
 
         async function handleBooking() {
-            const btn = document.getElementById('btn-cita');
             const app = {
-                nombre: document.getElementById('c-name').value,
-                telefono: document.getElementById('c-phone').value,
+                nombre: JSON.parse(localStorage.getItem('renault_user')).name,
+                telefono: JSON.parse(localStorage.getItem('renault_user')).phone,
                 unidad: document.getElementById('c-unit').value,
-                kilometraje: document.getElementById('c-km').value,
                 fecha: document.getElementById('c-date').value,
                 hora: document.getElementById('c-time').value
             };
-            if(!app.fecha || !app.hora) return alert("Selecciona fecha y hora");
-            btn.innerText = "AGENDANDO..."; btn.disabled = true;
+            if(!app.fecha || !app.hora) return alert("Completa los campos");
             try {
                 await fetch(`${API_BASE}?sheet=citas`, {
                     method: 'POST',
@@ -344,39 +360,9 @@
                     body: JSON.stringify({data: [app]})
                 });
                 localStorage.setItem('renault_appointment', JSON.stringify(app));
-                alert("¡Cita agendada!");
                 updateAppointmentUI();
                 showPage('inicio');
-            } catch(e) { alert("Error."); }
-            finally { btn.innerText = "AGENDAR CITA"; btn.disabled = false; }
-        }
-
-        async function loadCat() {
-            try {
-                const res = await fetch(`${API_BASE}?sheet=nuevos`);
-                const data = await res.json();
-                document.getElementById('cat-container').innerHTML = data.map(c => `
-                    <div class="car-card">
-                        <img src="${c.imagen}" onclick="openDesc('${c.modelo}', '${c.imagen}')" onerror="this.src='https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png'">
-                        <h3 style="margin:15px 0 5px">${c.modelo}</h3>
-                        <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${c.precio}</div>
-                        <button class="btn-action btn-yellow" onclick="openM('${c.modelo}')">COTIZAR</button>
-                    </div>`).join('');
-            } catch(e) {}
-        }
-
-        async function loadSemi() {
-            try {
-                const res = await fetch(`${API_BASE}?sheet=seminuevos`);
-                const data = await res.json();
-                document.getElementById('semi-container').innerHTML = data.map(s => `
-                    <div class="car-card">
-                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${s.Versión || s.modelo}</h3>
-                        <p style="margin:0; font-size:0.8rem; color:#888;">${s.Transmisión} | ${s.KM} KM</p>
-                        <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${s.Precio}</div>
-                        <button class="btn-action btn-yellow" style="padding:10px; font-size:0.8rem;" onclick="openM('${s.Versión || s.modelo}')">ME INTERESA</button>
-                    </div>`).join('');
-            } catch(e) {}
+            } catch(e) { alert("Error al conectar."); }
         }
 
         function updateAppointmentUI() {
@@ -396,28 +382,21 @@
         function toggleFinanzas() { document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none'; }
 
         async function handleQuote() {
-            const btn = document.getElementById('btn-quote');
             const quote = {
                 nombre: document.getElementById('q-name').value,
                 telefono: document.getElementById('q-phone').value,
                 modelo: document.getElementById('m-title').innerText,
-                cp: document.getElementById('q-cp').value,
-                metodo_pago: document.getElementById('q-metodo').value,
-                enganche: document.getElementById('q-down').value || "N/A",
-                meses: document.getElementById('q-meses').value || "N/A"
+                metodo_pago: document.getElementById('q-metodo').value
             };
-            if(!quote.nombre || !quote.telefono) return alert("Datos incompletos");
-            btn.innerText = "ENVIANDO..."; btn.disabled = true;
             try {
                 await fetch(`${API_BASE}?sheet=cotizaciones`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({data: [quote]})
                 });
-                alert("Solicitud enviada.");
+                alert("Enviado.");
                 closeM();
             } catch(e) { alert("Error."); }
-            finally { btn.innerText = "SOLICITAR"; btn.disabled = false; }
         }
     </script>
 </body>
