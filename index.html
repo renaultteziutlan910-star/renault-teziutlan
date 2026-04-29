@@ -75,7 +75,7 @@
         .tab-btn.active { color: #d4af37; border-bottom: 2px solid #d4af37; }
 
         .car-card { background: #1a1a1a; border-radius: 25px; padding: 15px; margin-bottom: 25px; border: 1px solid #333; }
-        .car-card img { width: 100%; border-radius: 20px; cursor: pointer; transition: transform 0.2s; }
+        .car-card img { width: 100%; border-radius: 20px; cursor: pointer; transition: transform 0.2s; background: #222; }
 
         .nav-bar {
             position: fixed; bottom: 0; width: 100%; background: #0d0d0d;
@@ -159,12 +159,16 @@
     <div id="p-nuevos" class="page">
         <div style="text-align: center; color: #d4af37; font-weight: 800; margin-bottom: 15px;">UNIDADES NUEVAS</div>
         <p style="text-align: center; font-size: 0.8rem; color: #888;">Toca la imagen para ver detalles técnicos</p>
-        <div id="cat-container">Cargando catálogo...</div>
+        <div id="cat-container">
+             <div style="padding:40px; text-align:center; color:#555;">Cargando catálogo premium...</div>
+        </div>
     </div>
 
     <div id="p-seminuevos" class="page">
         <div style="text-align: center; color: #d4af37; font-weight: 800; margin-bottom: 15px;">INVENTARIO SEMINUEVOS</div>
-        <div id="semi-container">Cargando inventario...</div>
+        <div id="semi-container">
+             <div style="padding:40px; text-align:center; color:#555;">Cargando inventario...</div>
+        </div>
     </div>
 
     <div id="modal-desc" class="modal">
@@ -224,6 +228,8 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtsJSdVpy7L_XdwFdxoq99-FPyRN0SUljawFS3gARNkT_9jQgywIx5agL6k_mS4Zc/exec";
         
         let currentVehicleSelected = "";
+        let cacheNuevos = null;
+        let cacheSeminuevos = null;
 
         const DESC_DATA = {
             "boreal": {
@@ -273,7 +279,12 @@
             initAppData();
         }
 
-        function initAppData() { loadCat(); loadSemi(); updateAppointmentUI(); }
+        // Carga inicial asíncrona para que no pese al abrir
+        async function initAppData() { 
+            updateAppointmentUI();
+            loadCat(); 
+            loadSemi(); 
+        }
 
         function renderUser(d) {
             document.getElementById('greet').innerText = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
@@ -304,16 +315,18 @@
         function switchTab(tabType) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-tab-' + tabType).classList.add('active');
-            const slug = currentVehicleSelected.toLowerCase();
-            // Lógica mejorada para encontrar el modelo en DESC_DATA
-            const key = Object.keys(DESC_DATA).find(k => slug.includes(k));
+            
+            const nombreBusqueda = currentVehicleSelected.toLowerCase();
+            // Lógica corregida: Busca si el nombre contiene alguna de las llaves (ej: "Boreal Iconic" contiene "boreal")
+            const key = Object.keys(DESC_DATA).find(k => nombreBusqueda.includes(k));
             
             let info = DESC_DATA[key] || {
-                info: `Unidad ${currentVehicleSelected} con calidad Renault garantizada.`,
-                seguridad: "Sistemas de seguridad activos y pasivos.",
-                tecnologia: "Conectividad multimedia avanzada.",
-                tags: ["Renault", "Calidad"]
+                info: `Unidad ${currentVehicleSelected} con diseño vanguardista y la garantía de calidad Renault.`,
+                seguridad: "Equipado con los más altos estándares de seguridad activa y pasiva para tu tranquilidad.",
+                tecnologia: "Conectividad inteligente y sistemas de asistencia a la conducción de última generación.",
+                tags: ["Renault", "Calidad", "Garantía"]
             };
+            
             document.getElementById('desc-text').innerText = info[tabType];
             document.getElementById('desc-tags').innerHTML = tabType === 'info' ? 
                 (info.tags || []).map(t => `<span class="feature-tag">${t}</span>`).join('') : "";
@@ -322,31 +335,41 @@
         function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
 
         async function loadCat() {
+            const container = document.getElementById('cat-container');
+            if(cacheNuevos) { container.innerHTML = cacheNuevos; return; }
+            
             try {
                 const res = await fetch(`${SCRIPT_URL}?sheet=nuevos`);
                 const data = await res.json();
-                document.getElementById('cat-container').innerHTML = data.map(c => `
+                const html = data.map(c => `
                     <div class="car-card">
-                        <img src="${c.imagen}" onclick="openDesc('${c.modelo}', '${c.imagen}')" onerror="this.src='https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png'">
+                        <img src="${c.imagen}" loading="lazy" onclick="openDesc('${c.modelo}', '${c.imagen}')" onerror="this.src='https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png'">
                         <h3 style="margin:15px 0 5px">${c.modelo}</h3>
                         <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${c.precio}</div>
                         <button class="btn-action btn-yellow" onclick="openM('${c.modelo}')">COTIZAR</button>
                     </div>`).join('');
-            } catch(e) { document.getElementById('cat-container').innerText = "Error al cargar catálogo."; }
+                cacheNuevos = html;
+                container.innerHTML = html;
+            } catch(e) { container.innerText = "Error al conectar con el servidor."; }
         }
 
         async function loadSemi() {
+            const container = document.getElementById('semi-container');
+            if(cacheSeminuevos) { container.innerHTML = cacheSeminuevos; return; }
+
             try {
                 const res = await fetch(`${SCRIPT_URL}?sheet=seminuevos`);
                 const data = await res.json();
-                document.getElementById('semi-container').innerHTML = data.map(s => `
+                const html = data.map(s => `
                     <div class="car-card">
                         <h3 style="margin:5px 0; color:var(--renault-yellow)">${s.modelo || s.Versión}</h3>
                         <p style="margin:0; font-size:0.8rem; color:#888;">${s.km || 0} KM</p>
                         <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${s.precio}</div>
                         <button class="btn-action btn-yellow" onclick="openM('${s.modelo || s.Versión}')">ME INTERESA</button>
                     </div>`).join('');
-            } catch(e) { document.getElementById('semi-container').innerText = "Error al cargar inventario."; }
+                cacheSeminuevos = html;
+                container.innerHTML = html;
+            } catch(e) { container.innerText = "Error al cargar inventario."; }
         }
 
         function renderAppointmentPage() {
@@ -362,7 +385,7 @@
                         <strong>Unidad:</strong> ${app.unidad}<br><strong>Fecha:</strong> ${app.fecha}<br><strong>Hora:</strong> ${app.hora} hrs
                     </div>
                     <button class="btn-action btn-yellow" style="margin-top:20px;" onclick="window.open('https://wa.me/522311234567?text=Confirmo mi cita')">WHATSAPP</button>
-                    <button class="btn-cancel-modern" onclick="localStorage.removeItem('renault_appointment'); renderAppointmentPage();">Cancelar Cita</button>
+                    <button class="btn-cancel-modern" onclick="localStorage.removeItem('renault_appointment'); renderAppointmentPage(); updateAppointmentUI();">Cancelar Cita</button>
                 </div>`;
             } else {
                 container.innerHTML = `<div class="card-white">
