@@ -221,7 +221,6 @@
     </nav>
 
     <script>
-        // URL ACTUALIZADA DEL GOOGLE APPS SCRIPT
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtsJSdVpy7L_XdwFdxoq99-FPyRN0SUljawFS3gARNkT_9jQgywIx5agL6k_mS4Zc/exec";
         
         let currentVehicleSelected = "";
@@ -306,7 +305,9 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-tab-' + tabType).classList.add('active');
             const slug = currentVehicleSelected.toLowerCase();
+            // Lógica mejorada para encontrar el modelo en DESC_DATA
             const key = Object.keys(DESC_DATA).find(k => slug.includes(k));
+            
             let info = DESC_DATA[key] || {
                 info: `Unidad ${currentVehicleSelected} con calidad Renault garantizada.`,
                 seguridad: "Sistemas de seguridad activos y pasivos.",
@@ -320,7 +321,6 @@
 
         function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
 
-        // --- CARGA DE DATOS ---
         async function loadCat() {
             try {
                 const res = await fetch(`${SCRIPT_URL}?sheet=nuevos`);
@@ -349,7 +349,6 @@
             } catch(e) { document.getElementById('semi-container').innerText = "Error al cargar inventario."; }
         }
 
-        // --- GESTIÓN DE CITAS ---
         function renderAppointmentPage() {
             const data = localStorage.getItem('renault_appointment');
             const container = document.getElementById('appointment-content');
@@ -373,6 +372,8 @@
                     <label class="form-label">Kilometraje</label><input type="number" id="c-km" class="form-control" placeholder="Kilometraje actual">
                     <label class="form-label">Fecha</label><input type="date" id="c-date" class="form-control">
                     <label class="form-label">Hora</label><input type="time" id="c-time" class="form-control">
+                    <label class="form-label">Detalles de la Unidad</label>
+                    <textarea id="c-details" class="form-control" placeholder="Describe aquí si tu unidad tiene algún detalle o falla..." style="height:80px;"></textarea>
                     <button id="btn-cita" class="btn-action btn-yellow" onclick="handleBooking()">AGENDAR CITA</button>
                 </div>`;
             }
@@ -387,7 +388,8 @@
                 unidad: document.getElementById('c-unit').value,
                 kilometraje: document.getElementById('c-km').value,
                 fecha: document.getElementById('c-date').value,
-                hora: document.getElementById('c-time').value
+                hora: document.getElementById('c-time').value,
+                detalles: document.getElementById('c-details').value
             };
             if(!app.fecha || !app.hora) return alert("Selecciona fecha y hora");
             btn.innerText = "PROCESANDO..."; btn.disabled = true;
@@ -405,7 +407,6 @@
             finally { btn.innerText = "AGENDAR CITA"; btn.disabled = false; }
         }
 
-        // --- COTIZACIONES ---
         function openM(t) { document.getElementById('m-title').innerText = t; document.getElementById('modal-quote').style.display = 'flex'; }
         function closeM() { document.getElementById('modal-quote').style.display = 'none'; }
         function toggleFinanzas() { document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none'; }
