@@ -285,8 +285,10 @@
             initAppData();
         }
 
+        // --- SISTEMA DE PRE-CARGA (MÁS RÁPIDO) ---
         async function initAppData() { 
             updateAppointmentUI();
+            // Llama a las funciones sin esperar, para que carguen en segundo plano
             loadCat(); 
             loadSemi(); 
         }
@@ -322,7 +324,6 @@
             document.getElementById('btn-tab-' + tabType).classList.add('active');
             
             const nombreBusqueda = currentVehicleSelected.toLowerCase();
-            // Busca si alguna de las llaves del diccionario está contenida en el nombre del modelo
             const key = Object.keys(DESC_DATA).find(k => nombreBusqueda.includes(k));
             
             let info = DESC_DATA[key] || {
@@ -365,8 +366,9 @@
             try {
                 const res = await fetch(`${SCRIPT_URL}?sheet=seminuevos`);
                 const data = await res.json();
-                // Corregido: Mapeo más flexible de nombres de columnas para seminuevos
+                // CORRECCIÓN DE NOMBRES EN SEMINUEVOS
                 const html = data.map(s => {
+                    // Busca el nombre en cualquier columna común si "modelo" viene vacío
                     const nombreUnidad = s.modelo || s.unidad || s.marca || s.Versión || 'Seminuevo';
                     return `
                     <div class="car-card">
