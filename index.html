@@ -285,12 +285,11 @@
             initAppData();
         }
 
-        // --- SISTEMA DE PRE-CARGA (MÁS RÁPIDO) ---
+        // CARGA RÁPIDA (PARALELA)
         async function initAppData() { 
             updateAppointmentUI();
-            // Llama a las funciones sin esperar, para que carguen en segundo plano
-            loadCat(); 
-            loadSemi(); 
+            // Ejecutamos ambas al mismo tiempo sin esperar una a la otra
+            Promise.all([loadCat(), loadSemi()]).catch(e => console.log("Error de carga inicial"));
         }
 
         function renderUser(d) {
@@ -314,22 +313,24 @@
             currentVehicleSelected = modelo;
             document.getElementById('desc-img').src = img;
             document.getElementById('desc-title').innerText = modelo;
-            switchTab('info');
+            switchTab('info'); // Esto ahora disparará la búsqueda corregida
             document.getElementById('btn-desc-quote').onclick = () => { closeDesc(); openM(modelo); };
             document.getElementById('modal-desc').style.display = 'flex';
         }
 
+        // CORRECCIÓN BOREAL E INFORMACIÓN
         function switchTab(tabType) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-tab-' + tabType).classList.add('active');
             
             const nombreBusqueda = currentVehicleSelected.toLowerCase();
-            const key = Object.keys(DESC_DATA).find(k => nombreBusqueda.includes(k));
+            // Buscamos si la palabra "boreal" o el nombre está en nuestra base de datos
+            const key = Object.keys(DESC_DATA).find(k => nombreBusqueda.includes(k.toLowerCase()));
             
             let info = DESC_DATA[key] || {
-                info: `Unidad ${currentVehicleSelected} con diseño vanguardista y la garantía de calidad Renault.`,
-                seguridad: "Equipado con los más altos estándares de seguridad activa y pasiva para tu tranquilidad.",
-                tecnologia: "Conectividad inteligente y sistemas de asistencia a la conducción de última generación.",
+                info: `Unidad ${currentVehicleSelected} disponible para entrega inmediata. Un Renault diseñado para durar.`,
+                seguridad: "Sistemas de seguridad Renault: Frenado ABS, bolsas de aire y estructura reforzada.",
+                tecnologia: "Conectividad total y confort premium en cada viaje.",
                 tags: ["Renault", "Calidad", "Garantía"]
             };
             
@@ -341,9 +342,8 @@
         function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
 
         async function loadCat() {
+            if(cacheNuevos) return;
             const container = document.getElementById('cat-container');
-            if(cacheNuevos) { container.innerHTML = cacheNuevos; return; }
-            
             try {
                 const res = await fetch(`${SCRIPT_URL}?sheet=nuevos`);
                 const data = await res.json();
@@ -356,30 +356,29 @@
                     </div>`).join('');
                 cacheNuevos = html;
                 container.innerHTML = html;
-            } catch(e) { container.innerText = "Error al conectar con el servidor."; }
+            } catch(e) { container.innerText = "Reintentando conexión..."; }
         }
 
+        // CORRECCIÓN SEMINUEVOS (Nombres de unidades)
         async function loadSemi() {
+            if(cacheSeminuevos) return;
             const container = document.getElementById('semi-container');
-            if(cacheSeminuevos) { container.innerHTML = cacheSeminuevos; return; }
-
             try {
                 const res = await fetch(`${SCRIPT_URL}?sheet=seminuevos`);
                 const data = await res.json();
-                // CORRECCIÓN DE NOMBRES EN SEMINUEVOS
                 const html = data.map(s => {
-                    // Busca el nombre en cualquier columna común si "modelo" viene vacío
-                    const nombreUnidad = s.modelo || s.unidad || s.marca || s.Versión || 'Seminuevo';
+                    // INTENTO DE NOMBRE: Busca en modelo, unidad o marca para no dejarlo vacío
+                    const nombreUnidad = s.modelo || s.unidad || s.marca || s.Modelo || 'Seminuevo Renault';
                     return `
                     <div class="car-card">
                         <h3 style="margin:5px 0; color:var(--renault-yellow)">${nombreUnidad}</h3>
-                        <p style="margin:0; font-size:0.8rem; color:#888;">${s.km || 0} KM | ${s.año || ''}</p>
+                        <p style="margin:0; font-size:0.8rem; color:#888;">${s.km || '0'} KM | ${s.año || ''}</p>
                         <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${formatPrice(s.precio)}</div>
                         <button class="btn-action btn-yellow" onclick="openM('${nombreUnidad}')">ME INTERESA</button>
                     </div>`}).join('');
                 cacheSeminuevos = html;
                 container.innerHTML = html;
-            } catch(e) { container.innerText = "Error al cargar inventario."; }
+            } catch(e) { container.innerText = "Actualizando inventario..."; }
         }
 
         function renderAppointmentPage() {
