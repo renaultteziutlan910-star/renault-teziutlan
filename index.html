@@ -267,6 +267,13 @@
             }
         };
 
+        // Función para agregar comas a los precios
+        function formatPrice(price) {
+            if (!price) return "$0";
+            let val = price.toString().replace(/[^0-9]/g, '');
+            return "$" + val.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
         function saveData() {
             const name = document.getElementById('user-name').value;
             const phone = document.getElementById('user-phone').value;
@@ -279,7 +286,6 @@
             initAppData();
         }
 
-        // Carga inicial asíncrona para que no pese al abrir
         async function initAppData() { 
             updateAppointmentUI();
             loadCat(); 
@@ -317,7 +323,7 @@
             document.getElementById('btn-tab-' + tabType).classList.add('active');
             
             const nombreBusqueda = currentVehicleSelected.toLowerCase();
-            // Lógica corregida: Busca si el nombre contiene alguna de las llaves (ej: "Boreal Iconic" contiene "boreal")
+            // Lógica corregida para encontrar la clave de información técnica
             const key = Object.keys(DESC_DATA).find(k => nombreBusqueda.includes(k));
             
             let info = DESC_DATA[key] || {
@@ -345,7 +351,7 @@
                     <div class="car-card">
                         <img src="${c.imagen}" loading="lazy" onclick="openDesc('${c.modelo}', '${c.imagen}')" onerror="this.src='https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png'">
                         <h3 style="margin:15px 0 5px">${c.modelo}</h3>
-                        <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${c.precio}</div>
+                        <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${formatPrice(c.precio)}</div>
                         <button class="btn-action btn-yellow" onclick="openM('${c.modelo}')">COTIZAR</button>
                     </div>`).join('');
                 cacheNuevos = html;
@@ -364,7 +370,7 @@
                     <div class="car-card">
                         <h3 style="margin:5px 0; color:var(--renault-yellow)">${s.modelo || s.Versión}</h3>
                         <p style="margin:0; font-size:0.8rem; color:#888;">${s.km || 0} KM</p>
-                        <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${s.precio}</div>
+                        <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${formatPrice(s.precio)}</div>
                         <button class="btn-action btn-yellow" onclick="openM('${s.modelo || s.Versión}')">ME INTERESA</button>
                     </div>`).join('');
                 cacheSeminuevos = html;
