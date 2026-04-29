@@ -221,53 +221,35 @@
     </nav>
 
     <script>
-        // URL DE TU PROPIO GOOGLE APPS SCRIPT
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzuYYardHqa2diUIgyZAojme1XrXKN3wzCeBMc_6YBHIU0bLmcdNUA3hMLKwWPqMEE/exec";
+        // URL ACTUALIZADA DEL GOOGLE APPS SCRIPT
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtsJSdVpy7L_XdwFdxoq99-FPyRN0SUljawFS3gARNkT_9jQgywIx5agL6k_mS4Zc/exec";
         
         let currentVehicleSelected = "";
 
         const DESC_DATA = {
             "boreal": {
-                info: "La nueva Boreal Iconic Hybrid 2026 introduce la avanzada tecnología E-Tech de Renault. Este sistema combina un motor de combustión con propulsión eléctrica para un ahorro de combustible de hasta un 40% en ciudad, ideal para el relieve de Teziutlán.",
-                seguridad: "Máxima protección con 6 bolsas de aire, frenado autónomo de emergencia (AEB), alerta de colisión frontal y control de crucero adaptativo para viajes largos más seguros.",
-                tecnologia: "Equipada con el nuevo sistema e-Shifter (palanca de cambios electrónica), tablero digital de alta definición de 10'', pantalla vertical y múltiples modos de conducción Eco, Sport y MySense.",
+                info: "La nueva Boreal Iconic Hybrid 2026 introduce la avanzada tecnología E-Tech de Renault. Ahorro de combustible de hasta un 40% en ciudad.",
+                seguridad: "Máxima protección con 6 bolsas de aire y frenado autónomo de emergencia (AEB).",
+                tecnologia: "Tablero digital de 10'', pantalla vertical y múltiples modos de conducción.",
                 tags: ["Híbrido E-Tech", "Tablero 10''", "Ahorro 40%"]
             },
             "kardian": {
-                info: "Renault Kardian redefine el segmento con su nuevo motor turbo de 1.0L que entrega 115hp. Es el primer vehículo fabricado sobre la nueva plataforma modular de Renault Group, ofreciendo un diseño robusto, moderno y una posición de manejo elevada tipo SUV.",
-                seguridad: "Líder en protección: cuenta con 6 bolsas de aire de serie, Frenado Autónomo de Emergencia (AEW), Alerta de Colisión Frontal y control electrónico de estabilidad (ESP) para máxima confianza en carretera.",
-                tecnologia: "Experiencia digital completa con tablero de 7'' personalizable y pantalla táctil de 8'' compatible con Android Auto y Apple CarPlay inalámbrico. Incluye sistema Multi-Sense para ajustar el modo de conducción.",
+                info: "Renault Kardian redefine el segmento con su nuevo motor turbo de 1.0L que entrega 115hp.",
+                seguridad: "Cuenta con 6 bolsas de aire de serie y Frenado Autónomo de Emergencia.",
+                tecnologia: "Pantalla táctil de 8'' compatible con Android Auto y Apple CarPlay inalámbrico.",
                 tags: ["Turbo 115hp", "6 Airbags", "Pantalla 8'' Wireless"]
             },
             "kwid": {
-                info: "El SUV de los compactos es ideal para la ciudad. Ofrece el mejor consumo de combustible del mercado con una altura al piso líder en su clase (18.5 cm), permitiendo sortear baches y topes con total facilidad y economía.",
-                seguridad: "Seguridad garantizada con 4 bolsas de aire desde la versión de entrada, frenos ABS con EBD, asistente de arranque en pendientes (HSA) y control de estabilidad para maniobras seguras.",
-                tecnologia: "Conectividad total con Media Evolution de 7'', cámara de reversa integrada y dirección eléctrica que hace que estacionarse sea una tarea sin esfuerzo.",
+                info: "El SUV de los compactos. Altura al piso líder en su clase (18.5 cm) y gran ahorro.",
+                seguridad: "4 bolsas de aire, frenos ABS y asistente de arranque en pendientes (HSA).",
+                tecnologia: "Media Evolution de 7'' y cámara de reversa integrada.",
                 tags: ["Consumo 22km/L", "Altura SUV", "Dirección Eléctrica"]
             },
             "duster": {
-                info: "La camioneta más icónica ahora es más potente. Con su nuevo motor Turbo 1.3L de 154hp, Duster ofrece un desempeño excepcional tanto en ciudad como en terrenos difíciles, manteniendo su amplio espacio interior.",
-                seguridad: "Estructura reforzada, sensores de punto ciego, cámara 360° (Multiview) y asistencia de frenado de emergencia para proteger a toda la familia en cualquier trayecto.",
-                tecnologia: "Llave inteligente tipo tarjeta, encendido por botón y sistema multimedia con replicación de smartphone. Su suspensión está calibrada para los caminos de México.",
+                info: "Motor Turbo 1.3L de 154hp. Desempeño excepcional y gran espacio interior.",
+                seguridad: "Estructura reforzada y cámara 360° (Multiview).",
+                tecnologia: "Llave inteligente tipo tarjeta y encendido por botón.",
                 tags: ["Motor Turbo 154hp", "Cajuela 475L", "Cámara 360°"]
-            },
-            "oroch": {
-                info: "La pickup que combina la comodidad de una SUV con la versatilidad de una caja de carga. Equipada con motor Turbo de 1.3L, es la herramienta perfecta para el trabajo y el estilo de vida activo.",
-                seguridad: "Cuenta con control de tracción, control de estabilidad, asistente de arranque en pendientes y sensores de reversa para facilitar las maniobras con carga.",
-                tecnologia: "Pantalla flotante de 8'', conectividad inalámbrica y modo ECO para optimizar el consumo de combustible sin sacrificar la potencia de carga.",
-                tags: ["Carga 650kg", "Suspensión Multilink", "Motor Turbo"]
-            },
-            "stepway": {
-                info: "El aventurero de Renault. Con un diseño exterior robusto y barras de techo funcionales, Stepway es perfecto para quienes buscan un hatchback con alma de SUV y gran espacio interior.",
-                seguridad: "4 bolsas de aire, estructura de acero de alta resistencia, frenos ABS y control de estabilidad para un manejo firme y seguro.",
-                tecnologia: "Sistema Media Evolution con pantalla táctil, sensores de luz y lluvia, y climatizador automático para el máximo confort a bordo.",
-                tags: ["Barras de Techo", "Altura 20cm", "Amplio Interior"]
-            },
-            "koleos": {
-                info: "El tope de gama en refinamiento. Koleos ofrece una experiencia Premium con materiales de alta calidad, un diseño elegante con luces LED Pure Vision y un espacio interior de clase ejecutiva.",
-                seguridad: "Asistente de estacionamiento automático 'Easy Park', alerta de punto ciego, 6 bolsas de aire y frenado de emergencia avanzado.",
-                tecnologia: "Sonido Bose® de 12 bocinas, pantalla vertical de 8.7'' tipo Tablet, asientos con calefacción, ventilación y masaje para el conductor.",
-                tags: ["Sonido Bose", "Lujo Premium", "LED Pure Vision"]
             }
         };
 
@@ -326,9 +308,9 @@
             const slug = currentVehicleSelected.toLowerCase();
             const key = Object.keys(DESC_DATA).find(k => slug.includes(k));
             let info = DESC_DATA[key] || {
-                info: `La unidad ${currentVehicleSelected} destaca por su confiabilidad Renault.`,
-                seguridad: "Sistemas Renault de última generación.",
-                tecnologia: "Conectividad total.",
+                info: `Unidad ${currentVehicleSelected} con calidad Renault garantizada.`,
+                seguridad: "Sistemas de seguridad activos y pasivos.",
+                tecnologia: "Conectividad multimedia avanzada.",
                 tags: ["Renault", "Calidad"]
             };
             document.getElementById('desc-text').innerText = info[tabType];
@@ -338,44 +320,36 @@
 
         function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
 
-        // --- CARGA DIRECTA DESDE GOOGLE (GRATIS Y SIN LÍMITES) ---
+        // --- CARGA DE DATOS ---
         async function loadCat() {
             try {
-                const res = await fetch(`${SCRIPT_URL}?action=read&sheet=nuevos`);
+                const res = await fetch(`${SCRIPT_URL}?sheet=nuevos`);
                 const data = await res.json();
-                
-                document.getElementById('cat-container').innerHTML = data.map(c => {
-                    const nombre = c.modelo || c.Modelo || "Unidad Renault";
-                    const img = c.imagen || c.Imagen || "";
-                    const precio = c.precio || c.Precio || "Ver precio";
-
-                    return `
+                document.getElementById('cat-container').innerHTML = data.map(c => `
                     <div class="car-card">
-                        <img src="${img}" onclick="openDesc('${nombre}', '${img}')" onerror="this.src='https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png'">
-                        <h3 style="margin:15px 0 5px">${nombre}</h3>
-                        <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${precio}</div>
-                        <button class="btn-action btn-yellow" onclick="openM('${nombre}')">COTIZAR</button>
-                    </div>`;
-                }).join('');
-            } catch(e) {
-                document.getElementById('cat-container').innerText = "Error al conectar con Google Sheets.";
-            }
+                        <img src="${c.imagen}" onclick="openDesc('${c.modelo}', '${c.imagen}')" onerror="this.src='https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png'">
+                        <h3 style="margin:15px 0 5px">${c.modelo}</h3>
+                        <div style="color:#d4af37; font-weight:bold; margin-bottom:15px;">${c.precio}</div>
+                        <button class="btn-action btn-yellow" onclick="openM('${c.modelo}')">COTIZAR</button>
+                    </div>`).join('');
+            } catch(e) { document.getElementById('cat-container').innerText = "Error al cargar catálogo."; }
         }
 
         async function loadSemi() {
             try {
-                const res = await fetch(`${SCRIPT_URL}?action=read&sheet=seminuevos`);
+                const res = await fetch(`${SCRIPT_URL}?sheet=seminuevos`);
                 const data = await res.json();
                 document.getElementById('semi-container').innerHTML = data.map(s => `
                     <div class="car-card">
-                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${s.modelo || s.Versión || "Seminuevo"}</h3>
-                        <p style="margin:0; font-size:0.8rem; color:#888;">${s.transmisión || ""} | ${s.km || s.KM || 0} KM</p>
-                        <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${s.precio || ""}</div>
-                        <button class="btn-action btn-yellow" style="padding:10px; font-size:0.8rem;" onclick="openM('${s.modelo || s.Versión}')">ME INTERESA</button>
+                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${s.modelo || s.Versión}</h3>
+                        <p style="margin:0; font-size:0.8rem; color:#888;">${s.km || 0} KM</p>
+                        <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${s.precio}</div>
+                        <button class="btn-action btn-yellow" onclick="openM('${s.modelo || s.Versión}')">ME INTERESA</button>
                     </div>`).join('');
-            } catch(e) {}
+            } catch(e) { document.getElementById('semi-container').innerText = "Error al cargar inventario."; }
         }
 
+        // --- GESTIÓN DE CITAS ---
         function renderAppointmentPage() {
             const data = localStorage.getItem('renault_appointment');
             const container = document.getElementById('appointment-content');
@@ -384,7 +358,7 @@
             if(data) {
                 const app = JSON.parse(data);
                 container.innerHTML = `<div class="card-white" style="text-align:center;">
-                    <div style="font-size: 3.5rem;">📅</div><h3>CITA ACTIVA</h3>
+                    <div style="font-size: 3.5rem;">📅</div><h3>CITA AGENDADA</h3>
                     <div style="background:#f7f7f7; padding:20px; border-radius:20px; text-align:left;">
                         <strong>Unidad:</strong> ${app.unidad}<br><strong>Fecha:</strong> ${app.fecha}<br><strong>Hora:</strong> ${app.hora} hrs
                     </div>
@@ -392,18 +366,14 @@
                     <button class="btn-cancel-modern" onclick="localStorage.removeItem('renault_appointment'); renderAppointmentPage();">Cancelar Cita</button>
                 </div>`;
             } else {
-                const units = ["Kwid", "Kardian", "Duster", "Stepway", "Oroch", "Koleos", "Master", "Kangoo", "Megane E-Tech", "Clio", "Sandero", "Logan", "Captur", "Fluence", "Safrane", "Scala", "Megane", "Scenic"];
-                const options = units.map(u => `<option value="${u}" ${user.unit === u ? 'selected' : ''}>${u}</option>`).join('');
-
                 container.innerHTML = `<div class="card-white">
                     <label class="form-label">Nombre</label><input type="text" id="c-name" class="form-control" value="${user.name || ''}">
                     <label class="form-label">Teléfono</label><input type="tel" id="c-phone" class="form-control" value="${user.phone || ''}">
-                    <label class="form-label">Tu Unidad</label>
-                    <select id="c-unit" class="form-control">${options}</select>
-                    <label class="form-label">Kilometraje</label><input type="number" id="c-km" class="form-control" placeholder="Ej: 10000">
+                    <label class="form-label">Unidad</label><input type="text" id="c-unit" class="form-control" value="${user.unit || ''}">
+                    <label class="form-label">Kilometraje</label><input type="number" id="c-km" class="form-control" placeholder="Kilometraje actual">
                     <label class="form-label">Fecha</label><input type="date" id="c-date" class="form-control">
                     <label class="form-label">Hora</label><input type="time" id="c-time" class="form-control">
-                    <button id="btn-cita" class="btn-action btn-yellow" style="margin-top:15px;" onclick="handleBooking()">AGENDAR CITA</button>
+                    <button id="btn-cita" class="btn-action btn-yellow" onclick="handleBooking()">AGENDAR CITA</button>
                 </div>`;
             }
         }
@@ -411,6 +381,7 @@
         async function handleBooking() {
             const btn = document.getElementById('btn-cita');
             const app = {
+                hoja: "citas",
                 nombre: document.getElementById('c-name').value,
                 telefono: document.getElementById('c-phone').value,
                 unidad: document.getElementById('c-unit').value,
@@ -419,20 +390,49 @@
                 hora: document.getElementById('c-time').value
             };
             if(!app.fecha || !app.hora) return alert("Selecciona fecha y hora");
-            btn.innerText = "AGENDANDO..."; btn.disabled = true;
+            btn.innerText = "PROCESANDO..."; btn.disabled = true;
             try {
-                await fetch(`${SCRIPT_URL}?action=write&sheet=citas`, {
+                await fetch(SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(app)
                 });
                 localStorage.setItem('renault_appointment', JSON.stringify(app));
-                alert("¡Cita enviada con éxito!");
+                alert("¡Cita agendada!");
                 updateAppointmentUI();
                 showPage('inicio');
-            } catch(e) { alert("Error al agendar."); }
+            } catch(e) { alert("Error de conexión."); }
             finally { btn.innerText = "AGENDAR CITA"; btn.disabled = false; }
+        }
+
+        // --- COTIZACIONES ---
+        function openM(t) { document.getElementById('m-title').innerText = t; document.getElementById('modal-quote').style.display = 'flex'; }
+        function closeM() { document.getElementById('modal-quote').style.display = 'none'; }
+        function toggleFinanzas() { document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none'; }
+
+        async function handleQuote() {
+            const btn = document.getElementById('btn-quote');
+            const quote = {
+                hoja: "cotizaciones",
+                nombre: document.getElementById('q-name').value,
+                telefono: document.getElementById('q-phone').value,
+                modelo: document.getElementById('m-title').innerText,
+                cp: document.getElementById('q-cp').value,
+                metodo_pago: document.getElementById('q-metodo').value,
+                enganche: document.getElementById('q-down').value || "0",
+                meses: document.getElementById('q-meses').value || "0"
+            };
+            btn.innerText = "ENVIANDO..."; btn.disabled = true;
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify(quote)
+                });
+                alert("Solicitud enviada.");
+                closeM();
+            } catch(e) { alert("Error al enviar."); }
+            finally { btn.innerText = "SOLICITAR"; btn.disabled = false; }
         }
 
         function updateAppointmentUI() {
@@ -445,35 +445,6 @@
                     <div style="font-size:1.2rem; font-weight:bold;">${app.fecha} | ${app.hora} hrs</div>
                 </div>`;
             } else container.innerHTML = '';
-        }
-
-        function openM(t) { document.getElementById('m-title').innerText = t; document.getElementById('modal-quote').style.display = 'flex'; }
-        function closeM() { document.getElementById('modal-quote').style.display = 'none'; }
-        function toggleFinanzas() { document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none'; }
-
-        async function handleQuote() {
-            const btn = document.getElementById('btn-quote');
-            const quote = {
-                nombre: document.getElementById('q-name').value,
-                telefono: document.getElementById('q-phone').value,
-                modelo: document.getElementById('m-title').innerText,
-                cp: document.getElementById('q-cp').value,
-                metodo_pago: document.getElementById('q-metodo').value,
-                enganche: document.getElementById('q-down').value || "N/A",
-                meses: document.getElementById('q-meses').value || "N/A"
-            };
-            btn.innerText = "ENVIANDO..."; btn.disabled = true;
-            try {
-                await fetch(`${SCRIPT_URL}?action=write&sheet=cotizaciones`, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(quote)
-                });
-                alert("Solicitud de cotización enviada.");
-                closeM();
-            } catch(e) { alert("Error al enviar cotización."); }
-            finally { btn.innerText = "SOLICITAR"; btn.disabled = false; }
         }
     </script>
 </body>
