@@ -267,7 +267,6 @@
             }
         };
 
-        // Función para agregar comas a los precios
         function formatPrice(price) {
             if (!price) return "$0";
             let val = price.toString().replace(/[^0-9]/g, '');
@@ -323,7 +322,6 @@
             document.getElementById('btn-tab-' + tabType).classList.add('active');
             
             const nombreBusqueda = currentVehicleSelected.toLowerCase();
-            // Lógica corregida para encontrar la clave de información técnica
             const key = Object.keys(DESC_DATA).find(k => nombreBusqueda.includes(k));
             
             let info = DESC_DATA[key] || {
@@ -368,10 +366,10 @@
                 const data = await res.json();
                 const html = data.map(s => `
                     <div class="car-card">
-                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${s.modelo || s.Versión}</h3>
-                        <p style="margin:0; font-size:0.8rem; color:#888;">${s.km || 0} KM</p>
+                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${s.modelo || s.Versión || 'Seminuevo'}</h3>
+                        <p style="margin:0; font-size:0.8rem; color:#888;">${s.km || 0} KM | ${s.año || ''}</p>
                         <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${formatPrice(s.precio)}</div>
-                        <button class="btn-action btn-yellow" onclick="openM('${s.modelo || s.Versión}')">ME INTERESA</button>
+                        <button class="btn-action btn-yellow" onclick="openM('${s.modelo || s.Versión || 'Seminuevo'}')">ME INTERESA</button>
                     </div>`).join('');
                 cacheSeminuevos = html;
                 container.innerHTML = html;
