@@ -322,6 +322,7 @@
             document.getElementById('btn-tab-' + tabType).classList.add('active');
             
             const nombreBusqueda = currentVehicleSelected.toLowerCase();
+            // Busca si alguna de las llaves del diccionario está contenida en el nombre del modelo
             const key = Object.keys(DESC_DATA).find(k => nombreBusqueda.includes(k));
             
             let info = DESC_DATA[key] || {
@@ -364,13 +365,16 @@
             try {
                 const res = await fetch(`${SCRIPT_URL}?sheet=seminuevos`);
                 const data = await res.json();
-                const html = data.map(s => `
+                // Corregido: Mapeo más flexible de nombres de columnas para seminuevos
+                const html = data.map(s => {
+                    const nombreUnidad = s.modelo || s.unidad || s.marca || s.Versión || 'Seminuevo';
+                    return `
                     <div class="car-card">
-                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${s.modelo || s.Versión || 'Seminuevo'}</h3>
+                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${nombreUnidad}</h3>
                         <p style="margin:0; font-size:0.8rem; color:#888;">${s.km || 0} KM | ${s.año || ''}</p>
                         <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${formatPrice(s.precio)}</div>
-                        <button class="btn-action btn-yellow" onclick="openM('${s.modelo || s.Versión || 'Seminuevo'}')">ME INTERESA</button>
-                    </div>`).join('');
+                        <button class="btn-action btn-yellow" onclick="openM('${nombreUnidad}')">ME INTERESA</button>
+                    </div>`}).join('');
                 cacheSeminuevos = html;
                 container.innerHTML = html;
             } catch(e) { container.innerText = "Error al cargar inventario."; }
