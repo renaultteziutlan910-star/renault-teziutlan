@@ -109,28 +109,13 @@
         <input type="tel" id="user-phone" class="login-input" placeholder="Número de teléfono">
         <label class="form-label" style="color:#888; text-align:left;">Selecciona tu Renault actual:</label>
         <select id="user-unit" class="login-input">
-            <optgroup label="Modelos Actuales">
-                <option value="Kwid">Kwid</option>
-                <option value="Kardian">Kardian</option>
-                <option value="Duster">Duster</option>
-                <option value="Stepway">Stepway</option>
-                <option value="Oroch">Oroch</option>
-                <option value="Koleos">Koleos</option>
-                <option value="Master">Master</option>
-                <option value="Kangoo">Kangoo</option>
-                <option value="Megane E-Tech">Megane E-Tech</option>
-            </optgroup>
-            <optgroup label="Modelos Anteriores">
-                <option value="Clio">Clio</option>
-                <option value="Sandero">Sandero</option>
-                <option value="Logan">Logan</option>
-                <option value="Captur">Captur</option>
-                <option value="Fluence">Fluence</option>
-                <option value="Safrane">Safrane</option>
-                <option value="Scala">Scala</option>
-                <option value="Megane">Megane (Gasolina)</option>
-                <option value="Scenic">Scenic</option>
-            </optgroup>
+            <option value="Kwid">Kwid</option>
+            <option value="Kardian">Kardian</option>
+            <option value="Duster">Duster</option>
+            <option value="Stepway">Stepway</option>
+            <option value="Oroch">Oroch</option>
+            <option value="Koleos">Koleos</option>
+            <option value="Megane E-Tech">Megane E-Tech</option>
         </select>
         <button class="btn-action btn-yellow" onclick="saveData()">INGRESAR</button>
     </div>
@@ -159,16 +144,12 @@
     <div id="p-nuevos" class="page">
         <div style="text-align: center; color: #d4af37; font-weight: 800; margin-bottom: 15px;">UNIDADES NUEVAS</div>
         <p style="text-align: center; font-size: 0.8rem; color: #888;">Toca la imagen para ver detalles técnicos</p>
-        <div id="cat-container">
-             <div style="padding:40px; text-align:center; color:#555;">Cargando catálogo premium...</div>
-        </div>
+        <div id="cat-container"></div>
     </div>
 
     <div id="p-seminuevos" class="page">
         <div style="text-align: center; color: #d4af37; font-weight: 800; margin-bottom: 15px;">INVENTARIO SEMINUEVOS</div>
-        <div id="semi-container">
-             <div style="padding:40px; text-align:center; color:#555;">Cargando inventario...</div>
-        </div>
+        <div id="semi-container"></div>
     </div>
 
     <div id="modal-desc" class="modal">
@@ -183,7 +164,7 @@
                 <button id="btn-tab-tecnologia" class="tab-btn" onclick="switchTab('tecnologia')">Tecnología</button>
             </div>
 
-            <div id="desc-text" class="desc-text">Selecciona una pestaña</div>
+            <div id="desc-text" class="desc-text"></div>
             <div id="desc-tags" style="margin-bottom:20px;"></div>
             
             <button class="btn-action btn-yellow" id="btn-desc-quote" onclick="">COTIZAR AHORA</button>
@@ -198,7 +179,7 @@
             <label class="form-label">Teléfono</label>
             <input type="tel" id="q-phone" class="form-control">
             <label class="form-label">Código Postal</label>
-            <input type="number" id="q-cp" class="form-control" placeholder="Ej: 73800">
+            <input type="number" id="q-cp" class="form-control" placeholder="73800">
             <label class="form-label">Método de Pago</label>
             <select id="q-metodo" class="form-control" onchange="toggleFinanzas()">
                 <option value="Contado">A Contado</option>
@@ -209,11 +190,11 @@
                 <input type="number" id="q-down" class="form-control">
                 <label class="form-label">Plazo (Meses)</label>
                 <select id="q-meses" class="form-control">
-                    <option value="12">12 Meses</option><option value="24">24 Meses</option><option value="36">36 Meses</option><option value="48">48 Meses</option><option value="60">60 Meses</option>
+                    <option value="12">12 Meses</option><option value="24">24 Meses</option><option value="48">48 Meses</option><option value="60">60 Meses</option>
                 </select>
             </div>
             <button id="btn-quote" class="btn-action btn-yellow" onclick="handleQuote()" style="margin-top:15px;">SOLICITAR</button>
-            <button onclick="closeM()" style="width:100%; background:none; border:none; color:#999; margin-top:15px; font-weight:bold;">Cerrar</button>
+            <button onclick="closeM()" style="width:100%; background:none; border:none; color:#999; margin-top:15px;">Cerrar</button>
         </div>
     </div>
 
@@ -231,29 +212,30 @@
         let cacheNuevos = null;
         let cacheSeminuevos = null;
 
+        // DATA TÉCNICA CORREGIDA
         const DESC_DATA = {
             "boreal": {
-                info: "La nueva Boreal Iconic Hybrid 2026 introduce la avanzada tecnología E-Tech de Renault. Ahorro de combustible de hasta un 40% en ciudad.",
-                seguridad: "Máxima protección con 6 bolsas de aire y frenado autónomo de emergencia (AEB).",
-                tecnologia: "Tablero digital de 10'', pantalla vertical y múltiples modos de conducción.",
+                info: "La nueva Boreal Iconic Hybrid 2026 introduce la avanzada tecnología E-Tech de Renault. Ahorro de combustible de hasta un 40% en ciudad y una conducción suave y silenciosa.",
+                seguridad: "Máxima protección con 6 bolsas de aire, frenado autónomo de emergencia (AEB) y control de estabilidad avanzado.",
+                tecnologia: "Tablero digital de 10'', pantalla vertical con conectividad inalámbrica y múltiples modos de conducción (Multi-Sense).",
                 tags: ["Híbrido E-Tech", "Tablero 10''", "Ahorro 40%"]
             },
             "kardian": {
-                info: "Renault Kardian redefine el segmento con su nuevo motor turbo de 1.0L que entrega 115hp.",
-                seguridad: "Cuenta con 6 bolsas de aire de serie y Frenado Autónomo de Emergencia.",
+                info: "Renault Kardian redefine el segmento con su nuevo motor turbo de 1.0L que entrega 115hp y un torque sorprendente.",
+                seguridad: "Cuenta con 6 bolsas de aire de serie y Frenado Autónomo de Emergencia para mayor tranquilidad.",
                 tecnologia: "Pantalla táctil de 8'' compatible con Android Auto y Apple CarPlay inalámbrico.",
-                tags: ["Turbo 115hp", "6 Airbags", "Pantalla 8'' Wireless"]
+                tags: ["Turbo 115hp", "6 Airbags", "Wireless CP/AA"]
             },
             "kwid": {
-                info: "El SUV de los compactos. Altura al piso líder en su clase (18.5 cm) y gran ahorro.",
+                info: "El SUV de los compactos. Altura al piso líder en su clase (18.5 cm) y un consumo de combustible imbatible.",
                 seguridad: "4 bolsas de aire, frenos ABS y asistente de arranque en pendientes (HSA).",
-                tecnologia: "Media Evolution de 7'' y cámara de reversa integrada.",
+                tecnologia: "Media Evolution de 7'' y cámara de reversa integrada para maniobras seguras.",
                 tags: ["Consumo 22km/L", "Altura SUV", "Dirección Eléctrica"]
             },
             "duster": {
-                info: "Motor Turbo 1.3L de 154hp. Desempeño excepcional y gran espacio interior.",
-                seguridad: "Estructura reforzada y cámara 360° (Multiview).",
-                tecnologia: "Llave inteligente tipo tarjeta y encendido por botón.",
+                info: "Motor Turbo 1.3L de 154hp. Desempeño excepcional tanto en ciudad como en carretera con gran espacio interior.",
+                seguridad: "Estructura reforzada, cámara 360° (Multiview) y sensores de punto ciego.",
+                tecnologia: "Llave inteligente tipo tarjeta, encendido por botón y climatización automática.",
                 tags: ["Motor Turbo 154hp", "Cajuela 475L", "Cámara 360°"]
             }
         };
@@ -277,7 +259,7 @@
             const name = document.getElementById('user-name').value;
             const phone = document.getElementById('user-phone').value;
             const unit = document.getElementById('user-unit').value;
-            if(!name || !phone) return alert("Por favor completa tus datos");
+            if(!name || !phone) return alert("Completa tus datos");
             const userData = { name, phone, unit };
             localStorage.setItem('renault_user', JSON.stringify(userData));
             renderUser(userData);
@@ -285,11 +267,11 @@
             initAppData();
         }
 
-        // CARGA RÁPIDA (PARALELA)
+        // CARGA PARALELA (OPTIMIZACIÓN DE VELOCIDAD)
         async function initAppData() { 
             updateAppointmentUI();
-            // Ejecutamos ambas al mismo tiempo sin esperar una a la otra
-            Promise.all([loadCat(), loadSemi()]).catch(e => console.log("Error de carga inicial"));
+            // Lanza las dos peticiones al mismo tiempo
+            Promise.all([loadCat(), loadSemi()]).catch(e => console.log("Carga silenciosa"));
         }
 
         function renderUser(d) {
@@ -313,29 +295,30 @@
             currentVehicleSelected = modelo;
             document.getElementById('desc-img').src = img;
             document.getElementById('desc-title').innerText = modelo;
-            switchTab('info'); // Esto ahora disparará la búsqueda corregida
+            switchTab('info');
             document.getElementById('btn-desc-quote').onclick = () => { closeDesc(); openM(modelo); };
             document.getElementById('modal-desc').style.display = 'flex';
         }
 
-        // CORRECCIÓN BOREAL E INFORMACIÓN
+        // CORRECCIÓN BOREAL Y PESTAÑAS
         function switchTab(tabType) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-tab-' + tabType).classList.add('active');
             
-            const nombreBusqueda = currentVehicleSelected.toLowerCase();
-            // Buscamos si la palabra "boreal" o el nombre está en nuestra base de datos
-            const key = Object.keys(DESC_DATA).find(k => nombreBusqueda.includes(k.toLowerCase()));
+            const modelLower = currentVehicleSelected.toLowerCase();
+            // Detecta "boreal" incluso si el nombre es más largo
+            const key = Object.keys(DESC_DATA).find(k => modelLower.includes(k));
             
-            let info = DESC_DATA[key] || {
-                info: `Unidad ${currentVehicleSelected} disponible para entrega inmediata. Un Renault diseñado para durar.`,
-                seguridad: "Sistemas de seguridad Renault: Frenado ABS, bolsas de aire y estructura reforzada.",
-                tecnologia: "Conectividad total y confort premium en cada viaje.",
-                tags: ["Renault", "Calidad", "Garantía"]
+            const info = DESC_DATA[key] || {
+                info: `Unidad ${currentVehicleSelected} disponible. Consulta equipamiento con tu asesor.`,
+                seguridad: "Equipamiento de seguridad estándar Renault incluido.",
+                tecnologia: "Sistemas de infoentretenimiento y conectividad de última generación.",
+                tags: ["Renault", "Calidad"]
             };
             
             document.getElementById('desc-text').innerText = info[tabType];
-            document.getElementById('desc-tags').innerHTML = tabType === 'info' ? 
+            const tagContainer = document.getElementById('desc-tags');
+            tagContainer.innerHTML = tabType === 'info' ? 
                 (info.tags || []).map(t => `<span class="feature-tag">${t}</span>`).join('') : "";
         }
 
@@ -356,7 +339,7 @@
                     </div>`).join('');
                 cacheNuevos = html;
                 container.innerHTML = html;
-            } catch(e) { container.innerText = "Reintentando conexión..."; }
+            } catch(e) { container.innerHTML = "<p style='text-align:center;'>Error al cargar catálogo.</p>"; }
         }
 
         // CORRECCIÓN SEMINUEVOS (Nombres de unidades)
@@ -367,18 +350,18 @@
                 const res = await fetch(`${SCRIPT_URL}?sheet=seminuevos`);
                 const data = await res.json();
                 const html = data.map(s => {
-                    // INTENTO DE NOMBRE: Busca en modelo, unidad o marca para no dejarlo vacío
-                    const nombreUnidad = s.modelo || s.unidad || s.marca || s.Modelo || 'Seminuevo Renault';
+                    // Si 'modelo' está vacío, intenta con 'unidad' o 'marca'
+                    const unitName = s.modelo || s.unidad || s.marca || `Renault ${s.año || 'Seminuevo'}`;
                     return `
                     <div class="car-card">
-                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${nombreUnidad}</h3>
+                        <h3 style="margin:5px 0; color:var(--renault-yellow)">${unitName}</h3>
                         <p style="margin:0; font-size:0.8rem; color:#888;">${s.km || '0'} KM | ${s.año || ''}</p>
                         <div style="color:#d4af37; font-weight:bold; margin:10px 0;">${formatPrice(s.precio)}</div>
-                        <button class="btn-action btn-yellow" onclick="openM('${nombreUnidad}')">ME INTERESA</button>
+                        <button class="btn-action btn-yellow" onclick="openM('${unitName}')">ME INTERESA</button>
                     </div>`}).join('');
                 cacheSeminuevos = html;
                 container.innerHTML = html;
-            } catch(e) { container.innerText = "Actualizando inventario..."; }
+            } catch(e) { container.innerHTML = "<p style='text-align:center;'>Error al cargar inventario.</p>"; }
         }
 
         function renderAppointmentPage() {
@@ -394,19 +377,17 @@
                         <strong>Unidad:</strong> ${app.unidad}<br><strong>Fecha:</strong> ${app.fecha}<br><strong>Hora:</strong> ${app.hora} hrs
                     </div>
                     <button class="btn-action btn-yellow" style="margin-top:20px;" onclick="window.open('https://wa.me/522311234567?text=Confirmo mi cita')">WHATSAPP</button>
-                    <button class="btn-cancel-modern" onclick="localStorage.removeItem('renault_appointment'); renderAppointmentPage(); updateAppointmentUI();">Cancelar Cita</button>
+                    <button class="btn-cancel-modern" onclick="localStorage.removeItem('renault_appointment'); renderAppointmentPage(); updateAppointmentUI();">Cancelar</button>
                 </div>`;
             } else {
                 container.innerHTML = `<div class="card-white">
                     <label class="form-label">Nombre</label><input type="text" id="c-name" class="form-control" value="${user.name || ''}">
-                    <label class="form-label">Teléfono</label><input type="tel" id="c-phone" class="form-control" value="${user.phone || ''}">
                     <label class="form-label">Unidad</label><input type="text" id="c-unit" class="form-control" value="${user.unit || ''}">
-                    <label class="form-label">Kilometraje</label><input type="number" id="c-km" class="form-control" placeholder="Kilometraje actual">
+                    <label class="form-label">Kilometraje</label><input type="number" id="c-km" class="form-control">
                     <label class="form-label">Fecha</label><input type="date" id="c-date" class="form-control">
                     <label class="form-label">Hora</label><input type="time" id="c-time" class="form-control">
-                    <label class="form-label">Detalles de la Unidad</label>
-                    <textarea id="c-details" class="form-control" placeholder="Describe aquí si tu unidad tiene algún detalle o falla..." style="height:80px;"></textarea>
-                    <button id="btn-cita" class="btn-action btn-yellow" onclick="handleBooking()">AGENDAR CITA</button>
+                    <textarea id="c-details" class="form-control" placeholder="Detalles de falla..." style="height:80px; margin-top:10px;"></textarea>
+                    <button id="btn-cita" class="btn-action btn-yellow" onclick="handleBooking()" style="margin-top:10px;">AGENDAR</button>
                 </div>`;
             }
         }
@@ -416,7 +397,6 @@
             const app = {
                 hoja: "citas",
                 nombre: document.getElementById('c-name').value,
-                telefono: document.getElementById('c-phone').value,
                 unidad: document.getElementById('c-unit').value,
                 kilometraje: document.getElementById('c-km').value,
                 fecha: document.getElementById('c-date').value,
@@ -426,17 +406,12 @@
             if(!app.fecha || !app.hora) return alert("Selecciona fecha y hora");
             btn.innerText = "PROCESANDO..."; btn.disabled = true;
             try {
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify(app)
-                });
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(app) });
                 localStorage.setItem('renault_appointment', JSON.stringify(app));
-                alert("¡Cita agendada!");
                 updateAppointmentUI();
                 showPage('inicio');
-            } catch(e) { alert("Error de conexión."); }
-            finally { btn.innerText = "AGENDAR CITA"; btn.disabled = false; }
+            } catch(e) { alert("Revisa tu conexión."); }
+            finally { btn.innerText = "AGENDAR"; btn.disabled = false; }
         }
 
         function openM(t) { document.getElementById('m-title').innerText = t; document.getElementById('modal-quote').style.display = 'flex'; }
@@ -450,18 +425,13 @@
                 nombre: document.getElementById('q-name').value,
                 telefono: document.getElementById('q-phone').value,
                 modelo: document.getElementById('m-title').innerText,
-                cp: document.getElementById('q-cp').value,
                 metodo_pago: document.getElementById('q-metodo').value,
                 enganche: document.getElementById('q-down').value || "0",
                 meses: document.getElementById('q-meses').value || "0"
             };
             btn.innerText = "ENVIANDO..."; btn.disabled = true;
             try {
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify(quote)
-                });
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(quote) });
                 alert("Solicitud enviada.");
                 closeM();
             } catch(e) { alert("Error al enviar."); }
@@ -474,8 +444,8 @@
             if(data) {
                 const app = JSON.parse(data);
                 container.innerHTML = `<div id="appointment-reminder">
-                    <div style="color:#d4af37; font-weight:900; font-size:0.8rem;">PRÓXIMA CITA</div>
-                    <div style="font-size:1.2rem; font-weight:bold;">${app.fecha} | ${app.hora} hrs</div>
+                    <div style="color:#d4af37; font-weight:900; font-size:0.7rem;">CITA PRÓXIMA</div>
+                    <div style="font-size:1.1rem; font-weight:bold;">${app.fecha} | ${app.hora} hrs</div>
                 </div>`;
             } else container.innerHTML = '';
         }
