@@ -54,6 +54,9 @@
         #appointment-reminder { background: rgba(255,255,255,0.1); border: 1px solid #d4af37; padding: 15px; border-radius: 20px; margin-top: 20px; text-align: center; }
         .btn-cancel-modern { background: none; border: 1px solid #ff4444; color: #ff4444; padding: 10px; border-radius: 10px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; }
         .semi-badge { display: inline-block; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; padding: 3px 10px; font-size: 0.72rem; color: #888; margin: 2px; }
+        
+        /* Nuevo estilo para el mensaje de espera VIP */
+        .waiting-msg { background: #f0f7ff; border: 1px solid #d0e3ff; padding: 15px; border-radius: 15px; margin-top: 15px; text-align: center; color: #0056b3; font-weight: bold; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -168,10 +171,6 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtsJSdVpy7L_XdwFdxoq99-FPyRN0SUljawFS3gARNkT_9jQgywIx5agL6k_mS4Zc/exec";
 const PLACEHOLDER = "https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png";
 
-// ── DESCRIPICIONES TÉCNICAS ──────────────────────────────────────
-// Las claves son palabras en minúsculas.
-// La búsqueda detecta si el nombre completo del modelo CONTIENE esa clave.
-// Ej: "Boreal Iconic Hybrid 2026" → contiene "boreal" → encontrado ✅
 const DESC_DATA = {
     "boreal": {
         info: "La nueva Boreal Iconic Hybrid 2026 integra la tecnología E-Tech de Renault con motor híbrido de última generación. Hasta 40% de ahorro de combustible en ciudad.",
@@ -217,14 +216,10 @@ const DESC_DATA = {
     }
 };
 
-// ── ESTADO GLOBAL ────────────────────────────────────────────────
 let currentVehicleSelected = "";
 let cacheNuevos            = null;
 let cacheSeminuevos        = null;
 
-// ── UTILIDADES ───────────────────────────────────────────────────
-
-// Busca un campo en el objeto ignorando mayúsculas y espacios.
 function getField(obj) {
     const keys = Array.from(arguments).slice(1);
     for (const k of keys) {
@@ -239,23 +234,10 @@ function getField(obj) {
     return "";
 }
 
-// Detecta el nombre de la unidad en seminuevos aunque la columna
-// tenga un nombre inesperado.
 function getNombreSemi(s) {
-    const porAlias = getField(s,
-        'versión','version','Versión','Version','VERSIÓN',
-        'modelo','Modelo','MODELO',
-        'unidad','Unidad','UNIDAD',
-        'nombre','Nombre','NOMBRE',
-        'marca','Marca','MARCA',
-        'auto','Auto','AUTO',
-        'vehiculo','Vehiculo','vehículo','Vehículo','descripcion','Descripcion','descripción','Descripción'
-    );
+    const porAlias = getField(s, 'versión','version','Versión','Version','VERSIÓN','modelo','Modelo','MODELO','unidad','Unidad','UNIDAD','nombre','Nombre','NOMBRE','marca','Marca','MARCA','auto','Auto','AUTO','vehiculo','Vehiculo','vehículo','Vehículo','descripcion','Descripcion','descripción','Descripción');
     if (porAlias) return porAlias;
-
-    // Fallback: primer campo que NO sea precio, km, año, color, etc.
-    const ignorar = ['precio','price','km','kms','kilometraje','año','year','color',
-                     'transmision','transmisión','imagen','foto','url','id','hoja','timestamp'];
+    const ignorar = ['precio','price','km','kms','kilometraje','año','year','color','transmision','transmisión','imagen','foto','url','id','hoja','timestamp'];
     for (const key of Object.keys(s)) {
         if (ignorar.includes(key.toLowerCase().trim())) continue;
         const val = String(s[key]).trim();
@@ -271,10 +253,8 @@ function formatPrice(price) {
     return "$" + num.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-// Escapa comillas simples para uso seguro en onclick inline
 function escQ(s) { return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
 
-// ── LOGIN ─────────────────────────────────────────────────────────
 function saveData() {
     const name  = document.getElementById('user-name').value.trim();
     const phone = document.getElementById('user-phone').value.trim();
@@ -310,7 +290,6 @@ async function initAppData() {
     Promise.all([loadCat(), loadSemi()]).catch(() => {});
 }
 
-// ── NAVEGACIÓN ────────────────────────────────────────────────────
 function showPage(id, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -320,24 +299,17 @@ function showPage(id, el) {
     if (id === 'citas') renderAppointmentPage();
 }
 
-// ── CATÁLOGO NUEVOS ───────────────────────────────────────────────
 async function loadCat() {
     if (cacheNuevos) { document.getElementById('cat-container').innerHTML = cacheNuevos; return; }
     const container = document.getElementById('cat-container');
     try {
         const res  = await fetch(`${SCRIPT_URL}?sheet=nuevos`);
         const data = await res.json();
-
         if (!Array.isArray(data) || data.length === 0) {
             container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">No hay unidades disponibles.</p>';
             return;
         }
-
-        // Guardamos los datos en una variable global para acceso por índice.
-        // Esto evita pasar el nombre del modelo como string en onclick,
-        // resolviendo el bug con nombres que tienen acentos, apóstrofes, etc.
         window._catalogoNuevos = data;
-
         cacheNuevos = data.map((c, i) => {
             const modelo  = getField(c, 'modelo','Modelo','MODELO','model','nombre','Nombre');
             const precio  = getField(c, 'precio','Precio','PRECIO','price');
@@ -354,37 +326,30 @@ async function loadCat() {
                 <button class="btn-action btn-yellow" onclick="openM('${escQ(modelo)}')">COTIZAR</button>
             </div>`;
         }).join('');
-
         container.innerHTML = cacheNuevos;
-
     } catch(e) {
         container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Reintentando conexión...</p>';
-        console.error("loadCat:", e);
     }
 }
 
-// ── SEMINUEVOS ────────────────────────────────────────────────────
 async function loadSemi() {
     if (cacheSeminuevos) { document.getElementById('semi-container').innerHTML = cacheSeminuevos; return; }
     const container = document.getElementById('semi-container');
     try {
         const res  = await fetch(`${SCRIPT_URL}?sheet=seminuevos`);
         const data = await res.json();
-
         if (!Array.isArray(data) || data.length === 0) {
             container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Sin inventario disponible.</p>';
             return;
         }
-
         cacheSeminuevos = data.map(s => {
-            const nombre = getNombreSemi(s); // ← detección robusta del nombre
+            const nombre = getNombreSemi(s);
             const km     = getField(s, 'km','KM','kilometraje','Kilometraje','kms','KMS');
             const anio   = getField(s, 'año','Año','anio','year','Year','AÑO');
             const trans  = getField(s, 'transmisión','transmision','Transmisión','Transmision','trans','Trans');
             const color  = getField(s, 'color','Color','COLOR');
             const precio = getField(s, 'precio','Precio','PRECIO','price');
             const kmFmt  = km ? parseInt(km).toLocaleString('es-MX') + ' km' : '';
-
             return `
             <div class="car-card">
                 <h3 style="margin:5px 0;color:var(--renault-yellow)">${nombre}</h3>
@@ -398,52 +363,37 @@ async function loadSemi() {
                 <button class="btn-action btn-yellow" onclick="openM('${escQ(nombre)}')">ME INTERESA</button>
             </div>`;
         }).join('');
-
         container.innerHTML = cacheSeminuevos;
-
     } catch(e) {
         container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Actualizando inventario...</p>';
-        console.error("loadSemi:", e);
     }
 }
 
-// ── DETALLE TÉCNICO ───────────────────────────────────────────────
-// Recibe el ÍNDICE del array en lugar del nombre como string.
-// Así no hay problemas con acentos, apóstrofes ni espacios en onclick.
 function openDesc(index) {
     const data = window._catalogoNuevos || [];
     const c    = data[index];
     if (!c) return;
-
     const modelo = getField(c, 'modelo','Modelo','MODELO','model','nombre','Nombre');
     const imagen = getField(c, 'imagen','Imagen','IMAGEN','img','image','foto','Foto','URL','url');
-
     currentVehicleSelected = modelo;
-
     document.getElementById('desc-img').src            = imagen || PLACEHOLDER;
     document.getElementById('desc-title').innerText    = modelo;
     document.getElementById('btn-desc-quote').onclick  = () => { closeDesc(); openM(modelo); };
-
     switchTab('info');
     document.getElementById('modal-desc').style.display = 'flex';
 }
 
-// La búsqueda en DESC_DATA es flexible:
-// "Boreal Iconic Hybrid 2026".toLowerCase().includes("boreal") → true ✅
 function switchTab(tabType) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-tab-' + tabType).classList.add('active');
-
     const nombreMin = currentVehicleSelected.toLowerCase();
     const key = Object.keys(DESC_DATA).find(k => nombreMin.includes(k));
-
     const info = DESC_DATA[key] || {
         info:       `${currentVehicleSelected} disponible para entrega inmediata en Renault Teziutlán.`,
         seguridad:  "Sistemas de seguridad Renault: ABS, bolsas de aire y estructura reforzada.",
         tecnologia: "Conectividad total y confort premium en cada viaje.",
         tags:       ["Renault", "Calidad", "Garantía"]
     };
-
     document.getElementById('desc-text').innerText  = info[tabType] || '';
     document.getElementById('desc-tags').innerHTML   = tabType === 'info'
         ? (info.tags || []).map(t => `<span class="feature-tag">${t}</span>`).join('') : '';
@@ -451,7 +401,6 @@ function switchTab(tabType) {
 
 function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
 
-// ── COTIZAR ───────────────────────────────────────────────────────
 function openM(nombreModelo) {
     document.getElementById('m-title').innerText       = nombreModelo || 'COTIZAR';
     document.getElementById('modal-quote').style.display = 'flex';
@@ -487,7 +436,6 @@ async function handleQuote() {
     finally { btn.innerText = "SOLICITAR"; btn.disabled = false; }
 }
 
-// ── CITAS ─────────────────────────────────────────────────────────
 function updateAppointmentUI() {
     const data = localStorage.getItem('renault_appointment');
     const el   = document.getElementById('reminder-container');
@@ -507,7 +455,6 @@ function renderAppointmentPage() {
 
     if (data) {
         const a = JSON.parse(data);
-        const waMsg = encodeURIComponent(`Confirmo mi cita:\nUnidad: ${a.unidad}\nFecha: ${a.fecha} | Hora: ${a.hora} hrs`);
         cont.innerHTML = `<div class="card-white" style="text-align:center">
             <div style="font-size:3.5rem">📅</div><h3>CITA AGENDADA</h3>
             <div style="background:#f7f7f7;padding:20px;border-radius:20px;text-align:left">
@@ -518,10 +465,11 @@ function renderAppointmentPage() {
                 <strong>Hora:</strong> ${a.hora} hrs
                 ${a.detalles ? `<br><strong>Detalles:</strong> ${a.detalles}` : ''}
             </div>
-            <a href="https://wa.me/522311234567?text=${waMsg}" target="_blank"
-                style="display:block;width:100%;padding:16px;border-radius:14px;background:#25d366;color:#fff;font-weight:900;text-align:center;text-decoration:none;margin-top:14px">
-                CONFIRMAR POR WHATSAPP
-            </a>
+            
+            <div class="waiting-msg">
+                En un momento se comunican con usted por medio de WhatsApp para confirmar su cita.
+            </div>
+
             <button class="btn-cancel-modern" onclick="cancelarCita()">Cancelar Cita</button>
         </div>`;
     } else {
@@ -573,14 +521,29 @@ async function handleBooking() {
     finally { btn.innerText = "AGENDAR CITA"; btn.disabled = false; }
 }
 
-function cancelarCita() {
-    if (confirm("¿Deseas cancelar tu cita de servicio?")) {
-        localStorage.removeItem('renault_appointment');
-        renderAppointmentPage();
-        updateAppointmentUI();
+// NUEVA FUNCIÓN: Envía a la hoja "cancelada" antes de borrar
+async function cancelarCita() {
+    const rawData = localStorage.getItem('renault_appointment');
+    if (!rawData) return;
+    
+    if (confirm("¿Deseas cancelar tu cita de servicio? Los datos se guardarán para contactarte después.")) {
+        const app = JSON.parse(rawData);
+        app.hoja = "cancelada"; // Cambiamos el destino a la nueva hoja
+        
+        try {
+            // Enviamos los datos a la hoja de cancelados en Excel
+            await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(app) });
+            
+            // Una vez enviado con éxito (o intento), borramos del teléfono
+            localStorage.removeItem('renault_appointment');
+            renderAppointmentPage();
+            updateAppointmentUI();
+            alert("Cita cancelada. En breve nos comunicaremos para reprogramar.");
+        } catch(e) {
+            alert("Error al procesar la cancelación. Intenta de nuevo.");
+        }
     }
 }
 </script>
 </body>
 </html>
-
