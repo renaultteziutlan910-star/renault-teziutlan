@@ -54,8 +54,6 @@
         #appointment-reminder { background: rgba(255,255,255,0.1); border: 1px solid #d4af37; padding: 15px; border-radius: 20px; margin-top: 20px; text-align: center; }
         .btn-cancel-modern { background: none; border: 1px solid #ff4444; color: #ff4444; padding: 10px; border-radius: 10px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; }
         .semi-badge { display: inline-block; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; padding: 3px 10px; font-size: 0.72rem; color: #888; margin: 2px; }
-        
-        /* Nuevo estilo para el mensaje de espera VIP */
         .waiting-msg { background: #f0f7ff; border: 1px solid #d0e3ff; padding: 15px; border-radius: 15px; margin-top: 15px; text-align: center; color: #0056b3; font-weight: bold; font-size: 0.9rem; }
     </style>
 </head>
@@ -465,11 +463,9 @@ function renderAppointmentPage() {
                 <strong>Hora:</strong> ${a.hora} hrs
                 ${a.detalles ? `<br><strong>Detalles:</strong> ${a.detalles}` : ''}
             </div>
-            
             <div class="waiting-msg">
                 En un momento se comunican con usted por medio de WhatsApp para confirmar su cita.
             </div>
-
             <button class="btn-cancel-modern" onclick="cancelarCita()">Cancelar Cita</button>
         </div>`;
     } else {
@@ -521,20 +517,26 @@ async function handleBooking() {
     finally { btn.innerText = "AGENDAR CITA"; btn.disabled = false; }
 }
 
-// NUEVA FUNCIÓN: Envía a la hoja "cancelada" antes de borrar
 async function cancelarCita() {
     const rawData = localStorage.getItem('renault_appointment');
     if (!rawData) return;
     
     if (confirm("¿Deseas cancelar tu cita de servicio? Los datos se guardarán para contactarte después.")) {
         const app = JSON.parse(rawData);
-        app.hoja = "cancelada"; // Cambiamos el destino a la nueva hoja
+        const datosCancelacion = {
+            hoja: "cancelada",
+            nombre: app.nombre,
+            telefono: app.telefono,
+            unidad: app.unidad,
+            kilometraje: app.kilometraje,
+            fecha: app.fecha,
+            hora: app.hora,
+            detalles: app.detalles,
+            timestamp: new Date().toISOString()
+        };
         
         try {
-            // Enviamos los datos a la hoja de cancelados en Excel
-            await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(app) });
-            
-            // Una vez enviado con éxito (o intento), borramos del teléfono
+            await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(datosCancelacion) });
             localStorage.removeItem('renault_appointment');
             renderAppointmentPage();
             updateAppointmentUI();
