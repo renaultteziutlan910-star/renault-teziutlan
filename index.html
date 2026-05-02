@@ -41,7 +41,6 @@
         .tab-btn.active { color: #d4af37; border-bottom: 2px solid #d4af37; }
         .car-card { background: #1a1a1a; border-radius: 25px; padding: 15px; margin-bottom: 25px; border: 1px solid #333; }
         .car-card img { width: 100%; border-radius: 20px; cursor: pointer; transition: transform 0.2s; background: #222; aspect-ratio: 16/9; object-fit: cover; display: block; }
-        .car-card img:active { transform: scale(0.98); }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0d0d0d; display: flex; justify-content: space-around; padding: 15px 0 30px 0; border-top: 1px solid #222; z-index: 1000; }
         .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 0.7rem; font-weight: 700; flex: 1; background: none; border: none; cursor: pointer; }
         .nav-item svg { width: 26px; height: 26px; fill: currentColor; margin-bottom: 4px; display: block; margin: 0 auto; }
@@ -457,11 +456,11 @@ function renderAppointmentPage() {
             <div style="font-size:3.5rem">📅</div><h3>CITA AGENDADA</h3>
             <div style="background:#f7f7f7;padding:20px;border-radius:20px;text-align:left">
                 <strong>Nombre:</strong> ${a.nombre}<br>
-                <strong>Unidad:</strong> ${a.unidad}<br>
+                <strong>Unidad:</strong> ${a["unidad a revisar"]}<br>
                 <strong>Kilometraje:</strong> ${parseInt(a.kilometraje||0).toLocaleString('es-MX')} km<br>
                 <strong>Fecha:</strong> ${a.fecha}<br>
                 <strong>Hora:</strong> ${a.hora} hrs
-                ${a.detalles ? `<br><strong>Detalles:</strong> ${a.detalles}` : ''}
+                ${a["detalles o fallas"] ? `<br><strong>Detalles:</strong> ${a["detalles o fallas"]}` : ''}
             </div>
             <div class="waiting-msg">
                 En un momento se comunican con usted por medio de WhatsApp para confirmar su cita.
@@ -494,15 +493,14 @@ function renderAppointmentPage() {
 async function handleBooking() {
     const btn = document.getElementById('btn-cita');
     const app = {
-        hoja:        "citas",
-        nombre:      document.getElementById('c-name').value,
-        telefono:    document.getElementById('c-phone').value,
-        unidad:      document.getElementById('c-unit').value,
-        kilometraje: document.getElementById('c-km').value,
-        fecha:       document.getElementById('c-date').value,
-        hora:        document.getElementById('c-time').value,
-        detalles:    document.getElementById('c-details').value,
-        timestamp:   new Date().toISOString()
+        hoja:                "citas",
+        "nombre":            document.getElementById('c-name').value,
+        "telefono":          document.getElementById('c-phone').value,
+        "unidad a revisar":  document.getElementById('c-unit').value,
+        "kilometraje":       document.getElementById('c-km').value,
+        "fecha":             document.getElementById('c-date').value,
+        "hora":              document.getElementById('c-time').value,
+        "detalles o fallas": document.getElementById('c-details').value
     };
     if (!app.fecha || !app.hora)         { alert("Selecciona fecha y hora."); return; }
     if (!app.nombre || !app.telefono)    { alert("Completa nombre y teléfono."); return; }
@@ -524,15 +522,14 @@ async function cancelarCita() {
     if (confirm("¿Deseas cancelar tu cita de servicio? Los datos se guardarán para contactarte después.")) {
         const app = JSON.parse(rawData);
         const datosCancelacion = {
-            hoja: "cancelada",
-            nombre: app.nombre,
-            telefono: app.telefono,
-            unidad: app.unidad,
-            kilometraje: app.kilometraje,
-            fecha: app.fecha,
-            hora: app.hora,
-            detalles: app.detalles,
-            timestamp: new Date().toISOString()
+            hoja:                "cancelada",
+            "nombre":            app["nombre"],
+            "telefono":          app["telefono"],
+            "unidad a revisar":  app["unidad a revisar"],
+            "kilometraje":       app["kilometraje"],
+            "fecha":             app["fecha"],
+            "hora":              app["hora"],
+            "detalles o fallas": app["detalles o fallas"]
         };
         
         try {
