@@ -162,6 +162,7 @@
 </nav>
 
 <script>
+// URL del script corregida según tu última implementación
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtsJSdVpy7L_XdwFdxoq99-FPyRN0SUljawFS3gARNkT_9jQgywIx5agL6k_mS4Zc/exec";
 const PLACEHOLDER = "https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png";
 
@@ -185,7 +186,7 @@ const DESC_DATA = {
         tags: ["Motor Turbo", "6 Airbags", "e-Shifter"]
     },
     "duster": {
-        info: "La camioneta que Teziutlán conoce y ama. Robusta, potente y lista para cualquier terreno (recordando la banda lateral derecha).",
+        info: "La camioneta que Teziutlán conoce y ama. Robusta, potente y lista para cualquier terreno.",
         seguridad: "Control de tracción, asistencia de frenado de emergencia y cámara Multiview 360°.",
         tecnologia: "Pantalla flotante de 8'', llave inteligente presencial y sistema Start/Stop.",
         tags: ["Cámara 360°", "Keyless Entry", "Legendaria"]
@@ -410,7 +411,7 @@ function renderAppointmentPage() {
                 <strong>Kilometraje:</strong> ${a.kilometraje} km<br>
                 <strong>Fecha:</strong> ${a.fecha}<br>
                 <strong>Hora:</strong> ${a.hora} hrs<br>
-                <strong>Falla/Detalle:</strong> ${a["detalles o fallas"] || 'Ninguno'}
+                <strong>Detalles:</strong> ${a.detalles || 'Ninguno'}
             </div>
             <button class="btn-cancel-modern" onclick="cancelarCita()">Cancelar Cita</button>
         </div>`;
@@ -440,7 +441,7 @@ async function handleBooking() {
         kilometraje: document.getElementById('c-km').value.trim(),
         fecha: document.getElementById('c-date').value,
         hora: document.getElementById('c-time').value,
-        "detalles o fallas": document.getElementById('c-details').value.trim()
+        detalles: document.getElementById('c-details').value.trim() // Nombre sincronizado
     };
     if (!app.nombre || !app.telefono || !app.fecha || !app.hora) { alert("Completa los campos obligatorios."); return; }
     btn.innerText = "PROCESANDO..."; btn.disabled = true;
@@ -459,7 +460,6 @@ async function cancelarCita() {
     const btn = document.querySelector('.btn-cancel-modern');
     if(btn) btn.innerText = "CANCELANDO...";
     try {
-        // Al cancelar, enviamos el objeto completo para que Excel identifique qué cita borrar/marcar
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({...app, hoja: "cancelada"}) });
         localStorage.removeItem('renault_appointment');
         updateAppointmentUI();
