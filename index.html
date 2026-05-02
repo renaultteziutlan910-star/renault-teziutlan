@@ -52,8 +52,6 @@
         .feature-tag { display: inline-block; background: #f0f0f0; padding: 5px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin: 3px; color: #555; }
         #appointment-reminder { background: rgba(255,255,255,0.1); border: 1px solid #d4af37; padding: 15px; border-radius: 20px; margin-top: 20px; text-align: center; }
         .btn-cancel-modern { background: none; border: 1px solid #ff4444; color: #ff4444; padding: 10px; border-radius: 10px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; }
-        .semi-badge { display: inline-block; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; padding: 3px 10px; font-size: 0.72rem; color: #888; margin: 2px; }
-        .waiting-msg { background: #f0f7ff; border: 1px solid #d0e3ff; padding: 15px; border-radius: 15px; margin-top: 15px; text-align: center; color: #0056b3; font-weight: bold; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -129,7 +127,8 @@
         </div>
         <div id="desc-text" class="desc-text"></div>
         <div id="desc-tags" style="margin-bottom:20px"></div>
-        <button class="btn-action btn-yellow" id="btn-desc-quote">COTIZAR AHORA</button>
+        <!-- CORRECCIÓN 1: Se agregó la función onclick al botón del modal -->
+        <button class="btn-action btn-yellow" id="btn-desc-quote" onclick="openM(currentVehicleSelected)">COTIZAR AHORA</button>
     </div>
 </div>
 
@@ -167,30 +166,37 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtsJSdVpy7L_XdwFdxoq99-FPyRN0SUljawFS3gARNkT_9jQgywIx5agL6k_mS4Zc/exec";
 const PLACEHOLDER = "https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png";
 
+// CORRECCIÓN 2: Información enriquecida para los modelos principales
 const DESC_DATA = {
+    "boreal iconic hybrid 2026": {
+        info: "El futuro de Renault en Teziutlán. Un híbrido de nueva generación con eficiencia líder en su clase y diseño vanguardista.",
+        seguridad: "Máxima protección con ADAS avanzada: frenado autónomo, control crucero adaptativo y 7 bolsas de aire.",
+        tecnologia: "Pantalla ultra-wide de 12'', sistema OpenR Link con Google integrado y sonido Premium Bose.",
+        tags: ["Híbrido E-Tech", "Google Built-in", "7 Airbags"]
+    },
     "kwid": {
-        info: "El SUV de los compactos. Ideal para la ciudad con la mayor altura al piso en su categoría y un consumo de combustible excepcional.",
-        seguridad: "Equipado con 4 bolsas de aire de serie, frenos ABS, asistencia de frenado de emergencia (AFU) y control de estabilidad (ESC).",
-        tecnologia: "Sistema multimedia Media Evolution con pantalla táctil de 7'', conectividad Apple CarPlay y Android Auto, y cámara de reversa.",
-        tags: ["4 Airbags", "Ahorro Gasolina", "Smartphone Replication"]
+        info: "El SUV de los compactos. Ideal para la ciudad con la mayor altura al piso en su categoría y gran ahorro de combustible.",
+        seguridad: "4 bolsas de aire de serie, frenos ABS con EBD y control electrónico de estabilidad (ESC).",
+        tecnologia: "Media Evolution de 7'' con Apple CarPlay y Android Auto, cámara de reversa y sensores de estacionamiento.",
+        tags: ["4 Airbags", "Ahorro Gasolina", "Compact SUV"]
     },
     "kardian": {
-        info: "El nuevo referente del segmento. Un SUV moderno con motor turbo de 115hp y un diseño robusto y sofisticado.",
-        seguridad: "Cuenta con 6 bolsas de aire, frenado autónomo de emergencia, alerta de colisión frontal y asistente de arranque en pendientes.",
-        tecnologia: "Consola central elevada, palanca de cambios 'e-shifter', panel digital de 7'' y freno de mano electrónico.",
+        info: "Cambio de juego. Un SUV con motor Turbo de 115hp, diseño robusto y la nueva identidad visual de Renault.",
+        seguridad: "6 bolsas de aire, alerta de colisión frontal, frenado autónomo y asistente de punto ciego.",
+        tecnologia: "Consola elevada, palanca e-shifter, freno de mano electrónico y cargador inalámbrico.",
         tags: ["Motor Turbo", "6 Airbags", "e-Shifter"]
     },
     "duster": {
-        info: "Leyenda todoterreno. Robusta, espaciosa y lista para cualquier camino en Teziutlán y sus alrededores.",
-        seguridad: "Estructura reforzada, control de tracción, cámara de 360° (según versión) y sensores de punto ciego.",
-        tecnologia: "Pantalla de 8'' con replicación inalámbrica, control crucero, limitador de velocidad y llave inteligente.",
-        tags: ["Cámara 360°", "Wireless CarPlay", "Modo Eco"]
+        info: "La camioneta que Teziutlán conoce y ama. Robusta, potente y lista para cualquier terreno (recordando la banda lateral derecha).",
+        seguridad: "Control de tracción, asistencia de frenado de emergencia y cámara Multiview 360°.",
+        tecnologia: "Pantalla flotante de 8'', llave inteligente presencial y sistema Start/Stop.",
+        tags: ["Cámara 360°", "Keyless Entry", "Legendaria"]
     },
     "oroch": {
-        info: "La combinación perfecta entre la comodidad de un SUV y la versatilidad de una pickup. Suspensión trasera multilink para mayor confort.",
-        seguridad: "Control de estabilidad, asistente de mitigación de vuelco, 2 bolsas de aire frontales y anclajes ISOFIX.",
-        tecnologia: "Nuevo interior con pantalla flotante de 8'', sensores de luz y lluvia, y climatizador automático.",
-        tags: ["Carga 650kg", "Suspensión Multilink", "Motor Turbo"]
+        info: "Mucho más que una pickup. Comodidad de SUV con la fuerza de carga necesaria para el trabajo diario.",
+        seguridad: "Suspensión trasera Multilink, asistente de arranque en pendientes y control de antivuelco.",
+        tecnologia: "Nueva pantalla táctil de 8'', volante multifunción y climatizador automático.",
+        tags: ["650kg Carga", "Suspensión Multilink", "Motor Turbo"]
     }
 };
 
@@ -331,7 +337,8 @@ function switchTab(tabType) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-tab-' + tabType).classList.add('active');
     
-    const slug = currentVehicleSelected.toLowerCase();
+    // Normalizar el nombre para buscar en DESC_DATA
+    const slug = currentVehicleSelected.toLowerCase().trim();
     const data = DESC_DATA[slug];
 
     if (data) {
@@ -342,17 +349,18 @@ function switchTab(tabType) {
         }
     } else {
         const generic = {
-            info: `${currentVehicleSelected} disponible en Renault Teziutlán.`,
-            seguridad: "Consulte los sistemas de seguridad activa y pasiva integrados en esta unidad.",
-            tecnologia: "Equipamiento tecnológico diseñado para mejorar su experiencia de conducción."
+            info: `${currentVehicleSelected} disponible en Renault Teziutlán. Contacta a un asesor para conocer más detalles sobre esta unidad.`,
+            seguridad: "Consulte los sistemas de seguridad activa y pasiva integrados para garantizar su protección en cada trayecto.",
+            tecnologia: "Equipamiento tecnológico de vanguardia diseñado para elevar su experiencia de confort y conectividad."
         };
         document.getElementById('desc-text').innerText = generic[tabType];
-        if (tabType === 'info') document.getElementById('desc-tags').innerHTML = '<span class="feature-tag">Calidad Renault</span>';
+        if (tabType === 'info') document.getElementById('desc-tags').innerHTML = '<span class="feature-tag">Calidad Renault</span> <span class="feature-tag">Teziutlán Premium</span>';
     }
 }
 
 function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
 function openM(nombreModelo) {
+    closeDesc(); // Cerrar el modal de descripción si está abierto
     document.getElementById('m-title').innerText = nombreModelo;
     document.getElementById('modal-quote').style.display = 'flex';
 }
@@ -373,8 +381,8 @@ async function handleQuote() {
     btn.innerText = "ENVIANDO..."; btn.disabled = true;
     try {
         await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(quote) });
-        alert("Solicitud enviada."); closeM();
-    } catch(e) { alert("Error."); }
+        alert("Solicitud de cotización enviada con éxito."); closeM();
+    } catch(e) { alert("Error al enviar la solicitud."); }
     finally { btn.innerText = "SOLICITAR"; btn.disabled = false; }
 }
 
@@ -436,65 +444,28 @@ async function handleBooking() {
         hora: document.getElementById('c-time').value,
         detalles: document.getElementById('c-details').value.trim()
     };
-
-    if (!app.nombre || !app.telefono || !app.fecha || !app.hora) { 
-        alert("Por favor, completa los campos obligatorios."); 
-        return; 
-    }
-
-    btn.innerText = "PROCESANDO..."; 
-    btn.disabled = true;
-
+    if (!app.nombre || !app.telefono || !app.fecha || !app.hora) { alert("Completa los campos obligatorios."); return; }
+    btn.innerText = "PROCESANDO..."; btn.disabled = true;
     try {
-        await fetch(SCRIPT_URL, { 
-            method: 'POST', 
-            mode: 'no-cors', 
-            body: JSON.stringify(app) 
-        });
-        
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(app) });
         localStorage.setItem('renault_appointment', JSON.stringify(app));
-
-        alert("¡Cita agendada correctamente!"); 
-        updateAppointmentUI(); 
-        showPage('inicio');
-    } catch(e) { 
-        alert("Error al agendar la cita."); 
-    } finally { 
-        btn.innerText = "AGENDAR CITA"; 
-        btn.disabled = false; 
-    }
+        alert("¡Cita agendada correctamente!"); updateAppointmentUI(); showPage('inicio');
+    } catch(e) { alert("Error al agendar."); }
+    finally { btn.innerText = "AGENDAR CITA"; btn.disabled = false; }
 }
 
 async function cancelarCita() {
     const rawData = localStorage.getItem('renault_appointment');
-    if (!rawData) return;
-    
-    if (!confirm("¿Seguro que deseas cancelar tu cita?")) return;
-    
+    if (!rawData || !confirm("¿Seguro que deseas cancelar tu cita?")) return;
     const app = JSON.parse(rawData);
     const btn = document.querySelector('.btn-cancel-modern');
     if(btn) btn.innerText = "CANCELANDO...";
-
-    const datosCancelacion = {
-        ...app,
-        hoja: "cancelada", 
-        accion: "borrar_y_mover"
-    };
-    
     try {
-        await fetch(SCRIPT_URL, { 
-            method: 'POST', 
-            mode: 'no-cors', 
-            body: JSON.stringify(datosCancelacion) 
-        });
-        
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({...app, hoja: "cancelada"}) });
         localStorage.removeItem('renault_appointment');
-        renderAppointmentPage(); 
-        updateAppointmentUI();
+        renderAppointmentPage(); updateAppointmentUI();
         alert("Cita cancelada correctamente.");
-    } catch(e) { 
-        alert("Error al cancelar la cita."); 
-    }
+    } catch(e) { alert("Error al cancelar."); }
 }
 </script>
 </body>
