@@ -404,7 +404,7 @@ function renderAppointmentPage() {
         const a = JSON.parse(data);
         cont.innerHTML = `<div class="card-white" style="text-align:center">
             <div style="font-size:3.5rem">📅</div><h3>CITA AGENDADA</h3>
-            <div style="background:#f7f7f7;padding:20px;border-radius:20px;text-align:left">
+            <div style="background:#f7f7f7;padding:20px;border-radius:20px;text-align:left;color:#333">
                 <strong>Nombre:</strong> ${a.nombre}<br>
                 <strong>Unidad:</strong> ${a.unidad}<br>
                 <strong>Kilometraje:</strong> ${a.kilometraje} km<br>
@@ -459,9 +459,11 @@ async function cancelarCita() {
     const btn = document.querySelector('.btn-cancel-modern');
     if(btn) btn.innerText = "CANCELANDO...";
     try {
+        // Al cancelar, enviamos el objeto completo para que Excel identifique qué cita borrar/marcar
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({...app, hoja: "cancelada"}) });
         localStorage.removeItem('renault_appointment');
-        renderAppointmentPage(); updateAppointmentUI();
+        updateAppointmentUI();
+        showPage('inicio');
         alert("Cita cancelada correctamente.");
     } catch(e) { alert("Error al cancelar."); }
 }
