@@ -127,7 +127,6 @@
         </div>
         <div id="desc-text" class="desc-text"></div>
         <div id="desc-tags" style="margin-bottom:20px"></div>
-        <!-- CORRECCIÓN 1: Se agregó la función onclick al botón del modal -->
         <button class="btn-action btn-yellow" id="btn-desc-quote" onclick="openM(currentVehicleSelected)">COTIZAR AHORA</button>
     </div>
 </div>
@@ -166,7 +165,6 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtsJSdVpy7L_XdwFdxoq99-FPyRN0SUljawFS3gARNkT_9jQgywIx5agL6k_mS4Zc/exec";
 const PLACEHOLDER = "https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png";
 
-// CORRECCIÓN 2: Información enriquecida para los modelos principales
 const DESC_DATA = {
     "boreal iconic hybrid 2026": {
         info: "El futuro de Renault en Teziutlán. Un híbrido de nueva generación con eficiencia líder en su clase y diseño vanguardista.",
@@ -337,7 +335,6 @@ function switchTab(tabType) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-tab-' + tabType).classList.add('active');
     
-    // Normalizar el nombre para buscar en DESC_DATA
     const slug = currentVehicleSelected.toLowerCase().trim();
     const data = DESC_DATA[slug];
 
@@ -360,7 +357,7 @@ function switchTab(tabType) {
 
 function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
 function openM(nombreModelo) {
-    closeDesc(); // Cerrar el modal de descripción si está abierto
+    closeDesc(); 
     document.getElementById('m-title').innerText = nombreModelo;
     document.getElementById('modal-quote').style.display = 'flex';
 }
@@ -412,7 +409,8 @@ function renderAppointmentPage() {
                 <strong>Unidad:</strong> ${a.unidad}<br>
                 <strong>Kilometraje:</strong> ${a.kilometraje} km<br>
                 <strong>Fecha:</strong> ${a.fecha}<br>
-                <strong>Hora:</strong> ${a.hora} hrs
+                <strong>Hora:</strong> ${a.hora} hrs<br>
+                <strong>Falla/Detalle:</strong> ${a["detalles o fallas"] || 'Ninguno'}
             </div>
             <button class="btn-cancel-modern" onclick="cancelarCita()">Cancelar Cita</button>
         </div>`;
@@ -442,7 +440,7 @@ async function handleBooking() {
         kilometraje: document.getElementById('c-km').value.trim(),
         fecha: document.getElementById('c-date').value,
         hora: document.getElementById('c-time').value,
-        detalles: document.getElementById('c-details').value.trim()
+        "detalles o fallas": document.getElementById('c-details').value.trim()
     };
     if (!app.nombre || !app.telefono || !app.fecha || !app.hora) { alert("Completa los campos obligatorios."); return; }
     btn.innerText = "PROCESANDO..."; btn.disabled = true;
