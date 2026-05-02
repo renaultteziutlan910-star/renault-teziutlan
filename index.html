@@ -108,7 +108,6 @@
 
 <div id="p-nuevos" class="page">
     <div style="text-align:center;color:#d4af37;font-weight:800;margin-bottom:8px">UNIDADES NUEVAS</div>
-    <p style="text-align:center;font-size:0.8rem;color:#888;margin-bottom:20px">Toca la imagen para ver detalles técnicos</p>
     <div id="cat-container"><div style="padding:40px;text-align:center;color:#555">Cargando catálogo premium...</div></div>
 </div>
 
@@ -170,46 +169,16 @@ const PLACEHOLDER = "https://raw.githubusercontent.com/Renato-Tez/Assets/main/re
 
 const DESC_DATA = {
     "boreal": {
-        info: "La nueva Boreal Iconic Hybrid 2026 integra la tecnología E-Tech de Renault con motor híbrido de última generación. Hasta 40% de ahorro de combustible en ciudad.",
-        seguridad: "Máxima protección: 6 bolsas de aire, frenado autónomo de emergencia (AEB) y control de estabilidad ESC.",
-        tecnologia: "Tablero digital de 10'', pantalla multimedia vertical táctil y múltiples modos de conducción inteligente.",
-        tags: ["Híbrido E-Tech", "Tablero 10''", "Ahorro 40%", "AEB"]
+        info: "La nueva Boreal Iconic Hybrid 2026 integra la tecnología E-Tech de Renault con motor híbrido de última generación.",
+        seguridad: "Máxima protección: 6 bolsas de aire y frenado autónomo.",
+        tecnologia: "Tablero digital de 10'' y pantalla multimedia vertical.",
+        tags: ["Híbrido E-Tech", "Tablero 10''", "AEB"]
     },
     "kardian": {
-        info: "Renault Kardian redefine el segmento con motor turbo 1.0L de 115hp y transmisión EDC de doble embrague.",
-        seguridad: "6 bolsas de aire de serie y Frenado Autónomo de Emergencia (AEB).",
-        tecnologia: "Pantalla táctil de 8'' con Android Auto y Apple CarPlay inalámbrico. Sistema Multi-sense.",
-        tags: ["Turbo 115hp", "6 Airbags", "Pantalla 8'' Wireless"]
-    },
-    "kwid": {
-        info: "El SUV de los compactos. Altura al piso líder en su clase (18.5 cm) y rendimiento excepcional.",
-        seguridad: "4 bolsas de aire, frenos ABS y asistente de arranque en pendientes (HSA).",
-        tecnologia: "Media Evolution de 7'' y cámara de reversa integrada.",
-        tags: ["Consumo 22km/L", "Altura SUV", "Dirección Eléctrica"]
-    },
-    "duster": {
-        info: "Motor Turbo 1.3L de 154hp. Desempeño excepcional en ciudad y carretera, con gran espacio interior.",
-        seguridad: "Estructura reforzada, cámara 360° Multiview y sensor de punto ciego.",
-        tecnologia: "Llave tipo tarjeta (Card Key), encendido por botón y multimedia de última generación.",
-        tags: ["Motor Turbo 154hp", "Cajuela 475L", "Cámara 360°"]
-    },
-    "koleos": {
-        info: "Elegancia y confort Premium. El SUV insignia de Renault con acabados de lujo.",
-        seguridad: "Asistente de estacionamiento automático, alerta de colisión y 6 airbags.",
-        tecnologia: "Sonido Bose Premium 8 bocinas, techo panorámico eléctrico y asientos con masaje.",
-        tags: ["Sonido Bose", "Techo panorámico", "LED Pure Vision"]
-    },
-    "stepway": {
-        info: "Estilo crossover con equipamiento completo y el sello Renault de calidad.",
-        seguridad: "Control de estabilidad ESC, 4 airbags y frenos ABS de serie.",
-        tecnologia: "Multimedia con conectividad inalámbrica, cámara de reversa y control de crucero.",
-        tags: ["Crossover", "ESC", "Crucero", "Cámara reversa"]
-    },
-    "oroch": {
-        info: "La pickup más versátil de Renault. Capacidad de carga real con comodidad de SUV.",
-        seguridad: "Chasis reforzado, frenos ABS con EBD y airbags frontales.",
-        tecnologia: "Pantalla multimedia conectada, cámara de reversa y llave inteligente.",
-        tags: ["Pickup", "Doble cabina", "4x4 Opcional"]
+        info: "Renault Kardian con motor turbo 1.0L y transmisión EDC de doble embrague.",
+        seguridad: "6 bolsas de aire y Frenado Autónomo de Emergencia.",
+        tecnologia: "Pantalla táctil de 8'' inalámbrica.",
+        tags: ["Turbo 115hp", "6 Airbags", "Wireless"]
     }
 };
 
@@ -220,9 +189,7 @@ let cacheSeminuevos        = null;
 function getField(obj) {
     const keys = Array.from(arguments).slice(1);
     for (const k of keys) {
-        const found = Object.keys(obj).find(
-            ok => ok.toLowerCase().trim() === k.toLowerCase().trim()
-        );
+        const found = Object.keys(obj).find(ok => ok.toLowerCase().trim() === k.toLowerCase().trim());
         if (found !== undefined && obj[found] !== null) {
             const val = String(obj[found]).trim();
             if (val && val !== "undefined" && val !== "null") return val;
@@ -232,22 +199,14 @@ function getField(obj) {
 }
 
 function getNombreSemi(s) {
-    const porAlias = getField(s, 'versión','version','Versión','Version','VERSIÓN','modelo','Modelo','MODELO','unidad','Unidad','UNIDAD','nombre','Nombre','NOMBRE','marca','Marca','MARCA','auto','Auto','AUTO','vehiculo','Vehiculo','vehículo','Vehículo','descripcion','Descripcion','descripción','Descripción');
-    if (porAlias) return porAlias;
-    const ignorar = ['precio','price','km','kms','kilometraje','año','year','color','transmision','transmisión','imagen','foto','url','id','hoja','timestamp'];
-    for (const key of Object.keys(s)) {
-        if (ignorar.includes(key.toLowerCase().trim())) continue;
-        const val = String(s[key]).trim();
-        if (val && val !== "undefined" && val !== "null" && val.length > 1) return val;
-    }
-    return "Seminuevo Renault";
+    const porAlias = getField(s, 'versión','version','modelo','nombre','unidad');
+    return porAlias || "Seminuevo Renault";
 }
 
 function formatPrice(price) {
     if (!price) return "Consultar precio";
     const num = price.toString().replace(/[^0-9]/g, '');
-    if (!num) return String(price);
-    return "$" + num.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return num ? "$" + num.replace(/\B(?=(\d{3})+(?!\d))/g, ",") : String(price);
 }
 
 function escQ(s) { return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
@@ -265,12 +224,12 @@ function saveData() {
 }
 
 function renderUser(d) {
-    document.getElementById('greet').innerText   = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
+    document.getElementById('greet').innerText = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
     const slug = d.unit.toLowerCase().replace(/\s+/g, '-');
-    document.getElementById('main-car').src       = `https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/${slug}.jpeg`;
-    document.getElementById('tag-car').innerText  = `Tu ${d.unit}`;
-    document.getElementById('q-name').value       = d.name;
-    document.getElementById('q-phone').value      = d.phone;
+    document.getElementById('main-car').src = `https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/${slug}.jpeg`;
+    document.getElementById('tag-car').innerText = `Tu ${d.unit}`;
+    document.getElementById('q-name').value = d.name;
+    document.getElementById('q-phone').value = d.phone;
 }
 
 window.onload = () => {
@@ -308,25 +267,19 @@ async function loadCat() {
         }
         window._catalogoNuevos = data;
         cacheNuevos = data.map((c, i) => {
-            const modelo  = getField(c, 'modelo','Modelo','MODELO','model','nombre','Nombre');
-            const precio  = getField(c, 'precio','Precio','PRECIO','price');
-            const imagen  = getField(c, 'imagen','Imagen','IMAGEN','img','image','foto','Foto','URL','url');
-            const version = getField(c, 'version','Versión','Version','versión','VERSIÓN','variante','Variante');
+            const modelo = getField(c, 'modelo','nombre');
+            const precio = getField(c, 'precio','price');
+            const imagen = getField(c, 'imagen','img','url');
             return `
             <div class="car-card">
-                <img src="${imagen || PLACEHOLDER}" loading="lazy" alt="${modelo}"
-                    onclick="openDesc(${i})"
-                    onerror="this.onerror=null;this.src='${PLACEHOLDER}'">
+                <img src="${imagen || PLACEHOLDER}" loading="lazy" onclick="openDesc(${i})" onerror="this.src='${PLACEHOLDER}'">
                 <h3 style="margin:15px 0 5px">${modelo || '—'}</h3>
-                ${version ? `<p style="margin:0 0 8px;font-size:0.82rem;color:#888">${version}</p>` : ''}
                 <div style="color:#d4af37;font-weight:bold;margin-bottom:15px">${formatPrice(precio)}</div>
                 <button class="btn-action btn-yellow" onclick="openM('${escQ(modelo)}')">COTIZAR</button>
             </div>`;
         }).join('');
         container.innerHTML = cacheNuevos;
-    } catch(e) {
-        container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Reintentando conexión...</p>';
-    }
+    } catch(e) { container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Error al cargar.</p>'; }
 }
 
 async function loadSemi() {
@@ -335,47 +288,29 @@ async function loadSemi() {
     try {
         const res  = await fetch(`${SCRIPT_URL}?sheet=seminuevos`);
         const data = await res.json();
-        if (!Array.isArray(data) || data.length === 0) {
-            container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Sin inventario disponible.</p>';
-            return;
-        }
         cacheSeminuevos = data.map(s => {
             const nombre = getNombreSemi(s);
-            const km     = getField(s, 'km','KM','kilometraje','Kilometraje','kms','KMS');
-            const anio   = getField(s, 'año','Año','anio','year','Year','AÑO');
-            const trans  = getField(s, 'transmisión','transmision','Transmisión','Transmision','trans','Trans');
-            const color  = getField(s, 'color','Color','COLOR');
-            const precio = getField(s, 'precio','Precio','PRECIO','price');
-            const kmFmt  = km ? parseInt(km).toLocaleString('es-MX') + ' km' : '';
+            const precio = getField(s, 'precio','price');
             return `
             <div class="car-card">
                 <h3 style="margin:5px 0;color:var(--renault-yellow)">${nombre}</h3>
-                <div style="margin:8px 0 10px">
-                    ${anio  ? `<span class="semi-badge">${anio}</span>`  : ''}
-                    ${trans ? `<span class="semi-badge">${trans}</span>` : ''}
-                    ${km    ? `<span class="semi-badge">${kmFmt}</span>` : ''}
-                    ${color ? `<span class="semi-badge">${color}</span>` : ''}
-                </div>
                 <div style="color:#d4af37;font-weight:bold;margin:10px 0">${formatPrice(precio)}</div>
                 <button class="btn-action btn-yellow" onclick="openM('${escQ(nombre)}')">ME INTERESA</button>
             </div>`;
         }).join('');
         container.innerHTML = cacheSeminuevos;
-    } catch(e) {
-        container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Actualizando inventario...</p>';
-    }
+    } catch(e) { container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Error al cargar.</p>'; }
 }
 
 function openDesc(index) {
     const data = window._catalogoNuevos || [];
-    const c    = data[index];
+    const c = data[index];
     if (!c) return;
-    const modelo = getField(c, 'modelo','Modelo','MODELO','model','nombre','Nombre');
-    const imagen = getField(c, 'imagen','Imagen','IMAGEN','img','image','foto','Foto','URL','url');
+    const modelo = getField(c, 'modelo','nombre');
+    const imagen = getField(c, 'imagen','img','url');
     currentVehicleSelected = modelo;
-    document.getElementById('desc-img').src            = imagen || PLACEHOLDER;
-    document.getElementById('desc-title').innerText    = modelo;
-    document.getElementById('btn-desc-quote').onclick  = () => { closeDesc(); openM(modelo); };
+    document.getElementById('desc-img').src = imagen || PLACEHOLDER;
+    document.getElementById('desc-title').innerText = modelo;
     switchTab('info');
     document.getElementById('modal-desc').style.display = 'flex';
 }
@@ -383,59 +318,40 @@ function openDesc(index) {
 function switchTab(tabType) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('btn-tab-' + tabType).classList.add('active');
-    const nombreMin = currentVehicleSelected.toLowerCase();
-    const key = Object.keys(DESC_DATA).find(k => nombreMin.includes(k));
-    const info = DESC_DATA[key] || {
-        info:       `${currentVehicleSelected} disponible para entrega inmediata en Renault Teziutlán.`,
-        seguridad:  "Sistemas de seguridad Renault: ABS, bolsas de aire y estructura reforzada.",
-        tecnologia: "Conectividad total y confort premium en cada viaje.",
-        tags:       ["Renault", "Calidad", "Garantía"]
-    };
-    document.getElementById('desc-text').innerText  = info[tabType] || '';
-    document.getElementById('desc-tags').innerHTML   = tabType === 'info'
-        ? (info.tags || []).map(t => `<span class="feature-tag">${t}</span>`).join('') : '';
+    const info = { info: `${currentVehicleSelected} disponible en Renault Teziutlán.` };
+    document.getElementById('desc-text').innerText = info[tabType] || '';
 }
 
 function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
-
 function openM(nombreModelo) {
-    document.getElementById('m-title').innerText       = nombreModelo || 'COTIZAR';
+    document.getElementById('m-title').innerText = nombreModelo;
     document.getElementById('modal-quote').style.display = 'flex';
 }
 function closeM() { document.getElementById('modal-quote').style.display = 'none'; }
-
 function toggleFinanzas() {
-    document.getElementById('campo-finanzas').style.display =
-        document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none';
+    document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none';
 }
 
 async function handleQuote() {
     const btn = document.getElementById('btn-quote');
-    const u   = JSON.parse(localStorage.getItem('renault_user') || '{}');
     const quote = {
-        hoja:        "cotizaciones",
-        nombre:      document.getElementById('q-name').value  || u.name  || '',
-        telefono:    document.getElementById('q-phone').value || u.phone || '',
-        modelo:      document.getElementById('m-title').innerText,
-        cp:          document.getElementById('q-cp').value,
-        metodo_pago: document.getElementById('q-metodo').value,
-        enganche:    document.getElementById('q-down').value  || "0",
-        meses:       document.getElementById('q-meses').value || "0",
-        fecha:       new Date().toLocaleDateString('es-MX')
+        hoja: "cotizaciones",
+        nombre: document.getElementById('q-name').value,
+        telefono: document.getElementById('q-phone').value,
+        modelo: document.getElementById('m-title').innerText,
+        fecha: new Date().toLocaleDateString('es-MX')
     };
-    if (!quote.nombre || !quote.telefono) { alert("Completa tu nombre y teléfono."); return; }
     btn.innerText = "ENVIANDO..."; btn.disabled = true;
     try {
         await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(quote) });
-        alert(`¡Solicitud enviada para ${quote.modelo}!\nUn asesor te contactará pronto.`);
-        closeM();
-    } catch(e) { alert("Error al enviar. Intenta de nuevo."); }
+        alert("Solicitud enviada."); closeM();
+    } catch(e) { alert("Error."); }
     finally { btn.innerText = "SOLICITAR"; btn.disabled = false; }
 }
 
 function updateAppointmentUI() {
     const data = localStorage.getItem('renault_appointment');
-    const el   = document.getElementById('reminder-container');
+    const el = document.getElementById('reminder-container');
     if (data) {
         const a = JSON.parse(data);
         el.innerHTML = `<div id="appointment-reminder">
@@ -448,7 +364,7 @@ function updateAppointmentUI() {
 function renderAppointmentPage() {
     const data = localStorage.getItem('renault_appointment');
     const cont = document.getElementById('appointment-content');
-    const u    = JSON.parse(localStorage.getItem('renault_user') || '{}');
+    const u = JSON.parse(localStorage.getItem('renault_user') || '{}');
 
     if (data) {
         const a = JSON.parse(data);
@@ -457,34 +373,23 @@ function renderAppointmentPage() {
             <div style="background:#f7f7f7;padding:20px;border-radius:20px;text-align:left">
                 <strong>Nombre:</strong> ${a.nombre}<br>
                 <strong>Unidad:</strong> ${a["unidad a revisar"]}<br>
-                <strong>Kilometraje:</strong> ${parseInt(a.kilometraje||0).toLocaleString('es-MX')} km<br>
+                <strong>Kilometraje:</strong> ${a.kilometraje} km<br>
                 <strong>Fecha:</strong> ${a.fecha}<br>
                 <strong>Hora:</strong> ${a.hora} hrs
-                ${a["detalles o fallas"] ? `<br><strong>Detalles:</strong> ${a["detalles o fallas"]}` : ''}
-            </div>
-            <div class="waiting-msg">
-                En un momento se comunican con usted por medio de WhatsApp para confirmar su cita.
             </div>
             <button class="btn-cancel-modern" onclick="cancelarCita()">Cancelar Cita</button>
         </div>`;
     } else {
-        const units = ["Kwid","Kardian","Duster","Stepway","Oroch","Koleos","Master","Kangoo","Megane E-Tech","Clio","Sandero","Logan","Captur","Fluence","Safrane","Scala","Megane","Scenic"];
-        const opts  = units.map(un => `<option value="${un}"${u.unit===un?' selected':''}>${un}</option>`).join('');
+        const units = ["Kwid","Kardian","Duster","Stepway","Oroch","Koleos","Master","Kangoo","Megane E-Tech"];
+        const opts = units.map(un => `<option value="${un}"${u.unit===un?' selected':''}>${un}</option>`).join('');
         cont.innerHTML = `<div class="card-white">
-            <label class="form-label">Nombre</label>
-            <input type="text"   id="c-name"    class="form-control" value="${u.name||''}">
-            <label class="form-label">Teléfono</label>
-            <input type="tel"    id="c-phone"   class="form-control" value="${u.phone||''}">
-            <label class="form-label">Unidad a Revisar</label>
-            <select              id="c-unit"    class="form-control">${opts}</select>
-            <label class="form-label">Kilometraje Actual</label>
-            <input type="number" id="c-km"      class="form-control" placeholder="Ej: 15000">
-            <label class="form-label">Fecha</label>
-            <input type="date"   id="c-date"    class="form-control">
-            <label class="form-label">Hora</label>
-            <input type="time"   id="c-time"    class="form-control">
-            <label class="form-label">Detalles o Fallas (opcional)</label>
-            <textarea id="c-details" class="form-control" placeholder="Describe si tu unidad tiene algún detalle o falla..." style="height:80px"></textarea>
+            <label class="form-label">Nombre</label><input type="text" id="c-name" class="form-control" value="${u.name||''}">
+            <label class="form-label">Teléfono</label><input type="tel" id="c-phone" class="form-control" value="${u.phone||''}">
+            <label class="form-label">Unidad a Revisar</label><select id="c-unit" class="form-control">${opts}</select>
+            <label class="form-label">Kilometraje Actual</label><input type="text" id="c-km" class="form-control" placeholder="Ej: 15,000">
+            <label class="form-label">Fecha</label><input type="date" id="c-date" class="form-control">
+            <label class="form-label">Hora</label><input type="time" id="c-time" class="form-control">
+            <label class="form-label">Detalles o Fallas</label><textarea id="c-details" class="form-control"></textarea>
             <button id="btn-cita" class="btn-action btn-yellow" onclick="handleBooking()">AGENDAR CITA</button>
         </div>`;
     }
@@ -492,56 +397,51 @@ function renderAppointmentPage() {
 
 async function handleBooking() {
     const btn = document.getElementById('btn-cita');
+    // LIMPIEZA DE COMAS EN EL KILOMETRAJE
+    const kmLimpio = document.getElementById('c-km').value.replace(/,/g, '').trim();
+    
     const app = {
-        hoja:                "citas",
-        "nombre":            document.getElementById('c-name').value,
-        "telefono":          document.getElementById('c-phone').value,
-        "unidad a revisar":  document.getElementById('c-unit').value,
-        "kilometraje":       document.getElementById('c-km').value,
-        "fecha":             document.getElementById('c-date').value,
-        "hora":              document.getElementById('c-time').value,
+        hoja: "citas",
+        "nombre": document.getElementById('c-name').value,
+        "telefono": document.getElementById('c-phone').value,
+        "unidad a revisar": document.getElementById('c-unit').value,
+        "kilometraje": kmLimpio,
+        "fecha": document.getElementById('c-date').value,
+        "hora": document.getElementById('c-time').value,
         "detalles o fallas": document.getElementById('c-details').value
     };
-    if (!app.fecha || !app.hora)         { alert("Selecciona fecha y hora."); return; }
-    if (!app.nombre || !app.telefono)    { alert("Completa nombre y teléfono."); return; }
+    if (!app.fecha || !app.hora) { alert("Completa los datos."); return; }
     btn.innerText = "PROCESANDO..."; btn.disabled = true;
     try {
         await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(app) });
         localStorage.setItem('renault_appointment', JSON.stringify(app));
-        alert("¡Cita agendada exitosamente!");
-        updateAppointmentUI();
-        showPage('inicio');
-    } catch(e) { alert("Error de conexión. Intenta de nuevo."); }
+        alert("Cita exitosa."); updateAppointmentUI(); showPage('inicio');
+    } catch(e) { alert("Error."); }
     finally { btn.innerText = "AGENDAR CITA"; btn.disabled = false; }
 }
 
 async function cancelarCita() {
     const rawData = localStorage.getItem('renault_appointment');
-    if (!rawData) return;
+    if (!rawData || !confirm("¿Cancelar cita?")) return;
     
-    if (confirm("¿Deseas cancelar tu cita de servicio? Los datos se guardarán para contactarte después.")) {
-        const app = JSON.parse(rawData);
-        const datosCancelacion = {
-            hoja:                "cancelada",
-            "nombre":            app["nombre"],
-            "telefono":          app["telefono"],
-            "unidad a revisar":  app["unidad a revisar"],
-            "kilometraje":       app["kilometraje"],
-            "fecha":             app["fecha"],
-            "hora":              app["hora"],
-            "detalles o fallas": app["detalles o fallas"]
-        };
-        
-        try {
-            await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(datosCancelacion) });
-            localStorage.removeItem('renault_appointment');
-            renderAppointmentPage();
-            updateAppointmentUI();
-            alert("Cita cancelada. En breve nos comunicaremos para reprogramar.");
-        } catch(e) {
-            alert("Error al procesar la cancelación. Intenta de nuevo.");
-        }
-    }
+    const app = JSON.parse(rawData);
+    const datosCancelacion = {
+        hoja: "cancelada",
+        "nombre": app.nombre,
+        "telefono": app.telefono,
+        "unidad a revisar": app["unidad a revisar"],
+        "kilometraje": app.kilometraje,
+        "fecha": app.fecha,
+        "hora": app.hora,
+        "detalles o fallas": app["detalles o fallas"]
+    };
+    
+    try {
+        await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(datosCancelacion) });
+        localStorage.removeItem('renault_appointment');
+        renderAppointmentPage(); updateAppointmentUI();
+        alert("Cancelada.");
+    } catch(e) { alert("Error."); }
 }
 </script>
 </body>
