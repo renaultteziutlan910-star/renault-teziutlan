@@ -9,77 +9,74 @@
             --gold-gradient: linear-gradient(145deg, #f5d17a 0%, #d4af37 50%, #b8860b 100%);
             --renault-yellow: #FFCC00;
             --success-green: #28a745;
-            --danger-red: #ff4444;
             --dark-bg: #000000;
             --white: #ffffff;
-            --gray-text: #8e8e93;
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--dark-bg); color: var(--white); margin: 0; padding: 0; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--dark-bg); color: var(--white); margin: 0; padding: 0; overflow-x: hidden; }
+        
+        /* LOGIN */
         #login-screen { position: fixed; inset: 0; background: var(--dark-bg); z-index: 5000; display: flex; flex-direction: column; justify-content: center; padding: 35px; text-align: center; }
+        
+        /* HEADER */
         header { padding: 20px 0; text-align: center; border-bottom: 1px solid #222; position: sticky; top: 0; background: var(--dark-bg); z-index: 2000; }
         .logo-area { display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; letter-spacing: 2px; }
         .v-line { width: 1px; height: 20px; background: #d4af37; }
         .gold-text { color: #d4af37; }
+
+        /* PAGINACIÓN */
         .page { display: none; padding: 20px 20px 140px 20px; animation: fadeIn 0.3s ease; }
         .active { display: block !important; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .card-profile { background: var(--gold-gradient); border-radius: 35px; padding: 40px 20px; text-align: center; color: #000; box-shadow: 0 15px 35px rgba(212,175,55,0.3); }
-        .car-hero { width: 100%; max-width: 280px; margin: 20px auto; display: block; filter: drop-shadow(0 15px 15px rgba(0,0,0,0.3)); border-radius: 15px; aspect-ratio: 16/9; object-fit: contain; }
+
+        /* AJUSTE DE IMÁGENES (PARA QUE SE VEAN MÁS GRANDES/CERCA) */
+        .car-hero { 
+            width: 120%; /* Aumentado para efecto de cercanía */
+            max-width: 350px; 
+            margin: 10px -10%; 
+            display: block; 
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.3));
+            transform: scale(1.1); /* Zoom visual */
+            object-fit: contain;
+        }
+        .car-card img { 
+            width: 100%; 
+            border-radius: 20px; 
+            background: #1a1a1a; 
+            aspect-ratio: 16/9; 
+            object-fit: cover; /* Cambiado a cover para llenar más el espacio */
+            display: block;
+            transform: scale(1.05); /* Zoom ligero en catálogo */
+        }
+
+        .card-profile { background: var(--gold-gradient); border-radius: 35px; padding: 40px 20px; text-align: center; color: #000; overflow: hidden; }
         .card-white { background: var(--white); color: #000; border-radius: 30px; padding: 25px; margin-top: 10px; }
+        
+        /* FORMULARIOS */
         .form-label { display: block; font-size: 0.7rem; font-weight: 800; color: #666; margin: 12px 0 5px 5px; text-transform: uppercase; }
         .form-control, .login-input { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 12px; background: #f9f9f9; box-sizing: border-box; font-size: 1rem; margin-bottom: 8px; color: #000; }
-        .login-input { background: #1a1a1a; border: 1px solid #333; color: #fff; }
-        .login-input:focus, .form-control:focus { outline: none; border-color: #d4af37; }
-        textarea.form-control { resize: vertical; min-height: 80px; font-family: inherit; }
+        textarea.form-control { min-height: 100px; resize: none; }
+
         .btn-action { width: 100%; padding: 18px; border: none; border-radius: 16px; font-weight: 900; font-size: 1rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
         .btn-yellow { background: var(--renault-yellow); color: #000; }
-        .btn-green { background: var(--success-green); color: #fff; margin-top: 25px; }
-        .btn-whatsapp-float { position: fixed; bottom: 100px; right: 20px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 3000; text-decoration: none; }
-        .btn-whatsapp-float svg { width: 30px; height: 30px; fill: currentColor; }
-        .tab-container { display: flex; border-bottom: 1px solid #eee; margin-bottom: 15px; }
-        .tab-btn { flex: 1; padding: 10px; border: none; background: none; font-weight: 800; font-size: 0.7rem; color: #999; cursor: pointer; text-transform: uppercase; }
-        .tab-btn.active { color: #d4af37; border-bottom: 2px solid #d4af37; }
-        .car-card { background: #1a1a1a; border-radius: 25px; padding: 15px; margin-bottom: 25px; border: 1px solid #333; }
-        .car-card img { width: 100%; border-radius: 20px; cursor: pointer; transition: transform 0.2s; background: #222; aspect-ratio: 16/9; object-fit: contain; display: block; }
+        .btn-green { background: var(--success-green); color: #fff; }
+
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0d0d0d; display: flex; justify-content: space-around; padding: 15px 0 30px 0; border-top: 1px solid #222; z-index: 1000; }
-        .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 0.7rem; font-weight: 700; flex: 1; background: none; border: none; cursor: pointer; }
-        .nav-item svg { width: 26px; height: 26px; fill: currentColor; margin-bottom: 4px; display: block; margin: 0 auto; }
+        .nav-item { text-align: center; color: #555; background: none; border: none; font-size: 0.7rem; font-weight: 700; flex: 1; }
         .nav-item.active { color: #d4af37; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 6000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: #fff; padding: 30px; border-radius: 30px; width: 100%; max-width: 400px; color: #000; max-height: 90vh; overflow-y: auto; position: relative; }
-        .desc-title { color: #d4af37; font-weight: 900; margin-bottom: 10px; font-size: 1.5rem; text-transform: uppercase; }
-        .desc-text { color: #444; line-height: 1.6; font-size: 0.95rem; margin-bottom: 20px; min-height: 100px; text-align: justify; }
-        .feature-tag { display: inline-block; background: #f0f0f0; padding: 5px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin: 3px; color: #555; }
-        #appointment-reminder { background: rgba(255,255,255,0.1); border: 1px solid #d4af37; padding: 15px; border-radius: 20px; margin-top: 20px; text-align: center; }
-        .btn-cancel-modern { background: none; border: 1px solid #ff4444; color: #ff4444; padding: 10px; border-radius: 10px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; }
+        .nav-item svg { width: 24px; height: 24px; fill: currentColor; display: block; margin: 0 auto 4px; }
     </style>
 </head>
 <body>
-
-<a href="https://wa.me/522311234567?text=Hola,%20necesito%20asesoría%20personalizada." class="btn-whatsapp-float" target="_blank">
-    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-</a>
 
 <div id="login-screen">
     <div class="logo-area" style="margin-bottom:30px"><span>RENAULT</span><div class="v-line"></div><span class="gold-text">TEZIUTLÁN</span></div>
     <input type="text" id="user-name" class="login-input" placeholder="Nombre completo">
     <input type="tel" id="user-phone" class="login-input" placeholder="Número de teléfono">
-    <label class="form-label" style="color:#888;text-align:left">Selecciona tu Renault actual:</label>
     <select id="user-unit" class="login-input">
-        <optgroup label="Modelos Actuales">
-            <option value="Kwid">Kwid</option><option value="Kardian">Kardian</option>
-            <option value="Duster">Duster</option><option value="Stepway">Stepway</option>
-            <option value="Oroch">Oroch</option><option value="Koleos">Koleos</option>
-            <option value="Master">Master</option><option value="Kangoo">Kangoo</option>
-            <option value="Megane E-Tech">Megane E-Tech</option>
-        </optgroup>
-        <optgroup label="Modelos Anteriores">
-            <option value="Clio">Clio</option><option value="Sandero">Sandero</option>
-            <option value="Logan">Logan</option><option value="Captur">Captur</option>
-            <option value="Fluence">Fluence</option><option value="Safrane">Safrane</option>
-            <option value="Scala">Scala</option><option value="Megane">Megane (Gasolina)</option>
-            <option value="Scenic">Scenic</option>
-        </optgroup>
+        <option value="Kwid">Kwid</option><option value="Kardian">Kardian</option>
+        <option value="Duster">Duster</option><option value="Stepway">Stepway</option>
+        <option value="Oroch">Oroch</option><option value="Koleos">Koleos</option>
+        <option value="Megane E-Tech">Megane E-Tech</option>
     </select>
     <button class="btn-action btn-yellow" onclick="saveData()">INGRESAR</button>
 </div>
@@ -88,371 +85,136 @@
     <div class="logo-area"><span>RENAULT</span><div class="v-line"></div><span class="gold-text">TEZIUTLÁN</span></div>
 </header>
 
+<!-- INICIO -->
 <div id="p-inicio" class="page active">
     <div class="card-profile">
         <h1 id="greet">¡HOLA!</h1>
-        <img id="main-car" src="" class="car-hero" alt="Tu Renault"
-            onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid.png'">
-        <div id="tag-car" style="font-weight:800;font-size:1.3rem">Tu Renault</div>
+        <div style="display:flex; justify-content:center;">
+            <img id="main-car" src="" class="car-hero" onerror="this.src='https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid.png'">
+        </div>
+        <div id="tag-car" style="font-weight:800;font-size:1.3rem; margin-top:10px">Tu Renault</div>
     </div>
-    <div id="reminder-container"></div>
-    <button class="btn-action btn-green" onclick="showPage('nuevos')">VER CATÁLOGO</button>
+    <div id="reminder-container" style="margin-top:20px"></div>
+    <button class="btn-action btn-green" style="margin-top:20px" onclick="showPage('nuevos')">EXPLORAR CATÁLOGO</button>
 </div>
 
+<!-- CITAS (CON CAMPO DE FALLA REINTEGRADO) -->
 <div id="p-citas" class="page">
-    <div style="text-align:center;color:#d4af37;font-weight:800;margin-bottom:15px">GESTIÓN DE SERVICIO</div>
+    <div style="text-align:center;color:#d4af37;font-weight:800;margin-bottom:15px">SERVICIO TÉCNICO</div>
     <div id="appointment-content"></div>
 </div>
 
+<!-- NUEVOS -->
 <div id="p-nuevos" class="page">
-    <div style="text-align:center;color:#d4af37;font-weight:800;margin-bottom:8px">UNIDADES NUEVAS</div>
-    <div id="cat-container"><div style="padding:40px;text-align:center;color:#555">Cargando catálogo premium...</div></div>
+    <div style="text-align:center;color:#d4af37;font-weight:800;margin-bottom:20px">UNIDADES NUEVAS</div>
+    <div id="cat-container"></div>
 </div>
 
+<!-- SEMINUEVOS -->
 <div id="p-seminuevos" class="page">
-    <div style="text-align:center;color:#d4af37;font-weight:800;margin-bottom:15px">INVENTARIO SEMINUEVOS</div>
-    <div id="semi-container"><div style="padding:40px;text-align:center;color:#555">Cargando inventario...</div></div>
-</div>
-
-<div id="modal-desc" class="modal">
-    <div class="modal-content">
-        <button onclick="closeDesc()" style="position:absolute;right:20px;top:20px;border:none;background:none;font-size:1.5rem;z-index:10;cursor:pointer">✕</button>
-        <img id="desc-img" src="" style="width:100%;border-radius:20px;margin-bottom:15px;aspect-ratio:16/9;object-fit:contain;background:#eee"
-            onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid.png'">
-        <div id="desc-title" class="desc-title">MODELO</div>
-        <div class="tab-container">
-            <button id="btn-tab-info"       class="tab-btn active" onclick="switchTab('info')">Info</button>
-            <button id="btn-tab-seguridad"  class="tab-btn"        onclick="switchTab('seguridad')">Seguridad</button>
-            <button id="btn-tab-tecnologia" class="tab-btn"        onclick="switchTab('tecnologia')">Tecnología</button>
-        </div>
-        <div id="desc-text" class="desc-text"></div>
-        <div id="desc-tags" style="margin-bottom:20px"></div>
-        <button class="btn-action btn-yellow" id="btn-desc-quote" onclick="openM(currentVehicleSelected)">COTIZAR AHORA</button>
-    </div>
-</div>
-
-<div id="modal-quote" class="modal">
-    <div class="modal-content">
-        <h3 id="m-title" style="color:#d4af37;margin-top:0">COTIZAR</h3>
-        <label class="form-label">Nombre del Cliente</label><input type="text" id="q-name" class="form-control">
-        <label class="form-label">Teléfono</label><input type="tel" id="q-phone" class="form-control">
-        <label class="form-label">Código Postal</label><input type="number" id="q-cp" class="form-control" placeholder="Ej: 73800">
-        <label class="form-label">Método de Pago</label>
-        <select id="q-metodo" class="form-control" onchange="toggleFinanzas()">
-            <option value="Contado">A Contado</option><option value="Financiado">Financiado</option>
-        </select>
-        <div id="campo-finanzas" style="display:none">
-            <label class="form-label">Enganche ($)</label><input type="number" id="q-down" class="form-control">
-            <label class="form-label">Plazo (Meses)</label>
-            <select id="q-meses" class="form-control">
-                <option value="12">12 Meses</option><option value="24">24 Meses</option>
-                <option value="36">36 Meses</option><option value="48">48 Meses</option><option value="60">60 Meses</option>
-            </select>
-        </div>
-        <button id="btn-quote" class="btn-action btn-yellow" onclick="handleQuote()" style="margin-top:15px">SOLICITAR</button>
-        <button onclick="closeM()" style="width:100%;background:none;border:none;color:#999;margin-top:12px;font-weight:bold;cursor:pointer">Cerrar</button>
-    </div>
+    <div style="text-align:center;color:#d4af37;font-weight:800;margin-bottom:20px">INVENTARIO SEMINUEVOS</div>
+    <div id="semi-container"></div>
 </div>
 
 <nav class="nav-bar">
     <button class="nav-item active" onclick="showPage('inicio',this)"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Inicio</button>
     <button class="nav-item" onclick="showPage('nuevos',this)"><svg viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99z"/></svg>Nuevos</button>
     <button class="nav-item" onclick="showPage('citas',this)"><svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>Citas</button>
-    <button class="nav-item" onclick="showPage('seminuevos',this)"><svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65z"/></svg>Seminuevos</button>
+    <button class="nav-item" onclick="showPage('seminuevos',this)"><svg viewBox="0 0 24 24"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65z"/></svg>Semis</button>
 </nav>
 
 <script>
-// CONFIGURACIÓN GLOBAL ACTUALIZADA
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXuhNApBkiAJbUwIqSd_DjzE39SglgR0a0UQrWDu6lvWipm2Vue3Hnn_FJ38P6ds8/exec";
-const PLACEHOLDER = "https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid.png";
-
-const DESC_DATA = {
-    "boreal iconic hybrid 2026": {
-        info: "El futuro de Renault en Teziutlán. Un híbrido de nueva generación con eficiencia líder en su clase y diseño vanguardista.",
-        seguridad: "Máxima protección con ADAS avanzada: frenado autónomo, control crucero adaptativo y 7 bolsas de aire.",
-        tecnologia: "Pantalla ultra-wide de 12'', sistema OpenR Link con Google integrado y sonido Premium Bose.",
-        tags: ["Híbrido E-Tech", "Google Built-in", "7 Airbags"]
-    },
-    "kwid": {
-        info: "El SUV de los compactos. Ideal para la ciudad con la mayor altura al piso en su categoría y gran ahorro de combustible.",
-        seguridad: "4 bolsas de aire de serie, frenos ABS con EBD y control electrónico de estabilidad (ESC).",
-        tecnologia: "Media Evolution de 7'' con Apple CarPlay y Android Auto, cámara de reversa y sensores de estacionamiento.",
-        tags: ["4 Airbags", "Ahorro Gasolina", "Compact SUV"]
-    },
-    "kardian": {
-        info: "Cambio de juego. Un SUV con motor Turbo de 115hp, diseño robusto y la nueva identidad visual de Renault.",
-        seguridad: "6 bolsas de aire, alerta de colisión frontal, frenado autónomo y asistente de punto ciego.",
-        tecnologia: "Consola elevada, palanca e-shifter, freno de mano electrónico y cargador inalámbrico.",
-        tags: ["Motor Turbo", "6 Airbags", "e-Shifter"]
-    },
-    "duster": {
-        info: "La camioneta que Teziutlán conoce y ama. Robusta, potente y lista para cualquier terreno.",
-        seguridad: "Control de tracción, asistencia de frenado de emergencia y cámara Multiview 360°.",
-        tecnologia: "Pantalla flotante de 8'', llave inteligente presencial y sistema Start/Stop.",
-        tags: ["Cámara 360°", "Keyless Entry", "Legendaria"]
-    },
-    "oroch": {
-        info: "Mucho más que una pickup. Comodidad de SUV con la fuerza de carga necesaria para el trabajo diario.",
-        seguridad: "Suspensión trasera Multilink, asistente de arranque en pendientes y control de antivuelco.",
-        tecnologia: "Nueva pantalla táctil de 8'', volante multifunción y climatizador automático.",
-        tags: ["650kg Carga", "Suspensión Multilink", "Motor Turbo"]
-    }
-};
-
-let currentVehicleSelected = "";
-
-function getField(obj) {
-    const keys = Array.from(arguments).slice(1);
-    for (const k of keys) {
-        const found = Object.keys(obj).find(ok => ok.toLowerCase().trim() === k.toLowerCase().trim());
-        if (found !== undefined && obj[found] !== null) {
-            let val = String(obj[found]).trim();
-            if (val.includes("github") || val.includes("http")) {
-                val = val.replace(/\s/g, '%20');
-            }
-            if (val && val !== "undefined" && val !== "null") return val;
-        }
-    }
-    return "";
-}
-
-function getNombreSemi(s) {
-    const porAlias = getField(s, 'versión','version','modelo','nombre','unidad');
-    return porAlias || "Seminuevo Renault";
-}
-
-function formatPrice(price) {
-    if (!price) return "Consultar precio";
-    const num = price.toString().replace(/[^0-9]/g, '');
-    return num ? "$" + num.replace(/\B(?=(\d{3})+(?!\d))/g, ",") : String(price);
-}
-
-function escQ(s) { return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'"); }
 
 function saveData() {
-    const name  = document.getElementById('user-name').value.trim();
-    const phone = document.getElementById('user-phone').value.trim();
-    const unit  = document.getElementById('user-unit').value;
-    if (!name || !phone) { alert("Por favor completa tus datos"); return; }
-    const userData = { name, phone, unit };
-    localStorage.setItem('renault_user', JSON.stringify(userData));
-    renderUser(userData);
+    const name = document.getElementById('user-name').value;
+    const phone = document.getElementById('user-phone').value;
+    const unit = document.getElementById('user-unit').value;
+    if(!name || !phone) return alert("Completa tus datos");
+    localStorage.setItem('renault_user', JSON.stringify({name, phone, unit}));
+    location.reload();
+}
+
+function renderUser() {
+    const data = JSON.parse(localStorage.getItem('renault_user'));
+    if(!data) return;
     document.getElementById('login-screen').style.display = 'none';
-    initAppData();
-}
-
-function renderUser(d) {
-    document.getElementById('greet').innerText = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
-    
-    // CORRECCIÓN PARA IMAGEN DE INICIO: Convierte espacios en guiones para GitHub
-    const slug = d.unit.toLowerCase().trim().replace(/\s+/g, '-');
+    document.getElementById('greet').innerText = `¡HOLA, ${data.name.split(' ')[0].toUpperCase()}!`;
+    const slug = data.unit.toLowerCase().replace(/\s+/g, '-');
     document.getElementById('main-car').src = `https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/${slug}.png`;
-    
-    document.getElementById('tag-car').innerText = `Tu ${d.unit}`;
-    document.getElementById('q-name').value = d.name;
-    document.getElementById('q-phone').value = d.phone;
-}
-
-window.onload = () => {
-    const raw = localStorage.getItem('renault_user');
-    if (raw) {
-        renderUser(JSON.parse(raw));
-        document.getElementById('login-screen').style.display = 'none';
-        initAppData();
-    }
-};
-
-async function initAppData() {
-    updateAppointmentUI();
-    Promise.all([loadCat(), loadSemi()]).catch(() => {});
+    document.getElementById('tag-car').innerText = `Tu ${data.unit}`;
+    renderAppointmentPage();
 }
 
 function showPage(id, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('p-' + id).classList.add('active');
-    if (el) el.classList.add('active');
-    window.scrollTo(0, 0);
-    if (id === 'citas') renderAppointmentPage();
-}
-
-async function loadCat() {
-    const container = document.getElementById('cat-container');
-    try {
-        const res  = await fetch(`${SCRIPT_URL}?hoja=nuevos`);
-        const data = await res.json();
-        if (!Array.isArray(data) || data.length === 0) {
-            container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">No hay unidades disponibles.</p>';
-            return;
-        }
-        window._catalogoNuevos = data;
-        container.innerHTML = data.map((c, i) => {
-            const modelo = getField(c, 'modelo','nombre');
-            const precio = getField(c, 'precio','price');
-            const imagen = getField(c, 'imagen','img','url','foto');
-            return `
-            <div class="car-card">
-                <img src="${imagen || PLACEHOLDER}" loading="lazy" onclick="openDesc(${i})" onerror="this.src='${PLACEHOLDER}'">
-                <h3 style="margin:15px 0 5px">${modelo || '—'}</h3>
-                <div style="color:#d4af37;font-weight:bold;margin-bottom:15px">${formatPrice(precio)}</div>
-                <button class="btn-action btn-yellow" onclick="openM('${escQ(modelo)}')">COTIZAR</button>
-            </div>`;
-        }).join('');
-    } catch(e) { container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Error al cargar el catálogo.</p>'; }
-}
-
-async function loadSemi() {
-    const container = document.getElementById('semi-container');
-    try {
-        const res  = await fetch(`${SCRIPT_URL}?hoja=seminuevos`);
-        const data = await res.json();
-        container.innerHTML = data.map(s => {
-            const nombre = getNombreSemi(s);
-            const precio = getField(s, 'precio','price');
-            return `
-            <div class="car-card">
-                <h3 style="margin:5px 0;color:var(--renault-yellow)">${nombre}</h3>
-                <div style="color:#d4af37;font-weight:bold;margin:10px 0">${formatPrice(precio)}</div>
-                <button class="btn-action btn-yellow" onclick="openM('${escQ(nombre)}')">ME INTERESA</button>
-            </div>`;
-        }).join('');
-    } catch(e) { container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Error al cargar inventario.</p>'; }
-}
-
-function openDesc(index) {
-    const data = window._catalogoNuevos || [];
-    const c = data[index];
-    if (!c) return;
-    const modelo = getField(c, 'modelo','nombre');
-    const imagen = getField(c, 'imagen','img','url');
-    currentVehicleSelected = modelo;
-    document.getElementById('desc-img').src = imagen || PLACEHOLDER;
-    document.getElementById('desc-title').innerText = modelo;
-    switchTab('info');
-    document.getElementById('modal-desc').style.display = 'flex';
-}
-
-function switchTab(tabType) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('btn-tab-' + tabType).classList.add('active');
-    const slug = currentVehicleSelected.toLowerCase().trim();
-    const data = DESC_DATA[slug];
-    if (data) {
-        document.getElementById('desc-text').innerText = data[tabType];
-        if (tabType === 'info') {
-            const tagsHtml = data.tags.map(t => `<span class="feature-tag">${t}</span>`).join('');
-            document.getElementById('desc-tags').innerHTML = tagsHtml;
-        }
-    } else {
-        const generic = {
-            info: `${currentVehicleSelected} disponible en Renault Teziutlán.`,
-            seguridad: "Consulte los sistemas de seguridad activa y pasiva integrados.",
-            tecnologia: "Equipamiento tecnológico de vanguardia."
-        };
-        document.getElementById('desc-text').innerText = generic[tabType];
-        if (tabType === 'info') document.getElementById('desc-tags').innerHTML = '<span class="feature-tag">Calidad Renault</span>';
-    }
-}
-
-function closeDesc() { document.getElementById('modal-desc').style.display = 'none'; }
-function openM(nombreModelo) {
-    closeDesc(); 
-    document.getElementById('m-title').innerText = nombreModelo;
-    document.getElementById('modal-quote').style.display = 'flex';
-}
-function closeM() { document.getElementById('modal-quote').style.display = 'none'; }
-function toggleFinanzas() {
-    document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none';
-}
-
-async function handleQuote() {
-    const btn = document.getElementById('btn-quote');
-    const quote = {
-        hoja: "cotizaciones",
-        nombre: document.getElementById('q-name').value,
-        telefono: document.getElementById('q-phone').value,
-        modelo: document.getElementById('m-title').innerText,
-        fecha: new Date().toLocaleDateString('es-MX')
-    };
-    btn.innerText = "ENVIANDO..."; btn.disabled = true;
-    try {
-        await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(quote) });
-        alert("Solicitud de cotización enviada."); closeM();
-    } catch(e) { alert("Error al enviar."); }
-    finally { btn.innerText = "SOLICITAR"; btn.disabled = false; }
-}
-
-function updateAppointmentUI() {
-    const data = localStorage.getItem('renault_appointment');
-    const el = document.getElementById('reminder-container');
-    if (data) {
-        const a = JSON.parse(data);
-        el.innerHTML = `<div id="appointment-reminder">
-            <div style="color:#d4af37;font-weight:900;font-size:0.8rem">PRÓXIMA CITA</div>
-            <div style="font-size:1.2rem;font-weight:bold">${a.fecha} | ${a.hora} hrs</div>
-        </div>`;
-    } else { el.innerHTML = ''; }
+    if(el) el.classList.add('active');
+    if(id === 'citas') renderAppointmentPage();
 }
 
 function renderAppointmentPage() {
-    const data = localStorage.getItem('renault_appointment');
+    const saved = localStorage.getItem('renault_appointment');
     const cont = document.getElementById('appointment-content');
     const u = JSON.parse(localStorage.getItem('renault_user') || '{}');
-    if (data) {
-        const a = JSON.parse(data);
-        cont.innerHTML = `<div class="card-white" style="text-align:center">
-            <h3>CITA AGENDADA</h3>
-            <div style="background:#f7f7f7;padding:20px;border-radius:20px;text-align:left;color:#333">
-                <strong>Nombre:</strong> ${a.nombre}<br>
-                <strong>Unidad:</strong> ${a.unidad}<br>
-                <strong>Fecha:</strong> ${a.fecha}<br>
-                <strong>Hora:</strong> ${a.hora} hrs
-            </div>
-            <button class="btn-cancel-modern" onclick="cancelarCita()">Cancelar Cita</button>
+
+    if(saved) {
+        const a = JSON.parse(saved);
+        cont.innerHTML = `<div class="card-white">
+            <h3 style="text-align:center">CITA CONFIRMADA</h3>
+            <p><strong>Fecha:</strong> ${a.fecha}<br><strong>Hora:</strong> ${a.hora}<br><strong>Falla:</strong> ${a.falla || 'No especificada'}</p>
+            <button class="btn-action" style="background:#ff4444;color:#fff" onclick="cancelarCita()">CANCELAR</button>
         </div>`;
     } else {
-        const units = ["Kwid","Kardian","Duster","Stepway","Oroch","Koleos","Master","Kangoo","Megane E-Tech"];
-        const opts = units.map(un => `<option value="${un}"${u.unit===un?' selected':''}>${un}</option>`).join('');
         cont.innerHTML = `<div class="card-white">
-            <label class="form-label">Nombre</label><input type="text" id="c-name" class="form-control" value="${u.name||''}">
-            <label class="form-label">Teléfono</label><input type="tel" id="c-phone" class="form-control" value="${u.phone||''}">
-            <label class="form-label">Unidad</label><select id="c-unit" class="form-control">${opts}</select>
             <label class="form-label">Fecha</label><input type="date" id="c-date" class="form-control">
             <label class="form-label">Hora</label><input type="time" id="c-time" class="form-control">
-            <button id="btn-cita" class="btn-action btn-yellow" onclick="handleBooking()">AGENDAR CITA</button>
+            <label class="form-label">¿Qué falla presenta su unidad?</label>
+            <textarea id="c-falla" class="form-control" placeholder="Ej: Ruido en suspensión, Check engine prendido, servicio de 10k..."></textarea>
+            <button class="btn-action btn-yellow" onclick="handleBooking()">AGENDAR CITA</button>
         </div>`;
     }
 }
 
 async function handleBooking() {
-    const btn = document.getElementById('btn-cita');
+    const u = JSON.parse(localStorage.getItem('renault_user'));
     const app = {
         hoja: "citas",
-        nombre: document.getElementById('c-name').value,
-        telefono: document.getElementById('c-phone').value,
-        unidad: document.getElementById('c-unit').value,
+        nombre: u.name,
+        telefono: u.phone,
+        unidad: u.unit,
         fecha: document.getElementById('c-date').value,
-        hora: document.getElementById('c-time').value
+        hora: document.getElementById('c-time').value,
+        falla: document.getElementById('c-falla').value
     };
-    if (!app.nombre || !app.fecha) { alert("Completa los datos."); return; }
-    btn.innerText = "PROCESANDO..."; btn.disabled = true;
-    try {
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(app) });
-        localStorage.setItem('renault_appointment', JSON.stringify(app));
-        alert("¡Cita agendada!"); updateAppointmentUI(); showPage('inicio');
-    } catch(e) { alert("Error."); }
-    finally { btn.innerText = "AGENDAR CITA"; btn.disabled = false; }
+    if(!app.fecha || !app.hora || !app.falla) return alert("Por favor indica la fecha, hora y la falla.");
+    
+    localStorage.setItem('renault_appointment', JSON.stringify(app));
+    fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(app) });
+    alert("Cita registrada correctamente.");
+    showPage('inicio');
 }
 
-async function cancelarCita() {
-    if (!confirm("¿Cancelar cita?")) return;
-    const app = JSON.parse(localStorage.getItem('renault_appointment'));
-    try {
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({...app, hoja: "cancelada"}) });
-        localStorage.removeItem('renault_appointment');
-        updateAppointmentUI(); showPage('inicio');
-    } catch(e) { alert("Error."); }
+async function loadCat() {
+    const res = await fetch(SCRIPT_URL + "?hoja=nuevos");
+    const data = await res.json();
+    document.getElementById('cat-container').innerHTML = data.map(c => `
+        <div class="car-card" style="margin-bottom:30px">
+            <img src="${c.imagen || ''}" onerror="this.src='https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid.png'">
+            <h3 style="margin:15px 0 5px">${c.modelo}</h3>
+            <p style="color:#d4af37; font-weight:bold; margin:0 0 10px 0">${c.precio}</p>
+            <button class="btn-action btn-yellow" onclick="alert('Solicitando informes de ${c.modelo}')">ME INTERESA</button>
+        </div>
+    `).join('');
 }
+
+function cancelarCita() {
+    localStorage.removeItem('renault_appointment');
+    renderAppointmentPage();
+}
+
+window.onload = () => { renderUser(); loadCat(); };
 </script>
 </body>
 </html>
