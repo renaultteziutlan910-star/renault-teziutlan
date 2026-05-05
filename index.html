@@ -242,7 +242,8 @@ function saveData() {
 function renderUser(d) {
     document.getElementById('greet').innerText = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
     const slug = d.unit.toLowerCase().replace(/\s+/g, '-');
-    document.getElementById('main-car').src = `https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/${slug}.jpeg`;
+    // Se actualizó la extensión de .jpeg a .png para leer las nuevas imágenes de estudio
+    document.getElementById('main-car').src = `https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/${slug}.png`;
     document.getElementById('tag-car').innerText = `Tu ${d.unit}`;
     document.getElementById('q-name').value = d.name;
     document.getElementById('q-phone').value = d.phone;
@@ -445,7 +446,6 @@ async function handleBooking() {
     if (!app.nombre || !app.telefono || !app.fecha || !app.hora) { alert("Completa los campos obligatorios."); return; }
     btn.innerText = "PROCESANDO..."; btn.disabled = true;
     try {
-        // Se envía con el campo "detalles" sincronizado
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(app) });
         localStorage.setItem('renault_appointment', JSON.stringify(app));
         alert("¡Cita agendada correctamente!"); updateAppointmentUI(); showPage('inicio');
@@ -460,7 +460,6 @@ async function cancelarCita() {
     const btn = document.querySelector('.btn-cancel-modern');
     if(btn) btn.innerText = "CANCELANDO...";
     try {
-        // Enviamos el objeto COMPLETO de la cita y cambiamos la hoja de destino a "cancelada"
         await fetch(SCRIPT_URL, { 
             method: 'POST', 
             mode: 'no-cors', 
