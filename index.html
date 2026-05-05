@@ -162,7 +162,8 @@
 </nav>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtsJSdVpy7L_XdwFdxoq99-FPyRN0SUljawFS3gARNkT_9jQgywIx5agL6k_mS4Zc/exec";
+// ACTUALIZADO: Nuevo SCRIPT_URL proporcionado por el usuario
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXYUVq-mWo0TVNjOqVexHShii2mbROdMj9wXYmgphsylIQIP_hMj8RLXQfN_sk0c4/exec";
 const PLACEHOLDER = "https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png";
 
 const DESC_DATA = {
@@ -242,6 +243,7 @@ function saveData() {
 function renderUser(d) {
     document.getElementById('greet').innerText = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
     const slug = d.unit.toLowerCase().replace(/\s+/g, '-');
+    // ACTUALIZADO: Referencia a .png para la imagen de perfil
     document.getElementById('main-car').src = `https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/${slug}.png`;
     document.getElementById('tag-car').innerText = `Tu ${d.unit}`;
     document.getElementById('q-name').value = d.name;
@@ -275,7 +277,7 @@ async function loadCat() {
     if (cacheNuevos) { document.getElementById('cat-container').innerHTML = cacheNuevos; return; }
     const container = document.getElementById('cat-container');
     try {
-        const res  = await fetch(`${SCRIPT_URL}?sheet=nuevos`);
+        const res  = await fetch(`${SCRIPT_URL}?hoja=nuevos`);
         const data = await res.json();
         if (!Array.isArray(data) || data.length === 0) {
             container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">No hay unidades disponibles.</p>';
@@ -295,14 +297,14 @@ async function loadCat() {
             </div>`;
         }).join('');
         container.innerHTML = cacheNuevos;
-    } catch(e) { container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Error al cargar.</p>'; }
+    } catch(e) { container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Error al cargar el catálogo.</p>'; }
 }
 
 async function loadSemi() {
     if (cacheSeminuevos) { document.getElementById('semi-container').innerHTML = cacheSeminuevos; return; }
     const container = document.getElementById('semi-container');
     try {
-        const res  = await fetch(`${SCRIPT_URL}?sheet=seminuevos`);
+        const res  = await fetch(`${SCRIPT_URL}?hoja=seminuevos`);
         const data = await res.json();
         cacheSeminuevos = data.map(s => {
             const nombre = getNombreSemi(s);
@@ -315,7 +317,7 @@ async function loadSemi() {
             </div>`;
         }).join('');
         container.innerHTML = cacheSeminuevos;
-    } catch(e) { container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Error al cargar.</p>'; }
+    } catch(e) { container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Error al cargar inventario.</p>'; }
 }
 
 function openDesc(index) {
