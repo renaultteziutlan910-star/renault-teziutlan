@@ -242,7 +242,6 @@ function saveData() {
 function renderUser(d) {
     document.getElementById('greet').innerText = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
     const slug = d.unit.toLowerCase().replace(/\s+/g, '-');
-    // Se actualizó la extensión de .jpeg a .png para leer las nuevas imágenes de estudio
     document.getElementById('main-car').src = `https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/${slug}.png`;
     document.getElementById('tag-car').innerText = `Tu ${d.unit}`;
     document.getElementById('q-name').value = d.name;
@@ -411,7 +410,7 @@ function renderAppointmentPage() {
                 <strong>Kilometraje:</strong> ${a.kilometraje} km<br>
                 <strong>Fecha:</strong> ${a.fecha}<br>
                 <strong>Hora:</strong> ${a.hora} hrs<br>
-                <strong>Detalles:</strong> ${a.detalles || 'Ninguno'}
+                <strong>Falla/Detalle:</strong> ${a.detalles || 'Ninguno'}
             </div>
             <button class="btn-cancel-modern" onclick="cancelarCita()">Cancelar Cita</button>
         </div>`;
