@@ -247,9 +247,20 @@ function saveData() {
 
 function renderUser(d) {
     document.getElementById('greet').innerText = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
-    const slug = d.unit.toLowerCase().replace(/\s+/g, '-');
-    // Imagen de perfil basada en el modelo elegido al inicio
-    document.getElementById('main-car').src = `https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/${slug}.png`;
+    
+    // CORRECCIÓN PARA CARGA DE IMAGEN EN INICIO SEGÚN GITHUB
+    const slug = d.unit.toLowerCase().trim().replace(/\s+/g, '-');
+    const mainCar = document.getElementById('main-car');
+    mainCar.src = `https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/${slug}.png`;
+    
+    // Respaldo en caso de que el nombre del archivo varíe levemente
+    mainCar.onerror = function() {
+        if (slug === 'megane-e-tech') this.src = 'https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/megane%20e-tech.png';
+        else if (slug === 'kwid-electrico') this.src = 'https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid%20electrico.png';
+        else this.src = PLACEHOLDER;
+        this.onerror = null; 
+    };
+
     document.getElementById('tag-car').innerText = `Tu ${d.unit}`;
     document.getElementById('q-name').value = d.name;
     document.getElementById('q-phone').value = d.phone;
