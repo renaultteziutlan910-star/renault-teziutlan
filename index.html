@@ -162,7 +162,6 @@
 </nav>
 
 <script>
-// URL del script corregida según tu última implementación
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwtsJSdVpy7L_XdwFdxoq99-FPyRN0SUljawFS3gARNkT_9jQgywIx5agL6k_mS4Zc/exec";
 const PLACEHOLDER = "https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png";
 
@@ -441,11 +440,12 @@ async function handleBooking() {
         kilometraje: document.getElementById('c-km').value.trim(),
         fecha: document.getElementById('c-date').value,
         hora: document.getElementById('c-time').value,
-        detalles: document.getElementById('c-details').value.trim() // Nombre sincronizado
+        detalles: document.getElementById('c-details').value.trim() 
     };
     if (!app.nombre || !app.telefono || !app.fecha || !app.hora) { alert("Completa los campos obligatorios."); return; }
     btn.innerText = "PROCESANDO..."; btn.disabled = true;
     try {
+        // Se envía con el campo "detalles" sincronizado
         await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(app) });
         localStorage.setItem('renault_appointment', JSON.stringify(app));
         alert("¡Cita agendada correctamente!"); updateAppointmentUI(); showPage('inicio');
@@ -460,12 +460,23 @@ async function cancelarCita() {
     const btn = document.querySelector('.btn-cancel-modern');
     if(btn) btn.innerText = "CANCELANDO...";
     try {
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({...app, hoja: "cancelada"}) });
+        // Enviamos el objeto COMPLETO de la cita y cambiamos la hoja de destino a "cancelada"
+        await fetch(SCRIPT_URL, { 
+            method: 'POST', 
+            mode: 'no-cors', 
+            body: JSON.stringify({
+                ...app, 
+                hoja: "cancelada"
+            }) 
+        });
         localStorage.removeItem('renault_appointment');
         updateAppointmentUI();
         showPage('inicio');
         alert("Cita cancelada correctamente.");
-    } catch(e) { alert("Error al cancelar."); }
+    } catch(e) { 
+        alert("Error al cancelar."); 
+        if(btn) btn.innerText = "Cancelar Cita";
+    }
 }
 </script>
 </body>
