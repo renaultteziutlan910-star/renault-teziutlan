@@ -92,7 +92,7 @@
     <div class="card-profile">
         <h1 id="greet">¡HOLA!</h1>
         <img id="main-car" src="" class="car-hero" alt="Tu Renault"
-            onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png'">
+            onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid.png'">
         <div id="tag-car" style="font-weight:800;font-size:1.3rem">Tu Renault</div>
     </div>
     <div id="reminder-container"></div>
@@ -118,7 +118,7 @@
     <div class="modal-content">
         <button onclick="closeDesc()" style="position:absolute;right:20px;top:20px;border:none;background:none;font-size:1.5rem;z-index:10;cursor:pointer">✕</button>
         <img id="desc-img" src="" style="width:100%;border-radius:20px;margin-bottom:15px;aspect-ratio:16/9;object-fit:cover;background:#eee"
-            onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png'">
+            onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid.png'">
         <div id="desc-title" class="desc-title">MODELO</div>
         <div class="tab-container">
             <button id="btn-tab-info"       class="tab-btn active" onclick="switchTab('info')">Info</button>
@@ -162,9 +162,9 @@
 </nav>
 
 <script>
-// ACTUALIZADO: Nuevo SCRIPT_URL proporcionado por el usuario
+// CONFIGURACIÓN GLOBAL
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXYUVq-mWo0TVNjOqVexHShii2mbROdMj9wXYmgphsylIQIP_hMj8RLXQfN_sk0c4/exec";
-const PLACEHOLDER = "https://raw.githubusercontent.com/Renato-Tez/Assets/main/renault-placeholder.png";
+const PLACEHOLDER = "https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid.png";
 
 const DESC_DATA = {
     "boreal iconic hybrid 2026": {
@@ -203,12 +203,17 @@ let currentVehicleSelected = "";
 let cacheNuevos            = null;
 let cacheSeminuevos        = null;
 
+// FUNCIÓN PARA EXTRAER COLUMNAS (MEJORADA PARA IMÁGENES)
 function getField(obj) {
     const keys = Array.from(arguments).slice(1);
     for (const k of keys) {
         const found = Object.keys(obj).find(ok => ok.toLowerCase().trim() === k.toLowerCase().trim());
         if (found !== undefined && obj[found] !== null) {
-            const val = String(obj[found]).trim();
+            let val = String(obj[found]).trim();
+            // Si el valor parece un link de GitHub, aseguramos que no tenga espacios accidentales
+            if (val.includes("github") || val.includes("http")) {
+                val = val.replace(/\s/g, '%20');
+            }
             if (val && val !== "undefined" && val !== "null") return val;
         }
     }
@@ -243,8 +248,8 @@ function saveData() {
 function renderUser(d) {
     document.getElementById('greet').innerText = `¡HOLA, ${d.name.split(' ')[0].toUpperCase()}!`;
     const slug = d.unit.toLowerCase().replace(/\s+/g, '-');
-    // ACTUALIZADO: Referencia a .png para la imagen de perfil
-    document.getElementById('main-car').src = `https://renaultteziutlan910-star.github.io/renault-teziutlan/renault%20app/img/${slug}.png`;
+    // Imagen de perfil basada en el modelo elegido al inicio
+    document.getElementById('main-car').src = `https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/${slug}.png`;
     document.getElementById('tag-car').innerText = `Tu ${d.unit}`;
     document.getElementById('q-name').value = d.name;
     document.getElementById('q-phone').value = d.phone;
@@ -273,8 +278,8 @@ function showPage(id, el) {
     if (id === 'citas') renderAppointmentPage();
 }
 
+// CARGA DEL CATÁLOGO (ACTUALIZADA)
 async function loadCat() {
-    if (cacheNuevos) { document.getElementById('cat-container').innerHTML = cacheNuevos; return; }
     const container = document.getElementById('cat-container');
     try {
         const res  = await fetch(`${SCRIPT_URL}?hoja=nuevos`);
@@ -284,10 +289,11 @@ async function loadCat() {
             return;
         }
         window._catalogoNuevos = data;
-        cacheNuevos = data.map((c, i) => {
+        container.innerHTML = data.map((c, i) => {
             const modelo = getField(c, 'modelo','nombre');
             const precio = getField(c, 'precio','price');
-            const imagen = getField(c, 'imagen','img','url');
+            const imagen = getField(c, 'imagen','img','url','foto');
+            
             return `
             <div class="car-card">
                 <img src="${imagen || PLACEHOLDER}" loading="lazy" onclick="openDesc(${i})" onerror="this.src='${PLACEHOLDER}'">
@@ -296,17 +302,15 @@ async function loadCat() {
                 <button class="btn-action btn-yellow" onclick="openM('${escQ(modelo)}')">COTIZAR</button>
             </div>`;
         }).join('');
-        container.innerHTML = cacheNuevos;
     } catch(e) { container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Error al cargar el catálogo.</p>'; }
 }
 
 async function loadSemi() {
-    if (cacheSeminuevos) { document.getElementById('semi-container').innerHTML = cacheSeminuevos; return; }
     const container = document.getElementById('semi-container');
     try {
         const res  = await fetch(`${SCRIPT_URL}?hoja=seminuevos`);
         const data = await res.json();
-        cacheSeminuevos = data.map(s => {
+        container.innerHTML = data.map(s => {
             const nombre = getNombreSemi(s);
             const precio = getField(s, 'precio','price');
             return `
@@ -316,7 +320,6 @@ async function loadSemi() {
                 <button class="btn-action btn-yellow" onclick="openM('${escQ(nombre)}')">ME INTERESA</button>
             </div>`;
         }).join('');
-        container.innerHTML = cacheSeminuevos;
     } catch(e) { container.innerHTML = '<p style="text-align:center;color:#888;padding:30px">Error al cargar inventario.</p>'; }
 }
 
