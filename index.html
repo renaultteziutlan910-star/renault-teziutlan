@@ -50,8 +50,33 @@
         .desc-title { color: #d4af37; font-weight: 900; margin-bottom: 10px; font-size: 1.5rem; text-transform: uppercase; }
         .desc-text { color: #444; line-height: 1.6; font-size: 0.95rem; margin-bottom: 20px; min-height: 100px; text-align: justify; }
         .feature-tag { display: inline-block; background: #f0f0f0; padding: 5px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin: 3px; color: #555; }
+        
+        /* --- ESTILOS PREMIUM PARA CITAS (NUEVOS) --- */
+        .stepper-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 0 10px; position: relative; margin-top: 10px; }
+        .step-line { position: absolute; top: 15px; left: 10%; right: 10%; height: 2px; background: #333; z-index: 1; }
+        .stepper-item { text-align: center; z-index: 2; flex: 1; position: relative; }
+        .step-circle { width: 32px; height: 32px; border-radius: 50%; background: #222; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; border: 2px solid #444; color: #888; font-size: 0.8rem; font-weight: bold; }
+        .stepper-item.active .step-circle { background: var(--gold-gradient); border-color: #f5d17a; color: #000; box-shadow: 0 0 15px rgba(212,175,55,0.5); }
+        .step-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #555; }
+        .stepper-item.active .step-label { color: #d4af37; }
+        
+        .premium-card { background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%); border: 1px solid rgba(212,175,55,0.2); border-radius: 25px; padding: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); margin-bottom: 20px; position: relative; overflow: hidden; }
+        .premium-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%); pointer-events: none; }
+        .premium-card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .premium-card-img { width: 80px; height: 50px; border-radius: 10px; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .premium-info-grid { display: grid; grid-template-columns: 1fr; gap: 12px; font-size: 0.9rem; }
+        .info-row { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding-bottom: 8px; align-items: center; }
+        .info-label { color: var(--gray-text); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        .info-value { font-weight: 500; color: #fff; }
+
+        .btn-premium-action { display: flex; align-items: center; gap: 15px; background: #161616; border: 1px solid #222; padding: 16px; border-radius: 20px; margin-bottom: 12px; text-align: left; width: 100%; color: #fff; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+        .btn-premium-action:active { transform: scale(0.97); background: #1f1f1f; }
+        .icon-circle { width: 44px; height: 44px; background: rgba(212,175,55,0.08); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #d4af37; font-size: 1.2rem; }
+        .action-text strong { display: block; font-size: 0.95rem; margin-bottom: 2px; }
+        .action-text small { color: #666; font-size: 0.75rem; }
+        
         #appointment-reminder { background: rgba(255,255,255,0.1); border: 1px solid #d4af37; padding: 15px; border-radius: 20px; margin-top: 20px; text-align: center; }
-        .btn-cancel-modern { background: none; border: 1px solid #ff4444; color: #ff4444; padding: 10px; border-radius: 10px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; }
+        .btn-cancel-modern { background: none; border: 1px solid #333; color: #ff4444; padding: 12px; border-radius: 12px; width: 100%; margin-top: 15px; font-weight: bold; cursor: pointer; font-size: 0.85rem; }
     </style>
 </head>
 <body>
