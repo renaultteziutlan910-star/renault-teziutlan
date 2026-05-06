@@ -30,31 +30,22 @@
         .form-control, .login-input { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 12px; background: #f9f9f9; box-sizing: border-box; font-size: 1rem; margin-bottom: 8px; color: #000; }
         .login-input { background: #1a1a1a; border: 1px solid #333; color: #fff; }
         .login-input:focus, .form-control:focus { outline: none; border-color: #d4af37; }
-        textarea.form-control { resize: vertical; min-height: 80px; font-family: inherit; }
         .btn-action { width: 100%; padding: 18px; border: none; border-radius: 16px; font-weight: 900; font-size: 1rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
         .btn-yellow { background: var(--renault-yellow); color: #000; }
         .btn-green { background: var(--success-green); color: #fff; margin-top: 25px; }
-        .btn-whatsapp-float { position: fixed; bottom: 100px; right: 20px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 3000; text-decoration: none; transition: opacity 0.3s ease, visibility 0.3s ease; }
-        .btn-whatsapp-float svg { width: 30px; height: 30px; fill: currentColor; }
-        .tab-container { display: flex; border-bottom: 1px solid #eee; margin-bottom: 15px; }
-        .tab-btn { flex: 1; padding: 10px; border: none; background: none; font-weight: 800; font-size: 0.7rem; color: #999; cursor: pointer; text-transform: uppercase; }
-        .tab-btn.active { color: #d4af37; border-bottom: 2px solid #d4af37; }
         .car-card { background: #1a1a1a; border-radius: 25px; padding: 15px; margin-bottom: 25px; border: 1px solid #333; }
-        .car-card img { width: 100%; border-radius: 20px; cursor: pointer; transition: transform 0.2s; background: #222; aspect-ratio: 16/9; object-fit: cover; display: block; }
+        .car-card img { width: 100%; border-radius: 20px; aspect-ratio: 16/9; object-fit: cover; display: block; background: #222; }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0d0d0d; display: flex; justify-content: space-around; padding: 15px 0 30px 0; border-top: 1px solid #222; z-index: 1000; }
         .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 0.7rem; font-weight: 700; flex: 1; background: none; border: none; cursor: pointer; }
         .nav-item svg { width: 26px; height: 26px; fill: currentColor; margin-bottom: 4px; display: block; margin: 0 auto; }
         .nav-item.active { color: #d4af37; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 6000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: #fff; padding: 30px; border-radius: 30px; width: 100%; max-width: 400px; color: #000; max-height: 90vh; overflow-y: auto; position: relative; }
-        .desc-title { color: #d4af37; font-weight: 900; margin-bottom: 10px; font-size: 1.5rem; text-transform: uppercase; }
-        .desc-text { color: #444; line-height: 1.6; font-size: 0.95rem; margin-bottom: 20px; min-height: 100px; text-align: justify; }
-        .feature-tag { display: inline-block; background: #f0f0f0; padding: 5px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; margin: 3px; color: #555; }
-        
-        .premium-card-service { background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%); border: 1px solid rgba(212,175,55,0.2); border-radius: 25px; padding: 25px; text-align: center; }
-        .info-row-service { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding: 10px 0; }
+        .modal-content { background: #fff; padding: 30px; border-radius: 30px; width: 100%; max-width: 400px; color: #000; }
+        .premium-card-service { background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%); border: 1px solid rgba(212,175,55,0.2); border-radius: 25px; padding: 25px; text-align: center; margin-bottom: 20px; }
+        .info-row-service { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding: 10px 0; font-size: 0.9rem; }
         .info-label-service { color: var(--gray-text); }
-        .info-value-service { font-weight: bold; }
+        .info-value-service { font-weight: bold; color: #fff; }
+        .btn-cancel-modern { background: none; border: 1px solid #ff4444; color: #ff4444; padding: 10px; border-radius: 10px; width: 100%; margin-top: 15px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -63,12 +54,11 @@
     <div class="logo-area" style="margin-bottom:30px"><span>RENAULT</span><div class="v-line"></div><span class="gold-text">TEZIUTLÁN</span></div>
     <input type="text" id="user-name" class="login-input" placeholder="Nombre completo">
     <input type="tel" id="user-phone" class="login-input" placeholder="Número de teléfono">
-    <label class="form-label" style="color:#888;text-align:left">Selecciona tu Renault actual:</label>
+    <label class="form-label" style="color:#888;text-align:left">Selecciona tu Renault:</label>
     <select id="user-unit" class="login-input">
         <option value="Kwid">Kwid</option><option value="Kardian">Kardian</option>
         <option value="Duster">Duster</option><option value="Stepway">Stepway</option>
         <option value="Oroch">Oroch</option><option value="Koleos">Koleos</option>
-        <option value="Master">Master</option><option value="Kangoo">Kangoo</option>
         <option value="Megane E-Tech">Megane E-Tech</option>
     </select>
     <button class="btn-action btn-yellow" onclick="saveData()">INGRESAR</button>
@@ -105,11 +95,11 @@
 
 <div id="modal-quote" class="modal">
     <div class="modal-content">
-        <h3 id="m-title" style="color:#d4af37">COTIZAR</h3>
+        <h3 id="m-title" style="color:#d4af37;margin-top:0">COTIZAR</h3>
         <label class="form-label">Nombre</label><input type="text" id="q-name" class="form-control">
         <label class="form-label">Teléfono</label><input type="tel" id="q-phone" class="form-control">
         <button id="btn-quote" class="btn-action btn-yellow" onclick="handleQuote()">SOLICITAR</button>
-        <button onclick="closeM()" style="width:100%;background:none;border:none;margin-top:10px">Cerrar</button>
+        <button onclick="closeM()" style="width:100%;background:none;border:none;margin-top:10px;cursor:pointer">Cerrar</button>
     </div>
 </div>
 
@@ -124,11 +114,20 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwpdy-7843_ZO4pIW3AKM4EIAEN1FnC1N4zFQeP3wU2pUs2VdVRVq1G0HGUp2m8Dw0/exec";
 const PLACEHOLDER = "https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid.png";
 
+// Función auxiliar para buscar campos en objetos (independiente de mayúsculas/minúsculas)
+function getVal(obj, ...keys) {
+    for (let k of keys) {
+        let foundKey = Object.keys(obj).find(key => key.toLowerCase().trim() === k.toLowerCase().trim());
+        if (foundKey && obj[foundKey]) return obj[foundKey];
+    }
+    return "";
+}
+
 function saveData() {
     const name = document.getElementById('user-name').value.trim();
     const phone = document.getElementById('user-phone').value.trim();
     const unit = document.getElementById('user-unit').value;
-    if (!name || !phone) return alert("Completa tus datos");
+    if (!name || !phone) return alert("Por favor, completa tus datos.");
     const userData = { name, phone, unit };
     localStorage.setItem('renault_user', JSON.stringify(userData));
     renderUser(userData);
@@ -143,15 +142,6 @@ function renderUser(d) {
     document.getElementById('tag-car').innerText = `Tu ${d.unit}`;
 }
 
-window.onload = () => {
-    const raw = localStorage.getItem('renault_user');
-    if (raw) {
-        renderUser(JSON.parse(raw));
-        document.getElementById('login-screen').style.display = 'none';
-        initAppData();
-    }
-};
-
 async function initAppData() {
     updateAppointmentUI();
     loadCat();
@@ -160,31 +150,41 @@ async function initAppData() {
 
 async function loadCat() {
     const cont = document.getElementById('cat-container');
-    cont.innerHTML = "Cargando...";
+    cont.innerHTML = "<p style='text-align:center;padding:20px'>Cargando catálogo...</p>";
     try {
         const res = await fetch(`${SCRIPT_URL}?hoja=nuevos`);
         const data = await res.json();
-        cont.innerHTML = data.map(c => `
+        if (!data || data.length === 0) throw new Error();
+        cont.innerHTML = data.map(c => {
+            const mod = getVal(c, 'modelo', 'nombre', 'unidad');
+            const img = getVal(c, 'imagen', 'foto', 'url');
+            return `
             <div class="car-card">
-                <img src="${c.imagen || PLACEHOLDER}">
-                <h3>${c.modelo}</h3>
-                <button class="btn-action btn-yellow" onclick="openM('${c.modelo}')">COTIZAR</button>
-            </div>`).join('');
-    } catch(e) { cont.innerHTML = "Error al cargar."; }
+                <img src="${img || PLACEHOLDER}" onerror="this.src='${PLACEHOLDER}'">
+                <h3 style="margin:15px; text-align:center">${mod}</h3>
+                <button class="btn-action btn-yellow" onclick="openM('${mod}')">COTIZAR</button>
+            </div>`;
+        }).join('');
+    } catch(e) { cont.innerHTML = "<p style='text-align:center;padding:20px;color:#888'>Error al conectar con el catálogo.</p>"; }
 }
 
 async function loadSemi() {
     const cont = document.getElementById('semi-container');
+    cont.innerHTML = "<p style='text-align:center;padding:20px'>Buscando unidades...</p>";
     try {
         const res = await fetch(`${SCRIPT_URL}?hoja=seminuevos`);
         const data = await res.json();
-        cont.innerHTML = data.map(s => `
+        cont.innerHTML = data.map(s => {
+            const mod = getVal(s, 'modelo', 'nombre', 'unidad', 'versión');
+            const pre = getVal(s, 'precio', 'price', 'valor');
+            return `
             <div class="car-card">
-                <h3>${s.modelo || s.nombre || 'Seminuevo'}</h3>
-                <p>${s.precio || ''}</p>
-                <button class="btn-action btn-yellow" onclick="openM('${s.modelo || s.nombre}')">INFO</button>
-            </div>`).join('');
-    } catch(e) { }
+                <h3 style="margin:15px; color:var(--renault-yellow)">${mod}</h3>
+                <div style="margin:0 15px 15px; font-weight:bold">${pre}</div>
+                <button class="btn-action btn-yellow" onclick="openM('${mod}')">ME INTERESA</button>
+            </div>`;
+        }).join('');
+    } catch(e) { cont.innerHTML = "<p style='text-align:center;padding:20px;color:#888'>Sin unidades seminuevas por ahora.</p>"; }
 }
 
 function showPage(id, el) {
@@ -199,21 +199,28 @@ function showPage(id, el) {
 
 function openM(m) {
     document.getElementById('m-title').innerText = m;
+    document.getElementById('q-name').value = JSON.parse(localStorage.getItem('renault_user')).name;
+    document.getElementById('q-phone').value = JSON.parse(localStorage.getItem('renault_user')).phone;
     document.getElementById('modal-quote').style.display = 'flex';
 }
 function closeM() { document.getElementById('modal-quote').style.display = 'none'; }
 
 async function handleQuote() {
+    const btn = document.getElementById('btn-quote');
     const data = {
         "hoja": "cotizaciones",
         "nombre": document.getElementById('q-name').value,
         "telefono": document.getElementById('q-phone').value,
         "unidad a revisar": document.getElementById('m-title').innerText,
-        "fecha": new Date().toLocaleString()
+        "fecha": new Date().toLocaleString('es-MX')
     };
-    await fetch(`${SCRIPT_URL}?${new URLSearchParams(data)}`, { method: 'POST', mode: 'no-cors' });
-    alert("Enviado");
-    closeM();
+    btn.innerText = "ENVIANDO..."; btn.disabled = true;
+    try {
+        await fetch(`${SCRIPT_URL}?${new URLSearchParams(data)}`, { method: 'POST', mode: 'no-cors' });
+        alert("Solicitud recibida.");
+        closeM();
+    } catch(e) { alert("Error de red."); }
+    finally { btn.innerText = "SOLICITAR"; btn.disabled = false; }
 }
 
 function renderAppointmentPage() {
@@ -225,23 +232,27 @@ function renderAppointmentPage() {
         const a = JSON.parse(data);
         cont.innerHTML = `
             <div class="premium-card-service">
-                <h3>Tu ${a["unidad a revisar"]}</h3>
-                <div class="info-row-service"><span>Fecha:</span> <span>${a.fecha}</span></div>
-                <div class="info-row-service"><span>Hora:</span> <span>${a.hora}</span></div>
-                <button class="btn-cancel-modern" onclick="cancelarCita()">CANCELAR</button>
+                <div style="color:#d4af37; font-weight:900; font-size:1.4rem; margin-bottom:10px">Tu ${a["unidad a revisar"]}</div>
+                <div class="info-row-service"><span class="info-label-service">FECHA</span> <span class="info-value-service">${a.fecha}</span></div>
+                <div class="info-row-service"><span class="info-label-service">HORA</span> <span class="info-value-service">${a.hora} HRS</span></div>
+                <div class="info-row-service"><span class="info-label-service">KM</span> <span class="info-value-service">${a.kilometraje} KM</span></div>
+                <button class="btn-cancel-modern" onclick="cancelarCita()">CANCELAR MI CITA</button>
             </div>`;
     } else {
         cont.innerHTML = `
             <div class="card-white">
-                <label class="form-label">Kilometraje</label><input type="text" id="c-km" class="form-control">
+                <label class="form-label">Unidad a Revisar</label>
+                <input type="text" id="c-unit" class="form-control" value="${u.unit || ''}" readonly>
+                <label class="form-label">Kilometraje</label><input type="number" id="c-km" class="form-control" placeholder="Ej: 10000">
                 <label class="form-label">Fecha</label><input type="date" id="c-date" class="form-control">
                 <label class="form-label">Hora</label><input type="time" id="c-time" class="form-control">
-                <button class="btn-action btn-yellow" onclick="handleBooking()">AGENDAR</button>
+                <button id="btn-cita" class="btn-action btn-yellow" onclick="handleBooking()">AGENDAR CITA</button>
             </div>`;
     }
 }
 
 async function handleBooking() {
+    const btn = document.getElementById('btn-cita');
     const u = JSON.parse(localStorage.getItem('renault_user'));
     const app = {
         "hoja": "citas",
@@ -252,20 +263,50 @@ async function handleBooking() {
         "fecha": document.getElementById('c-date').value,
         "hora": document.getElementById('c-time').value
     };
-    await fetch(`${SCRIPT_URL}?${new URLSearchParams(app)}`, { method: 'POST', mode: 'no-cors' });
-    localStorage.setItem('renault_appointment', JSON.stringify(app));
-    renderAppointmentPage();
+    if(!app.fecha || !app.hora) return alert("Elige fecha y hora");
+    btn.innerText = "AGENDANDO..."; btn.disabled = true;
+    try {
+        await fetch(`${SCRIPT_URL}?${new URLSearchParams(app)}`, { method: 'POST', mode: 'no-cors' });
+        localStorage.setItem('renault_appointment', JSON.stringify(app));
+        updateAppointmentUI();
+        renderAppointmentPage();
+    } catch(e) { alert("Error al agendar."); }
+    finally { btn.innerText = "AGENDAR CITA"; btn.disabled = false; }
 }
 
 async function cancelarCita() {
+    if(!confirm("¿Seguro?")) return;
     const a = JSON.parse(localStorage.getItem('renault_appointment'));
     const data = { ...a, "hoja": "cancelada" };
-    await fetch(`${SCRIPT_URL}?${new URLSearchParams(data)}`, { method: 'POST', mode: 'no-cors' });
-    localStorage.removeItem('renault_appointment');
-    renderAppointmentPage();
+    try {
+        await fetch(`${SCRIPT_URL}?${new URLSearchParams(data)}`, { method: 'POST', mode: 'no-cors' });
+        localStorage.removeItem('renault_appointment');
+        updateAppointmentUI();
+        renderAppointmentPage();
+        alert("Cita cancelada.");
+    } catch(e) { alert("Error al cancelar."); }
 }
 
-function updateAppointmentUI() {}
+function updateAppointmentUI() {
+    const data = localStorage.getItem('renault_appointment');
+    const el = document.getElementById('reminder-container');
+    if (data) {
+        const a = JSON.parse(data);
+        el.innerHTML = `<div style="background:rgba(212,175,55,0.1); border:1px solid #d4af37; padding:15px; border-radius:20px; margin-top:20px; text-align:center">
+            <div style="color:#d4af37; font-weight:900; font-size:0.8rem">PRÓXIMA CITA</div>
+            <div style="font-size:1.1rem; font-weight:bold">${a.fecha} | ${a.hora} hrs</div>
+        </div>`;
+    } else el.innerHTML = '';
+}
+
+window.onload = () => {
+    const raw = localStorage.getItem('renault_user');
+    if (raw) {
+        renderUser(JSON.parse(raw));
+        document.getElementById('login-screen').style.display = 'none';
+        initAppData();
+    }
+};
 </script>
 </body>
 </html>
