@@ -61,6 +61,7 @@
         .step-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #555; }
         .stepper-item.active .step-label { color: #d4af37; }
         
+        /* AJUSTE IMAGEN CARRO EN CITAS */
         .premium-card-service { background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%); border: 1px solid rgba(212,175,55,0.2); border-radius: 25px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); margin-bottom: 20px; text-align: center; }
         .premium-card-header-service { margin-bottom: 20px; }
         .premium-card-img-service { width: 100%; max-width: 320px; height: auto; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6)); margin-bottom: 15px; }
@@ -397,6 +398,7 @@ function toggleFinanzas() {
     document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none';
 }
 
+// COTIZACIÓN
 async function handleQuote() {
     const btn = document.getElementById('btn-quote');
     const data = {
@@ -409,7 +411,12 @@ async function handleQuote() {
     btn.innerText = "ENVIANDO..."; btn.disabled = true;
     const params = new URLSearchParams(data);
     try {
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: params });
+        await fetch(SCRIPT_URL, { 
+            method: 'POST', 
+            mode: 'no-cors', 
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString() 
+        });
         alert("Solicitud de cotización enviada con éxito."); closeM();
     } catch(e) { alert("Error al enviar la solicitud."); }
     finally { btn.innerText = "SOLICITAR"; btn.disabled = false; }
@@ -486,6 +493,7 @@ function renderAppointmentPage() {
     }
 }
 
+// CITA
 async function handleBooking() {
     const btn = document.getElementById('btn-cita');
     const app = {
@@ -502,7 +510,12 @@ async function handleBooking() {
     btn.innerText = "PROCESANDO..."; btn.disabled = true;
     const params = new URLSearchParams(app);
     try {
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: params });
+        await fetch(SCRIPT_URL, { 
+            method: 'POST', 
+            mode: 'no-cors', 
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString() 
+        });
         localStorage.setItem('renault_appointment', JSON.stringify(app));
         alert("¡Cita agendada correctamente!"); updateAppointmentUI(); renderAppointmentPage();
     } catch(e) { alert("Error al agendar."); }
@@ -517,7 +530,12 @@ async function cancelarCita() {
     if(btn) btn.innerText = "CANCELANDO...";
     const params = new URLSearchParams({ ...app, hoja: "cancelada" });
     try {
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: params });
+        await fetch(SCRIPT_URL, { 
+            method: 'POST', 
+            mode: 'no-cors', 
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString() 
+        });
         localStorage.removeItem('renault_appointment');
         updateAppointmentUI();
         renderAppointmentPage();
