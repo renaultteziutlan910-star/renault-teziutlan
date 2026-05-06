@@ -398,7 +398,7 @@ function toggleFinanzas() {
     document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none';
 }
 
-// COTIZACIÓN
+// --- CORRECCIÓN COTIZACIÓN ---
 async function handleQuote() {
     const btn = document.getElementById('btn-quote');
     const data = {
@@ -409,13 +409,15 @@ async function handleQuote() {
         fecha: new Date().toLocaleString('es-MX')
     };
     btn.innerText = "ENVIANDO..."; btn.disabled = true;
+    
+    // Enviamos datos en la URL para mayor compatibilidad con Apps Script
     const params = new URLSearchParams(data);
+    const finalUrl = `${SCRIPT_URL}?${params.toString()}`;
+    
     try {
-        await fetch(SCRIPT_URL, { 
+        await fetch(finalUrl, { 
             method: 'POST', 
-            mode: 'no-cors', 
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: params.toString() 
+            mode: 'no-cors'
         });
         alert("Solicitud de cotización enviada con éxito."); closeM();
     } catch(e) { alert("Error al enviar la solicitud."); }
@@ -493,7 +495,7 @@ function renderAppointmentPage() {
     }
 }
 
-// CITA
+// --- CORRECCIÓN CITA ---
 async function handleBooking() {
     const btn = document.getElementById('btn-cita');
     const app = {
@@ -508,13 +510,15 @@ async function handleBooking() {
     };
     if (!app.nombre || !app.telefono || !app.fecha || !app.hora) { alert("Completa los campos obligatorios."); return; }
     btn.innerText = "PROCESANDO..."; btn.disabled = true;
+    
+    // Envío por URL
     const params = new URLSearchParams(app);
+    const finalUrl = `${SCRIPT_URL}?${params.toString()}`;
+    
     try {
-        await fetch(SCRIPT_URL, { 
+        await fetch(finalUrl, { 
             method: 'POST', 
-            mode: 'no-cors', 
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: params.toString() 
+            mode: 'no-cors'
         });
         localStorage.setItem('renault_appointment', JSON.stringify(app));
         alert("¡Cita agendada correctamente!"); updateAppointmentUI(); renderAppointmentPage();
@@ -522,19 +526,22 @@ async function handleBooking() {
     finally { btn.innerText = "AGENDAR CITA"; btn.disabled = false; }
 }
 
+// --- CORRECCIÓN CANCELACIÓN ---
 async function cancelarCita() {
     const rawData = localStorage.getItem('renault_appointment');
     if (!rawData || !confirm("¿Seguro que deseas cancelar tu cita?")) return;
     const app = JSON.parse(rawData);
     const btn = document.querySelector('.btn-cancel-modern');
     if(btn) btn.innerText = "CANCELANDO...";
+    
+    // Envío por URL
     const params = new URLSearchParams({ ...app, hoja: "cancelada" });
+    const finalUrl = `${SCRIPT_URL}?${params.toString()}`;
+    
     try {
-        await fetch(SCRIPT_URL, { 
+        await fetch(finalUrl, { 
             method: 'POST', 
-            mode: 'no-cors', 
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: params.toString() 
+            mode: 'no-cors'
         });
         localStorage.removeItem('renault_appointment');
         updateAppointmentUI();
@@ -542,7 +549,7 @@ async function cancelarCita() {
         alert("Cita cancelada correctamente.");
     } catch(e) { 
         alert("Error al cancelar."); 
-        if(btn) btn.innerText = "Cancelar Cita";
+        if(btn) btn.innerText = "Cancelar mi Cita";
     }
 }
 </script>
