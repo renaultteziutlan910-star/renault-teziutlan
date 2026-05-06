@@ -182,7 +182,7 @@
 </nav>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxTRbJksr0wyKIoizqnOWU06X6v0L9wsSIyCCF7kzkEnwF8Ua87M-C-dhpcpoawao/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwpdy-7843_ZO4pIW3AKM4EIAEN1FnC1N4zFQeP3wU2pUs2VdVRVq1G0HGUp2m8Dw0/exec";
 const PLACEHOLDER = "https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid.png";
 
 const DESC_DATA = {
@@ -396,37 +396,32 @@ function toggleFinanzas() {
     document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none';
 }
 
-// --- CORRECCIÓN COTIZACIÓN (ENVÍA DATOS DE ASESOR) ---
+// --- CORRECCIÓN COTIZACIÓN (LLAVES EXACTAS EXCEL) ---
 async function handleQuote() {
     const btn = document.getElementById('btn-quote');
     const metodo = document.getElementById('q-metodo').value;
     
     const data = {
-        hoja: "cotizaciones",
-        nombre: document.getElementById('q-name').value,
-        telefono: document.getElementById('q-phone').value,
-        cp: document.getElementById('q-cp').value,
-        modelo: document.getElementById('m-title').innerText,
-        metodo: metodo,
-        enganche: metodo === 'Financiado' ? document.getElementById('q-down').value : 'N/A',
-        plazo: metodo === 'Financiado' ? document.getElementById('q-meses').value : 'N/A',
-        fecha: new Date().toLocaleString('es-MX')
+        "hoja": "cotizaciones",
+        "nombre": document.getElementById('q-name').value,
+        "telefono": document.getElementById('q-phone').value,
+        "codigo postal": document.getElementById('q-cp').value,
+        "metoodo de pag": document.getElementById('m-title').innerText,
+        "enganche": metodo === 'Financiado' ? document.getElementById('q-down').value : 'N/A',
+        "plazo(meses)": metodo === 'Financiado' ? document.getElementById('q-meses').value : 'N/A',
+        "fecha": new Date().toLocaleString('es-MX')
     };
 
     if (!data.nombre || !data.telefono) { alert("Nombre y teléfono son obligatorios"); return; }
-
     btn.innerText = "ENVIANDO..."; btn.disabled = true;
-    const params = new URLSearchParams(data);
     
     try {
+        const params = new URLSearchParams(data);
         await fetch(`${SCRIPT_URL}?${params.toString()}`, { method: 'POST', mode: 'no-cors' });
-        alert("Solicitud de cotización enviada con éxito.");
+        alert("Solicitud de cotización enviada correctamente.");
         closeM();
-    } catch(e) { 
-        alert("Error al enviar. Intenta de nuevo."); 
-    } finally { 
-        btn.innerText = "SOLICITAR"; btn.disabled = false; 
-    }
+    } catch(e) { alert("Error al enviar."); } 
+    finally { btn.innerText = "SOLICITAR"; btn.disabled = false; }
 }
 
 function updateAppointmentUI() {
@@ -448,7 +443,7 @@ function renderAppointmentPage() {
 
     if (data) {
         const a = JSON.parse(data);
-        const slug = a.unidad.toLowerCase().trim().replace(/\s+/g, '-');
+        const slug = a["unidad a revisar"].toLowerCase().trim().replace(/\s+/g, '-');
         const imgPath = `https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/${slug}.png`;
         cont.innerHTML = `
             <div class="stepper-container">
@@ -460,14 +455,14 @@ function renderAppointmentPage() {
             <div class="premium-card-service">
                 <div class="premium-card-header-service">
                     <img src="${imgPath}" class="premium-card-img-service" onerror="this.src='${PLACEHOLDER}'">
-                    <div style="color:#d4af37; font-weight:900; font-size:1.4rem; letter-spacing:0.5px">Tu ${a.unidad}</div>
+                    <div style="color:#d4af37; font-weight:900; font-size:1.4rem; letter-spacing:0.5px">Tu ${a["unidad a revisar"]}</div>
                     <div style="font-size:0.8rem; color:#888; font-weight:700">SERVICIO PROGRAMADO</div>
                 </div>
                 <div class="premium-info-grid">
                     <div class="info-row-service"><span class="info-label-service">CLIENTE</span> <span class="info-value-service">${a.nombre}</span></div>
                     <div class="info-row-service"><span class="info-label-service">KILOMETRAJE</span> <span class="info-value-service">${a.kilometraje} KM</span></div>
                     <div class="info-row-service"><span class="info-label-service">PRÓXIMA CITA</span> <span class="info-value-service">${a.fecha} | ${a.hora} HRS</span></div>
-                    <div class="info-row-service"><span class="info-label-service">FALLA</span> <span class="info-value-service">${a.detalles || 'Revisión General'}</span></div>
+                    <div class="info-row-service"><span class="info-label-service">FALLA</span> <span class="info-value-service">${a["detalles o fallas"] || 'Revisión General'}</span></div>
                 </div>
             </div>
             <a class="btn-premium-action" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cita+Servicio+Renault&details=Servicio+Renault+Teziutlan" target="_blank">
@@ -500,45 +495,41 @@ function renderAppointmentPage() {
     }
 }
 
-// --- CORRECCIÓN CITA (MANTIENE FLUJO PRINCIPAL) ---
+// --- CORRECCIÓN CITA (LLAVES EXACTAS EXCEL) ---
 async function handleBooking() {
     const btn = document.getElementById('btn-cita');
     const app = {
-        hoja: "citas",
-        nombre: document.getElementById('c-name').value.trim(),
-        telefono: document.getElementById('c-phone').value.trim(),
-        unidad: document.getElementById('c-unit').value,
-        kilometraje: document.getElementById('c-km').value.trim(),
-        fecha: document.getElementById('c-date').value,
-        hora: document.getElementById('c-time').value,
-        detalles: document.getElementById('c-details').value.trim() 
+        "hoja": "citas",
+        "nombre": document.getElementById('c-name').value.trim(),
+        "telefono": document.getElementById('c-phone').value.trim(),
+        "unidad a revisar": document.getElementById('c-unit').value,
+        "kilometraje": document.getElementById('c-km').value.trim(),
+        "fecha": document.getElementById('c-date').value,
+        "hora": document.getElementById('c-time').value,
+        "detalles o fallas": document.getElementById('c-details').value.trim() 
     };
 
     if (!app.nombre || !app.telefono || !app.fecha || !app.hora) { alert("Completa los campos obligatorios."); return; }
-    
     btn.innerText = "PROCESANDO..."; btn.disabled = true;
-    const params = new URLSearchParams(app);
     
     try {
+        const params = new URLSearchParams(app);
         await fetch(`${SCRIPT_URL}?${params.toString()}`, { method: 'POST', mode: 'no-cors' });
         localStorage.setItem('renault_appointment', JSON.stringify(app));
         alert("¡Cita agendada correctamente!");
         updateAppointmentUI(); 
         renderAppointmentPage();
-    } catch(e) { 
-        alert("Error al agendar."); 
-    } finally { 
-        btn.innerText = "AGENDAR CITA"; btn.disabled = false; 
-    }
+    } catch(e) { alert("Error al agendar."); } 
+    finally { btn.innerText = "AGENDAR CITA"; btn.disabled = false; }
 }
 
-// --- CORRECCIÓN CANCELACIÓN ---
+// --- CORRECCIÓN CANCELACIÓN (LLAVES EXACTAS EXCEL) ---
 async function cancelarCita() {
     const rawData = localStorage.getItem('renault_appointment');
     if (!rawData || !confirm("¿Seguro que deseas cancelar tu cita?")) return;
     
     const app = JSON.parse(rawData);
-    const params = new URLSearchParams({ ...app, hoja: "cancelada" }); 
+    const params = new URLSearchParams({ ...app, "hoja": "cancelada" }); 
     
     try {
         await fetch(`${SCRIPT_URL}?${params.toString()}`, { method: 'POST', mode: 'no-cors' });
