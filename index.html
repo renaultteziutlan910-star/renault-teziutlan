@@ -60,6 +60,8 @@
         .nav-item svg { width: 26px; height: 26px; fill: currentColor; margin-bottom: 4px; display: block; margin: 0 auto; }
         .nav-item.active { color: #d4af37; }
         .btn-cancel-modern { background: none; border: 1px solid #ff4444; color: #ff4444; padding: 12px; border-radius: 15px; width: 100%; margin-top: 20px; font-weight: bold; cursor: pointer; }
+        .car-card { background: #1a1a1a; border-radius: 25px; padding: 15px; margin-bottom: 25px; border: 1px solid #333; }
+        .car-card img { width: 100%; border-radius: 20px; aspect-ratio: 16/9; object-fit: cover; }
     </style>
 </head>
 <body>
@@ -96,8 +98,15 @@
     <div id="appointment-content"></div>
 </div>
 
-<div id="p-nuevos" class="page"><div id="cat-container"></div></div>
-<div id="p-seminuevos" class="page"><div id="semi-container"></div></div>
+<div id="p-nuevos" class="page">
+    <div style="text-align:center;color:#d4af37;font-weight:800;margin-bottom:8px">UNIDADES NUEVAS</div>
+    <div id="cat-container"></div>
+</div>
+
+<div id="p-seminuevos" class="page">
+    <div style="text-align:center;color:#d4af37;font-weight:800;margin-bottom:15px">INVENTARIO SEMINUEVOS</div>
+    <div id="semi-container"></div>
+</div>
 
 <nav class="nav-bar">
     <button class="nav-item active" onclick="showPage('inicio',this)"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Inicio</button>
@@ -107,7 +116,7 @@
 </nav>
 
 <script>
-const SCRIPT_URL = "TU_URL_DE_APPS_SCRIPT_AQUI"; // Asegúrate de poner tu URL
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbXXuhNApBkiAJbUwIqSd_DjzE39SglgR0a0UQrWDu6lvWipm2Vue3Hnn_FJ38P6ds8/exec";
 const PLACEHOLDER = "https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid.png";
 
 function saveData() {
@@ -119,6 +128,7 @@ function saveData() {
     localStorage.setItem('renault_user', JSON.stringify(userData));
     renderUser(userData);
     document.getElementById('login-screen').style.display = 'none';
+    initAppData();
 }
 
 function renderUser(d) {
@@ -139,6 +149,7 @@ function showPage(id, el) {
 function renderAppointmentPage() {
     const data = localStorage.getItem('renault_appointment');
     const cont = document.getElementById('appointment-content');
+    const u = JSON.parse(localStorage.getItem('renault_user') || '{}');
 
     if (data) {
         const a = JSON.parse(data);
@@ -146,7 +157,6 @@ function renderAppointmentPage() {
         const imgPath = `https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/${slug}.png`;
 
         cont.innerHTML = `
-            <!-- Stepper de Progreso -->
             <div class="stepper-container">
                 <div class="step-line"></div>
                 <div class="stepper-item active"><div class="step-circle">✓</div><div class="step-label">Agendado</div></div>
@@ -154,7 +164,6 @@ function renderAppointmentPage() {
                 <div class="stepper-item"><div class="step-circle">3</div><div class="step-label">En Servicio</div></div>
             </div>
 
-            <!-- Tarjeta Premium del Vehículo -->
             <div class="premium-card">
                 <div class="premium-card-header">
                     <img src="${imgPath}" class="premium-card-img" onerror="this.src='${PLACEHOLDER}'">
@@ -171,13 +180,12 @@ function renderAppointmentPage() {
                 </div>
             </div>
 
-            <!-- Botones de Acción -->
             <a class="btn-premium-action" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cita+Servicio+Renault&dates=20260512T183400Z/20260512T193400Z" target="_blank">
                 <div class="icon-circle">📅</div>
                 <div><strong>Añadir al Calendario</strong><br><small style="color:#666">Sincroniza con tu agenda</small></div>
             </a>
 
-            <a class="btn-premium-action" href="https://maps.app.goo.gl/TU_UBICACION" target="_blank">
+            <a class="btn-premium-action" href="https://www.google.com/maps/search/?api=1&query=Renault+Teziutlan" target="_blank">
                 <div class="icon-circle">📍</div>
                 <div><strong>Cómo llegar</strong><br><small style="color:#666">Abrir ubicación del taller</small></div>
             </a>
@@ -190,26 +198,70 @@ function renderAppointmentPage() {
             <button class="btn-cancel-modern" onclick="cancelarCita()">Cancelar mi Cita</button>
         `;
     } else {
+        const units = ["Kwid","Kardian","Duster","Stepway","Oroch","Koleos"];
+        const opts = units.map(un => `<option value="${un}"${u.unit===un?' selected':''}>${un}</option>`).join('');
         cont.innerHTML = `<div class="card-white">
-            <label class="form-label">Unidad</label><input type="text" id="c-unit" class="form-control" placeholder="Ej: Kwid">
-            <label class="form-label">Kilometraje</label><input type="number" id="c-km" class="form-control">
+            <label class="form-label">Nombre</label><input type="text" id="c-name" class="form-control" value="${u.name||''}">
+            <label class="form-label">Teléfono</label><input type="tel" id="c-phone" class="form-control" value="${u.phone||''}">
+            <label class="form-label">Unidad a Revisar</label><select id="c-unit" class="form-control">${opts}</select>
+            <label class="form-label">Kilometraje Actual</label><input type="text" id="c-km" class="form-control" placeholder="Ej: 15,000">
             <label class="form-label">Fecha</label><input type="date" id="c-date" class="form-control">
             <label class="form-label">Hora</label><input type="time" id="c-time" class="form-control">
-            <button class="btn-action btn-yellow" onclick="handleBooking()">AGENDAR CITA</button>
+            <label class="form-label">¿Qué falla presenta su unidad?</label>
+            <textarea id="c-details" class="form-control" placeholder="Ej: Ruido en suspensión, servicio de 10k..."></textarea>
+            <button id="btn-cita" class="btn-action btn-yellow" onclick="handleBooking()">AGENDAR CITA</button>
         </div>`;
     }
 }
 
-function handleBooking() {
+async function handleBooking() {
+    const btn = document.getElementById('btn-cita');
     const app = {
-        nombre: JSON.parse(localStorage.getItem('renault_user')).name,
+        hoja: "citas",
+        nombre: document.getElementById('c-name').value.trim(),
+        telefono: document.getElementById('c-phone').value.trim(),
         unidad: document.getElementById('c-unit').value,
-        kilometraje: document.getElementById('c-km').value,
+        kilometraje: document.getElementById('c-km').value.trim(),
         fecha: document.getElementById('c-date').value,
-        hora: document.getElementById('c-time').value
+        hora: document.getElementById('c-time').value,
+        detalles: document.getElementById('c-details').value.trim() 
     };
-    localStorage.setItem('renault_appointment', JSON.stringify(app));
-    renderAppointmentPage();
+    if (!app.fecha || !app.hora) return alert("Por favor selecciona fecha y hora.");
+    btn.innerText = "PROCESANDO...";
+    try {
+        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(app) });
+        localStorage.setItem('renault_appointment', JSON.stringify(app));
+        renderAppointmentPage();
+    } catch(e) { alert("Error al conectar con la base de datos."); }
+}
+
+async function loadCat() {
+    try {
+        const res = await fetch(SCRIPT_URL + "?hoja=nuevos");
+        const data = await res.json();
+        document.getElementById('cat-container').innerHTML = data.map(c => `
+            <div class="car-card">
+                <img src="${c.imagen || PLACEHOLDER}">
+                <h3 style="margin:15px 0 5px">${c.modelo}</h3>
+                <div style="color:#d4af37;font-weight:bold;margin-bottom:15px">$${c.precio}</div>
+                <button class="btn-action btn-yellow" onclick="alert('Solicitando informes...')">ME INTERESA</button>
+            </div>
+        `).join('');
+    } catch(e) {}
+}
+
+async function loadSemi() {
+    try {
+        const res = await fetch(SCRIPT_URL + "?hoja=seminuevos");
+        const data = await res.json();
+        document.getElementById('semi-container').innerHTML = data.map(s => `
+            <div class="car-card">
+                <h3 style="margin:5px 0;color:var(--renault-yellow)">${s.unidad || s.modelo}</h3>
+                <div style="color:#d4af37;font-weight:bold;margin:10px 0">$${s.precio}</div>
+                <button class="btn-action btn-yellow">ME INTERESA</button>
+            </div>
+        `).join('');
+    } catch(e) {}
 }
 
 function cancelarCita() {
@@ -219,11 +271,18 @@ function cancelarCita() {
     }
 }
 
+async function initAppData() {
+    loadCat();
+    loadSemi();
+}
+
 window.onload = () => {
     const raw = localStorage.getItem('renault_user');
     if (raw) {
-        renderUser(JSON.parse(raw));
+        const d = JSON.parse(raw);
+        renderUser(d);
         document.getElementById('login-screen').style.display = 'none';
+        initAppData();
     }
 };
 </script>
