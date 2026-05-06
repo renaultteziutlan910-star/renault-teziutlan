@@ -61,7 +61,6 @@
         .step-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #555; }
         .stepper-item.active .step-label { color: #d4af37; }
         
-        /* AJUSTE IMAGEN CARRO EN CITAS */
         .premium-card-service { background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%); border: 1px solid rgba(212,175,55,0.2); border-radius: 25px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); margin-bottom: 20px; text-align: center; }
         .premium-card-header-service { margin-bottom: 20px; }
         .premium-card-img-service { width: 100%; max-width: 320px; height: auto; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6)); margin-bottom: 15px; }
@@ -183,7 +182,7 @@
 </nav>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw4wOylbQfWZjWjGk90rqDZYxwP7s7u5OwS4J1db0Q5ghtlRu-rb-ox43Fv7lmmauk/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxTRbJksr0wyKIoizqnOWU06X6v0L9wsSIyCCF7kzkEnwF8Ua87M-C-dhpcpoawao/exec";
 const PLACEHOLDER = "https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid.png";
 
 const DESC_DATA = {
@@ -294,7 +293,6 @@ function showPage(id, el) {
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('p-' + id).classList.add('active');
     
-    // OCULTAR O MOSTRAR WHATSAPP DEPENDIENDO LA PÁGINA
     const wa = document.getElementById('wa-bubble');
     if (id === 'citas') {
         wa.style.visibility = 'hidden';
@@ -398,30 +396,37 @@ function toggleFinanzas() {
     document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none';
 }
 
-// --- CORRECCIÓN COTIZACIÓN ---
+// --- CORRECCIÓN COTIZACIÓN (ENVÍA DATOS DE ASESOR) ---
 async function handleQuote() {
     const btn = document.getElementById('btn-quote');
+    const metodo = document.getElementById('q-metodo').value;
+    
     const data = {
         hoja: "cotizaciones",
         nombre: document.getElementById('q-name').value,
         telefono: document.getElementById('q-phone').value,
+        cp: document.getElementById('q-cp').value,
         modelo: document.getElementById('m-title').innerText,
+        metodo: metodo,
+        enganche: metodo === 'Financiado' ? document.getElementById('q-down').value : 'N/A',
+        plazo: metodo === 'Financiado' ? document.getElementById('q-meses').value : 'N/A',
         fecha: new Date().toLocaleString('es-MX')
     };
+
+    if (!data.nombre || !data.telefono) { alert("Nombre y teléfono son obligatorios"); return; }
+
     btn.innerText = "ENVIANDO..."; btn.disabled = true;
-    
-    // Enviamos datos en la URL para mayor compatibilidad con Apps Script
     const params = new URLSearchParams(data);
-    const finalUrl = `${SCRIPT_URL}?${params.toString()}`;
     
     try {
-        await fetch(finalUrl, { 
-            method: 'POST', 
-            mode: 'no-cors'
-        });
-        alert("Solicitud de cotización enviada con éxito."); closeM();
-    } catch(e) { alert("Error al enviar la solicitud."); }
-    finally { btn.innerText = "SOLICITAR"; btn.disabled = false; }
+        await fetch(`${SCRIPT_URL}?${params.toString()}`, { method: 'POST', mode: 'no-cors' });
+        alert("Solicitud de cotización enviada con éxito.");
+        closeM();
+    } catch(e) { 
+        alert("Error al enviar. Intenta de nuevo."); 
+    } finally { 
+        btn.innerText = "SOLICITAR"; btn.disabled = false; 
+    }
 }
 
 function updateAppointmentUI() {
@@ -495,7 +500,7 @@ function renderAppointmentPage() {
     }
 }
 
-// --- CORRECCIÓN CITA ---
+// --- CORRECCIÓN CITA (MANTIENE FLUJO PRINCIPAL) ---
 async function handleBooking() {
     const btn = document.getElementById('btn-cita');
     const app = {
@@ -508,49 +513,40 @@ async function handleBooking() {
         hora: document.getElementById('c-time').value,
         detalles: document.getElementById('c-details').value.trim() 
     };
+
     if (!app.nombre || !app.telefono || !app.fecha || !app.hora) { alert("Completa los campos obligatorios."); return; }
-    btn.innerText = "PROCESANDO..."; btn.disabled = true;
     
-    // Envío por URL
+    btn.innerText = "PROCESANDO..."; btn.disabled = true;
     const params = new URLSearchParams(app);
-    const finalUrl = `${SCRIPT_URL}?${params.toString()}`;
     
     try {
-        await fetch(finalUrl, { 
-            method: 'POST', 
-            mode: 'no-cors'
-        });
+        await fetch(`${SCRIPT_URL}?${params.toString()}`, { method: 'POST', mode: 'no-cors' });
         localStorage.setItem('renault_appointment', JSON.stringify(app));
-        alert("¡Cita agendada correctamente!"); updateAppointmentUI(); renderAppointmentPage();
-    } catch(e) { alert("Error al agendar."); }
-    finally { btn.innerText = "AGENDAR CITA"; btn.disabled = false; }
+        alert("¡Cita agendada correctamente!");
+        updateAppointmentUI(); 
+        renderAppointmentPage();
+    } catch(e) { 
+        alert("Error al agendar."); 
+    } finally { 
+        btn.innerText = "AGENDAR CITA"; btn.disabled = false; 
+    }
 }
 
 // --- CORRECCIÓN CANCELACIÓN ---
 async function cancelarCita() {
     const rawData = localStorage.getItem('renault_appointment');
     if (!rawData || !confirm("¿Seguro que deseas cancelar tu cita?")) return;
-    const app = JSON.parse(rawData);
-    const btn = document.querySelector('.btn-cancel-modern');
-    if(btn) btn.innerText = "CANCELANDO...";
     
-    // Envío por URL
-    const params = new URLSearchParams({ ...app, hoja: "cancelada" });
-    const finalUrl = `${SCRIPT_URL}?${params.toString()}`;
+    const app = JSON.parse(rawData);
+    const params = new URLSearchParams({ ...app, hoja: "cancelada" }); 
     
     try {
-        await fetch(finalUrl, { 
-            method: 'POST', 
-            mode: 'no-cors'
-        });
+        await fetch(`${SCRIPT_URL}?${params.toString()}`, { method: 'POST', mode: 'no-cors' });
         localStorage.removeItem('renault_appointment');
         updateAppointmentUI();
         renderAppointmentPage();
         alert("Cita cancelada correctamente.");
-    } catch(e) { 
-        alert("Error al cancelar."); 
-        if(btn) btn.innerText = "Cancelar mi Cita";
-    }
+    } catch(e) { alert("Error al procesar cancelación."); }
 }
 </script>
 </body>
