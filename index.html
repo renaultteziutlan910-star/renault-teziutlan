@@ -17,7 +17,7 @@
 
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--dark-bg); color: var(--white); margin: 0; padding: 0; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         
-        /* --- ESTILOS PREMIUM PARA CITAS (SOLO MODIFICACIÓN AQUÍ) --- */
+        /* --- ESTILOS PREMIUM PARA CITAS --- */
         .stepper-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 0 10px; position: relative; margin-top: 10px; }
         .step-line { position: absolute; top: 15px; left: 10%; right: 10%; height: 2px; background: #333; z-index: 1; }
         .stepper-item { text-align: center; z-index: 2; flex: 1; position: relative; }
@@ -39,9 +39,8 @@
         .icon-circle { width: 44px; height: 44px; background: rgba(212,175,55,0.08); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #d4af37; font-size: 1.2rem; }
         .action-text strong { display: block; font-size: 0.95rem; margin-bottom: 2px; }
         .action-text small { color: #666; font-size: 0.75rem; }
-        /* --- FIN ESTILOS PREMIUM --- */
 
-        /* Estilos Generales Reutilizados */
+        /* Estilos Generales */
         #login-screen { position: fixed; inset: 0; background: var(--dark-bg); z-index: 5000; display: flex; flex-direction: column; justify-content: center; padding: 35px; text-align: center; }
         header { padding: 20px 0; text-align: center; border-bottom: 1px solid #222; position: sticky; top: 0; background: var(--dark-bg); z-index: 2000; }
         .logo-area { display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; letter-spacing: 2px; }
@@ -63,8 +62,11 @@
         .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 0.7rem; font-weight: 700; flex: 1; background: none; border: none; cursor: pointer; }
         .nav-item svg { width: 26px; height: 26px; fill: currentColor; margin-bottom: 4px; display: block; margin: 0 auto; }
         .nav-item.active { color: #d4af37; }
-        .car-card { background: #1a1a1a; border-radius: 25px; padding: 15px; margin-bottom: 25px; border: 1px solid #333; }
-        .car-card img { width: 100%; border-radius: 20px; cursor: pointer; transition: transform 0.2s; background: #222; aspect-ratio: 16/9; object-fit: cover; display: block; }
+        
+        /* --- ESTILO PARA CARRO MÁS GRANDE EN NUEVOS --- */
+        .car-card { background: #1a1a1a; border-radius: 25px; padding: 20px; margin-bottom: 25px; border: 1px solid #333; }
+        .car-card img { width: 100%; border-radius: 20px; cursor: pointer; transition: transform 0.2s; aspect-ratio: 16/9; object-fit: contain; background: transparent; display: block; margin-bottom: 10px; }
+        
         .btn-cancel-modern { background: none; border: 1px solid #222; color: #ff4444; padding: 12px; border-radius: 12px; width: 100%; margin-top: 15px; font-weight: bold; cursor: pointer; font-size: 0.85rem; }
     </style>
 </head>
@@ -82,6 +84,13 @@
             <option value="Oroch">Oroch</option><option value="Koleos">Koleos</option>
             <option value="Master">Master</option><option value="Kangoo">Kangoo</option>
             <option value="Megane E-Tech">Megane E-Tech</option>
+        </optgroup>
+        <optgroup label="Modelos Anteriores">
+            <option value="Clio">Clio</option><option value="Sandero">Sandero</option>
+            <option value="Logan">Logan</option><option value="Captur">Captur</option>
+            <option value="Fluence">Fluence</option><option value="Safrane">Safrane</option>
+            <option value="Scala">Scala</option><option value="Megane">Megane (Gasolina)</option>
+            <option value="Scenic">Scenic</option>
         </optgroup>
     </select>
     <button class="btn-action btn-yellow" onclick="saveData()">INGRESAR</button>
@@ -107,6 +116,7 @@
 </div>
 
 <div id="p-nuevos" class="page">
+    <div style="text-align:center;color:#d4af37;font-weight:800;margin-bottom:8px">UNIDADES NUEVAS</div>
     <div id="cat-container"></div>
 </div>
 
@@ -191,7 +201,7 @@ function renderAppointmentPage() {
                 <div class="action-text"><strong>Añadir al Calendario</strong><small>Sincroniza con tu agenda personal</small></div>
             </a>
 
-            <a class="btn-premium-action" href="https://maps.google.com/?q=Renault+Teziutlan" target="_blank">
+            <a class="btn-premium-action" href="http://googleusercontent.com/maps.google.com/4" target="_blank">
                 <div class="icon-circle">📍</div>
                 <div class="action-text"><strong>Cómo llegar</strong><small>Abrir ubicación exacta del taller</small></div>
             </a>
@@ -204,12 +214,23 @@ function renderAppointmentPage() {
             <button class="btn-cancel-modern" onclick="cancelarCita()">Cancelar mi Cita</button>
         `;
     } else {
-        const units = ["Kwid","Kardian","Duster","Stepway","Oroch","Koleos"];
-        const opts = units.map(un => `<option value="${un}"${u.unit===un?' selected':''}>${un}</option>`).join('');
         cont.innerHTML = `<div class="card-white">
             <label class="form-label">Nombre</label><input type="text" id="c-name" class="form-control" value="${u.name||''}">
             <label class="form-label">Teléfono</label><input type="tel" id="c-phone" class="form-control" value="${u.phone||''}">
-            <label class="form-label">Unidad a Revisar</label><select id="c-unit" class="form-control">${opts}</select>
+            <label class="form-label">Unidad a Revisar</label>
+            <select id="c-unit" class="form-control">
+                <optgroup label="Modelos Actuales">
+                    <option value="Kwid">Kwid</option><option value="Kardian">Kardian</option>
+                    <option value="Duster">Duster</option><option value="Stepway">Stepway</option>
+                    <option value="Oroch">Oroch</option><option value="Koleos">Koleos</option>
+                    <option value="Master">Master</option><option value="Kangoo">Kangoo</option>
+                    <option value="Megane E-Tech">Megane E-Tech</option>
+                </optgroup>
+                <optgroup label="Modelos Anteriores">
+                    <option value="Clio">Clio</option><option value="Sandero">Sandero</option>
+                    <option value="Logan">Logan</option><option value="Captur">Captur</option>
+                </optgroup>
+            </select>
             <label class="form-label">Kilometraje Actual</label><input type="text" id="c-km" class="form-control" placeholder="Ej: 15,000">
             <label class="form-label">Fecha</label><input type="date" id="c-date" class="form-control">
             <label class="form-label">Hora</label><input type="time" id="c-time" class="form-control">
@@ -247,9 +268,11 @@ async function loadCat() {
         document.getElementById('cat-container').innerHTML = data.map(c => `
             <div class="car-card">
                 <img src="${c.imagen || PLACEHOLDER}">
-                <h3 style="margin:15px 0 5px">${c.modelo}</h3>
-                <div style="color:#d4af37;font-weight:bold;margin-bottom:15px">$${c.precio}</div>
-                <button class="btn-action btn-yellow">ME INTERESA</button>
+                <div style="text-align:center">
+                    <h3 style="margin:5px 0; color:#fff; font-size:1.2rem; font-weight:900">${c.modelo}</h3>
+                    <div style="color:#d4af37; font-weight:900; font-size:1.1rem; margin-bottom:15px">$${c.precio}</div>
+                    <button class="btn-action btn-yellow" style="margin-top:0">ME INTERESA</button>
+                </div>
             </div>
         `).join('');
     } catch(e) {}
@@ -261,9 +284,11 @@ async function loadSemi() {
         const data = await res.json();
         document.getElementById('semi-container').innerHTML = data.map(s => `
             <div class="car-card">
-                <h3 style="margin:5px 0;color:var(--renault-yellow)">${s.unidad || s.modelo}</h3>
-                <div style="color:#d4af37;font-weight:bold;margin:10px 0">$${s.precio}</div>
-                <button class="btn-action btn-yellow">ME INTERESA</button>
+                <div style="text-align:center">
+                    <h3 style="margin:5px 0;color:var(--renault-yellow)">${s.unidad || s.modelo}</h3>
+                    <div style="color:#d4af37;font-weight:bold;margin:10px 0">$${s.precio}</div>
+                    <button class="btn-action btn-yellow">ME INTERESA</button>
+                </div>
             </div>
         `).join('');
     } catch(e) {}
