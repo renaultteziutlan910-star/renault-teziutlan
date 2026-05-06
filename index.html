@@ -182,7 +182,6 @@
 </nav>
 
 <script>
-// LINK ACTUALIZADO
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVeIzyBmafN58GQYTtW6Db0JZnZMb34DCrD2t8urAa0iFU4dP2SkayTNcSmRP8Xw/exec";
 const PLACEHOLDER = "https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid.png";
 
@@ -536,7 +535,11 @@ async function cancelarCita() {
     if (!rawData || !confirm("¿Seguro que deseas cancelar tu cita?")) return;
     
     const app = JSON.parse(rawData);
-    const params = new URLSearchParams({ ...app, hoja: "cancelada" }); 
+    // Agregamos hoja: "cancelada" y mantenemos todos los datos de la cita original para identificarlos en la hoja
+    const params = new URLSearchParams({ 
+        ...app, 
+        hoja: "cancelada" 
+    }); 
     
     try {
         await fetch(`${SCRIPT_URL}?${params.toString()}`, { method: 'POST', mode: 'no-cors' });
