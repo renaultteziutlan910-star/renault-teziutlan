@@ -60,13 +60,19 @@
         .stepper-item.active .step-circle { background: var(--gold-gradient); border-color: #f5d17a; color: #000; box-shadow: 0 0 15px rgba(212,175,55,0.5); }
         .step-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #555; }
         .stepper-item.active .step-label { color: #d4af37; }
-        .premium-card-service { background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%); border: 1px solid rgba(212,175,55,0.2); border-radius: 25px; padding: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); margin-bottom: 20px; }
-        .premium-card-header-service { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-        .premium-card-img-service { width: 140px; height: auto; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); }
-        .info-row-service { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding: 8px 0; font-size: 0.9rem; }
-        .info-label-service { color: var(--gray-text); }
+        
+        /* AJUSTE IMAGEN CARRO EN CITAS */
+        .premium-card-service { background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%); border: 1px solid rgba(212,175,55,0.2); border-radius: 25px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); margin-bottom: 20px; text-align: center; }
+        .premium-card-header-service { margin-bottom: 20px; }
+        .premium-card-img-service { width: 100%; max-width: 320px; height: auto; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6)); margin-bottom: 15px; }
+        
+        .info-row-service { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding: 10px 0; font-size: 0.95rem; }
+        .info-label-service { color: var(--gray-text); font-weight: 600; }
+        .info-value-service { font-weight: bold; color: #fff; }
         .btn-premium-action { display: flex; align-items: center; gap: 15px; background: #161616; border: 1px solid #222; padding: 15px; border-radius: 18px; margin-bottom: 12px; text-decoration: none; color: #fff; }
         .icon-circle-service { width: 40px; height: 40px; background: rgba(212,175,55,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #d4af37; font-size: 1.2rem; }
+        .action-text-service strong { display: block; font-size: 0.9rem; }
+        .action-text-service small { font-size: 0.7rem; color: #777; }
     </style>
 </head>
 <body>
@@ -385,23 +391,28 @@ function toggleFinanzas() {
     document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none';
 }
 
-// CORRECCIÓN: Envío de datos como URLSearchParams para mayor compatibilidad
+// CORRECCIÓN PARA GUARDAR DATOS (COTIZACIÓN)
 async function handleQuote() {
     const btn = document.getElementById('btn-quote');
-    const params = new URLSearchParams({
+    const data = {
         hoja: "cotizaciones",
         nombre: document.getElementById('q-name').value,
         telefono: document.getElementById('q-phone').value,
         modelo: document.getElementById('m-title').innerText,
-        fecha: new Date().toLocaleDateString('es-MX')
-    });
+        fecha: new Date().toLocaleString('es-MX')
+    };
+    
     btn.innerText = "ENVIANDO..."; btn.disabled = true;
+    
+    // Usamos URLSearchParams para asegurar que Google Apps Script reciba los datos correctamente
+    const params = new URLSearchParams(data);
+
     try {
         await fetch(SCRIPT_URL, { 
             method: 'POST', 
             mode: 'no-cors', 
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: params 
+            body: params.toString() 
         });
         alert("Solicitud de cotización enviada con éxito."); closeM();
     } catch(e) { alert("Error al enviar la solicitud."); }
@@ -437,13 +448,12 @@ function renderAppointmentPage() {
                 <div class="stepper-item"><div class="step-circle">2</div><div class="step-label">Confirmado</div></div>
                 <div class="stepper-item"><div class="step-circle">3</div><div class="step-label">En Servicio</div></div>
             </div>
+            
             <div class="premium-card-service">
                 <div class="premium-card-header-service">
                     <img src="${imgPath}" class="premium-card-img-service" onerror="this.src='${PLACEHOLDER}'">
-                    <div>
-                        <div style="color:#d4af37; font-weight:900; font-size:1.1rem; letter-spacing:0.5px">Tu ${a.unidad}</div>
-                        <div style="font-size:0.75rem; color:#888; font-weight:700">SERVICIO PROGRAMADO</div>
-                    </div>
+                    <div style="color:#d4af37; font-weight:900; font-size:1.4rem; letter-spacing:0.5px">Tu ${a.unidad}</div>
+                    <div style="font-size:0.8rem; color:#888; font-weight:700">SERVICIO PROGRAMADO</div>
                 </div>
                 <div class="premium-info-grid">
                     <div class="info-row-service"><span class="info-label-service">CLIENTE</span> <span class="info-value-service">${a.nombre}</span></div>
@@ -452,7 +462,8 @@ function renderAppointmentPage() {
                     <div class="info-row-service"><span class="info-label-service">FALLA</span> <span class="info-value-service">${a.detalles || 'Revisión General'}</span></div>
                 </div>
             </div>
-            <a class="btn-premium-action" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cita+Servicio+Renault&dates=20260512T183400Z/20260512T193400Z" target="_blank">
+
+            <a class="btn-premium-action" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cita+Servicio+Renault&details=Servicio+Renault+Teziutlan" target="_blank">
                 <div class="icon-circle-service">📅</div>
                 <div class="action-text-service"><strong>Añadir al Calendario</strong><small>Sincroniza con tu agenda personal</small></div>
             </a>
@@ -496,7 +507,7 @@ function renderAppointmentPage() {
     }
 }
 
-// CORRECCIÓN: Envío de datos como URLSearchParams para mayor compatibilidad
+// CORRECCIÓN PARA GUARDAR DATOS (CITA)
 async function handleBooking() {
     const btn = document.getElementById('btn-cita');
     const app = {
@@ -509,16 +520,19 @@ async function handleBooking() {
         hora: document.getElementById('c-time').value,
         detalles: document.getElementById('c-details').value.trim() 
     };
+
     if (!app.nombre || !app.telefono || !app.fecha || !app.hora) { alert("Completa los campos obligatorios."); return; }
+    
     btn.innerText = "PROCESANDO..."; btn.disabled = true;
     
     const params = new URLSearchParams(app);
+
     try {
         await fetch(SCRIPT_URL, { 
             method: 'POST', 
             mode: 'no-cors', 
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: params 
+            body: params.toString() 
         });
         localStorage.setItem('renault_appointment', JSON.stringify(app));
         alert("¡Cita agendada correctamente!"); updateAppointmentUI(); renderAppointmentPage();
@@ -534,12 +548,13 @@ async function cancelarCita() {
     if(btn) btn.innerText = "CANCELANDO...";
     
     const params = new URLSearchParams({ ...app, hoja: "cancelada" });
+
     try {
         await fetch(SCRIPT_URL, { 
             method: 'POST', 
             mode: 'no-cors', 
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: params 
+            body: params.toString() 
         });
         localStorage.removeItem('renault_appointment');
         updateAppointmentUI();
