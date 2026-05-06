@@ -53,7 +53,6 @@
         #appointment-reminder { background: rgba(255,255,255,0.1); border: 1px solid #d4af37; padding: 15px; border-radius: 20px; margin-top: 20px; text-align: center; }
         .btn-cancel-modern { background: none; border: 1px solid #ff4444; color: #ff4444; padding: 10px; border-radius: 10px; width: 100%; margin-top: 10px; font-weight: bold; cursor: pointer; }
 
-        /* --- ESTILOS PREMIUM PARA VISTA DE CITA --- */
         .stepper-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 0 10px; position: relative; margin-top: 10px; }
         .step-line { position: absolute; top: 15px; left: 10%; right: 10%; height: 2px; background: #333; z-index: 1; }
         .stepper-item { text-align: center; z-index: 2; flex: 1; position: relative; }
@@ -63,7 +62,6 @@
         .stepper-item.active .step-label { color: #d4af37; }
         .premium-card-service { background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 100%); border: 1px solid rgba(212,175,55,0.2); border-radius: 25px; padding: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); margin-bottom: 20px; }
         .premium-card-header-service { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-        /* CORRECCIÓN: Tamaño de imagen de carro más grande */
         .premium-card-img-service { width: 140px; height: auto; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); }
         .info-row-service { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding: 8px 0; font-size: 0.9rem; }
         .info-label-service { color: var(--gray-text); }
@@ -179,7 +177,6 @@
 </nav>
 
 <script>
-// CONFIGURACIÓN GLOBAL
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxXuhNApBkiAJbUwIqSd_DjzE39SglgR0a0UQrWDu6lvWipm2Vue3Hnn_FJ38P6ds8/exec";
 const PLACEHOLDER = "https://raw.githubusercontent.com/renaultteziutlan910-star/renault-teziutlan/main/img/kwid.png";
 
@@ -388,18 +385,24 @@ function toggleFinanzas() {
     document.getElementById('campo-finanzas').style.display = document.getElementById('q-metodo').value === 'Financiado' ? 'block' : 'none';
 }
 
+// CORRECCIÓN: Envío de datos como URLSearchParams para mayor compatibilidad
 async function handleQuote() {
     const btn = document.getElementById('btn-quote');
-    const quote = {
+    const params = new URLSearchParams({
         hoja: "cotizaciones",
         nombre: document.getElementById('q-name').value,
         telefono: document.getElementById('q-phone').value,
         modelo: document.getElementById('m-title').innerText,
         fecha: new Date().toLocaleDateString('es-MX')
-    };
+    });
     btn.innerText = "ENVIANDO..."; btn.disabled = true;
     try {
-        await fetch(SCRIPT_URL, { method:'POST', mode:'no-cors', body: JSON.stringify(quote) });
+        await fetch(SCRIPT_URL, { 
+            method: 'POST', 
+            mode: 'no-cors', 
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params 
+        });
         alert("Solicitud de cotización enviada con éxito."); closeM();
     } catch(e) { alert("Error al enviar la solicitud."); }
     finally { btn.innerText = "SOLICITAR"; btn.disabled = false; }
@@ -417,7 +420,6 @@ function updateAppointmentUI() {
     } else { el.innerHTML = ''; }
 }
 
-/* --- FUNCIÓN RENDER MODIFICADA PARA VISTA PREMIUM --- */
 function renderAppointmentPage() {
     const data = localStorage.getItem('renault_appointment');
     const cont = document.getElementById('appointment-content');
@@ -435,7 +437,6 @@ function renderAppointmentPage() {
                 <div class="stepper-item"><div class="step-circle">2</div><div class="step-label">Confirmado</div></div>
                 <div class="stepper-item"><div class="step-circle">3</div><div class="step-label">En Servicio</div></div>
             </div>
-
             <div class="premium-card-service">
                 <div class="premium-card-header-service">
                     <img src="${imgPath}" class="premium-card-img-service" onerror="this.src='${PLACEHOLDER}'">
@@ -451,26 +452,21 @@ function renderAppointmentPage() {
                     <div class="info-row-service"><span class="info-label-service">FALLA</span> <span class="info-value-service">${a.detalles || 'Revisión General'}</span></div>
                 </div>
             </div>
-
             <a class="btn-premium-action" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Cita+Servicio+Renault&dates=20260512T183400Z/20260512T193400Z" target="_blank">
                 <div class="icon-circle-service">📅</div>
                 <div class="action-text-service"><strong>Añadir al Calendario</strong><small>Sincroniza con tu agenda personal</small></div>
             </a>
-
             <a class="btn-premium-action" href="https://www.google.com/maps/search/?api=1&query=Renault+Teziutlan" target="_blank">
                 <div class="icon-circle-service">📍</div>
                 <div class="action-text-service"><strong>Cómo llegar</strong><small>Abrir ubicación exacta del taller</small></div>
             </a>
-
             <a class="btn-premium-action" href="https://wa.me/522311234567" target="_blank">
                 <div class="icon-circle-service">💬</div>
                 <div class="action-text-service"><strong>Asesor Técnico</strong><small>Chat directo para dudas o cambios</small></div>
             </a>
-
             <button class="btn-cancel-modern" onclick="cancelarCita()">Cancelar mi Cita</button>
         `;
     } else {
-        // CORRECCIÓN: Se agregó el listado completo de carros (Actuales y Anteriores)
         const opts = `
             <optgroup label="Modelos Actuales">
                 <option value="Kwid">Kwid</option><option value="Kardian">Kardian</option>
@@ -486,7 +482,6 @@ function renderAppointmentPage() {
                 <option value="Scala">Scala</option><option value="Megane">Megane (Gasolina)</option>
                 <option value="Scenic">Scenic</option>
             </optgroup>`;
-            
         cont.innerHTML = `<div class="card-white">
             <label class="form-label">Nombre</label><input type="text" id="c-name" class="form-control" value="${u.name||''}">
             <label class="form-label">Teléfono</label><input type="tel" id="c-phone" class="form-control" value="${u.phone||''}">
@@ -497,12 +492,11 @@ function renderAppointmentPage() {
             <label class="form-label">Detalles o Fallas</label><textarea id="c-details" class="form-control"></textarea>
             <button id="btn-cita" class="btn-action btn-yellow" onclick="handleBooking()">AGENDAR CITA</button>
         </div>`;
-        
-        // Selecciona automáticamente el carro que el usuario registró al inicio
         if(u.unit) document.getElementById('c-unit').value = u.unit;
     }
 }
 
+// CORRECCIÓN: Envío de datos como URLSearchParams para mayor compatibilidad
 async function handleBooking() {
     const btn = document.getElementById('btn-cita');
     const app = {
@@ -517,8 +511,15 @@ async function handleBooking() {
     };
     if (!app.nombre || !app.telefono || !app.fecha || !app.hora) { alert("Completa los campos obligatorios."); return; }
     btn.innerText = "PROCESANDO..."; btn.disabled = true;
+    
+    const params = new URLSearchParams(app);
     try {
-        await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(app) });
+        await fetch(SCRIPT_URL, { 
+            method: 'POST', 
+            mode: 'no-cors', 
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params 
+        });
         localStorage.setItem('renault_appointment', JSON.stringify(app));
         alert("¡Cita agendada correctamente!"); updateAppointmentUI(); renderAppointmentPage();
     } catch(e) { alert("Error al agendar."); }
@@ -531,14 +532,14 @@ async function cancelarCita() {
     const app = JSON.parse(rawData);
     const btn = document.querySelector('.btn-cancel-modern');
     if(btn) btn.innerText = "CANCELANDO...";
+    
+    const params = new URLSearchParams({ ...app, hoja: "cancelada" });
     try {
         await fetch(SCRIPT_URL, { 
             method: 'POST', 
             mode: 'no-cors', 
-            body: JSON.stringify({
-                ...app, 
-                hoja: "cancelada"
-            }) 
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params 
         });
         localStorage.removeItem('renault_appointment');
         updateAppointmentUI();
