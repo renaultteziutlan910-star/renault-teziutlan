@@ -2,10 +2,10 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental K</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dental K'</title>
 <style>
-  :root{
+  :root {
     --purple-dark:#4b3267;
     --purple-mid:#7d63a8;
     --purple-light:#cdbde8;
@@ -15,662 +15,125 @@
     --text-dark:#2d2436;
     --white:#fff;
   }
-  *{box-sizing:border-box; margin:0; padding:0;}
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color: transparent;}
   body{
-    font-family:'Segoe UI', Arial, sans-serif;
-    background:#ddd;
+    font-family:'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background:#e0e0e0;
     display:flex;
     justify-content:center;
+    align-items:center;
     min-height:100vh;
   }
   .app{
     width:100%;
     max-width:420px;
-    min-height:100vh;
-    background:linear-gradient(180deg,var(--purple-bg) 0%, var(--purple-bg2) 100%);
+    height:100vh;
+    max-height:850px;
+    background:var(--purple-bg);
     display:flex;
     flex-direction:column;
     position:relative;
-    overflow-x:hidden;
+    overflow:hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
   }
-  .screen{
-    display:none;
+  .content-area{
     flex:1;
-    flex-direction:column;
-    padding:20px 18px 90px 18px;
-    animation:fade .25s ease;
+    overflow-y:auto;
+    padding:20px;
+    padding-bottom:100px; /* Espacio para el nav */
   }
-  .screen.active{display:flex;}
-  @keyframes fade{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+  .screen{ display:none; flex-direction:column; }
+  .screen.active{ display:flex; }
 
-  /* Header / logo */
-  .logo-wrap{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    margin-bottom:18px;
-  }
-  .logo-icon{
-    width:60px; height:60px;
-    color:var(--purple-mid);
-  }
-  .logo-name{
-    font-size:22px;
-    font-weight:800;
-    color:var(--purple-dark);
-    letter-spacing:1px;
-    margin-top:4px;
-  }
-  .logo-sub{
-    font-size:10px;
-    color:var(--purple-mid);
-    letter-spacing:1px;
-  }
+  /* Nuevo Estilo Logotipo */
+  .logo-wrap{ display:flex; flex-direction:column; align-items:center; margin:15px 0; }
+  .logo-svg { width: 80px; height: 80px; fill: var(--purple-mid); }
+  .logo-name{ font-size:24px; font-weight:900; color:var(--purple-dark); letter-spacing:1px; }
 
-  h2.title{
-    font-size:20px;
-    font-weight:800;
-    color:var(--text-dark);
-    margin-bottom:14px;
-  }
-
-  /* Cards */
-  .card{
-    background:var(--white);
-    border-radius:16px;
-    padding:16px;
-    margin-bottom:16px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
-  }
-
-  /* Welcome card */
-  .welcome-card{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-  }
-  .welcome-text{
-    font-size:18px;
-    font-weight:700;
-    color:var(--text-dark);
-    line-height:1.3;
-  }
-  .avatar{
-    width:70px; height:70px;
-    border-radius:50%;
-    background:#f5c453;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-shrink:0;
-    overflow:hidden;
-  }
-  .avatar svg{width:100%; height:100%;}
-
-  /* Appointment card */
-  .appt-card h3{
-    font-size:15px;
-    font-weight:700;
-    color:var(--text-dark);
-    margin-bottom:6px;
-  }
-  .appt-card .appt-service{
-    font-weight:700;
-    margin-bottom:8px;
-  }
-  .appt-card p{
-    font-size:14px;
-    color:#555;
-    margin-bottom:2px;
-  }
-  .btn{
-    width:100%;
-    border:none;
-    border-radius:10px;
-    padding:13px;
-    font-size:15px;
-    font-weight:700;
-    cursor:pointer;
-    margin-top:10px;
-    transition:opacity .15s;
-  }
-  .btn:active{opacity:.8;}
-  .btn-primary{
-    background:var(--purple-dark);
-    color:var(--white);
-  }
-  .btn-outline{
-    background:var(--white);
-    color:var(--text-dark);
-    border:1px solid #ddd;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-  }
-
-  /* Promotions */
-  .promo-title{
-    font-size:15px;
-    font-weight:700;
-    color:var(--text-dark);
-    margin-bottom:12px;
-  }
-  .promo-row{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-  }
-  .promo-item{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    flex:1;
-    text-align:center;
-    cursor:pointer;
-  }
-  .promo-circle{
-    width:55px; height:55px;
-    border-radius:50%;
-    background:var(--purple-bg2);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-bottom:6px;
-  }
-  .promo-circle svg{width:26px; height:26px; color:var(--purple-dark);}
-  .promo-item span{
-    font-size:11px;
-    color:var(--text-dark);
-    font-weight:600;
-  }
-
-  /* Treatments grid */
-  .treatments-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-  }
-  .treat-card{
-    background:var(--white);
-    border-radius:14px;
-    padding:14px 12px;
-    text-align:center;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-  }
-  .treat-card svg{
-    width:50px; height:50px;
-    color:var(--purple-dark);
-    margin-bottom:8px;
-  }
-  .treat-card h4{
-    font-size:14px;
-    font-weight:700;
-    color:var(--text-dark);
-    margin-bottom:4px;
-  }
-  .treat-card p{
-    font-size:10.5px;
-    color:#888;
-    margin-bottom:10px;
-    line-height:1.3;
-  }
-  .treat-card .quote-btn{
-    font-size:11px;
-    font-weight:700;
-    color:var(--purple-dark);
-    background:none;
-    border:none;
-    cursor:pointer;
-    text-decoration:underline;
-  }
-  .promo-card{
-    border:2px dashed var(--purple-mid);
-    background:var(--purple-bg2);
-    justify-content:center;
-  }
-  .promo-card svg{color:var(--purple-dark);}
-
-  /* Citas screen */
-  .doctor-card{
-    background:var(--white);
-    border-radius:16px;
-    overflow:hidden;
-    margin-bottom:16px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
-  }
-  .doctor-img{
-    width:100%;
-    height:140px;
-    background:linear-gradient(135deg,#cdbde8,#a98fd2);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .doctor-img svg{width:90px; height:90px; color:var(--white); opacity:.85;}
-  .doctor-info{padding:14px 16px;}
-  .doctor-info h3{font-size:17px; font-weight:800; color:var(--text-dark);}
-  .doctor-info .sub{font-size:13px; color:#888; margin-bottom:10px;}
-  .info-row{
-    display:flex;
-    justify-content:space-between;
-    font-size:13px;
-    color:#555;
-    padding:6px 0;
-    border-bottom:1px solid #f0f0f0;
-  }
-  .info-row span:last-child{font-weight:700; color:var(--text-dark);}
-  .doctor-info .btn{margin-top:12px;}
-
-  .history-card h4{
-    font-size:15px;
-    font-weight:700;
-    color:var(--text-dark);
-    margin-bottom:10px;
-  }
-  .history-item{
-    display:flex;
-    align-items:flex-start;
-    gap:10px;
-    padding-bottom:12px;
-    position:relative;
-  }
-  .history-item:not(:last-child)::before{
-    content:'';
-    position:absolute;
-    left:5px; top:16px; bottom:0;
-    width:1px;
-    background:#ddd;
-  }
-  .dot{
-    width:11px; height:11px;
-    border-radius:50%;
-    background:var(--purple-mid);
-    margin-top:4px;
-    flex-shrink:0;
-  }
-  .history-text{font-size:13px; color:var(--text-dark);}
-  .history-date{font-size:11px; color:#999; display:block;}
-  .completed{color:#2e9e5b; font-weight:700;}
-
-  /* Profile */
-  .profile-header{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    margin-bottom:18px;
-  }
-  .profile-avatar{
-    width:80px; height:80px;
-    border-radius:50%;
-    background:#7d63a8;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-bottom:10px;
-    overflow:hidden;
-  }
-  .profile-avatar svg{width:100%; height:100%;}
-  .profile-header h3{font-size:17px; font-weight:800; color:var(--text-dark);}
-  .profile-header p{font-size:12px; color:#777;}
-
-  .profile-list{
-    background:var(--white);
-    border-radius:16px;
-    overflow:hidden;
-    margin-bottom:16px;
-    box-shadow:0 4px 12px rgba(0,0,0,.06);
-  }
-  .profile-item{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:14px 16px;
-    border-bottom:1px solid #f0f0f0;
-    cursor:pointer;
-    font-size:14px;
-    font-weight:600;
-    color:var(--text-dark);
-  }
-  .profile-item:last-child{border-bottom:none;}
-  .profile-item .left{display:flex; align-items:center; gap:10px;}
-  .profile-item svg{width:20px; height:20px; color:var(--purple-mid);}
-  .profile-item .edit-icon{width:16px; height:16px; color:#aaa;}
-
-  .info-text{
-    text-align:center;
-    font-size:13px;
-    color:#777;
-    line-height:1.5;
-    margin-bottom:18px;
-  }
-
-  /* Bottom Nav */
+  /* Elementos UI */
+  .card{ background:var(--white); border-radius:20px; padding:20px; margin-bottom:16px; box-shadow:0 4px 10px rgba(0,0,0,0.05); }
+  h2.title{ font-size:20px; color:var(--purple-dark); margin-bottom:15px; }
+  .btn{ width:100%; border:none; border-radius:12px; padding:14px; font-weight:700; cursor:pointer; margin-top:10px; }
+  .btn-primary{ background:var(--purple-dark); color:var(--white); }
+  
+  /* Navegación Fija */
   .bottom-nav{
-    position:sticky;
+    position:absolute;
     bottom:0;
     width:100%;
-    background:var(--purple-bg2);
+    background:var(--white);
     display:flex;
     justify-content:space-around;
-    padding:10px 0 6px 0;
-    box-shadow:0 -2px 10px rgba(0,0,0,.05);
+    padding:12px 0;
+    border-top:1px solid #eee;
+    z-index:100;
   }
-  .nav-item{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:3px;
-    color:#9c8cc0;
-    background:none;
-    border:none;
-    cursor:pointer;
-    font-size:10px;
-    font-weight:600;
-    padding:4px 10px;
-  }
-  .nav-item svg{width:22px; height:22px;}
-  .nav-item.active{
-    color:var(--purple-dark);
-    border-bottom:2px solid var(--purple-dark);
-  }
+  .nav-item{ display:flex; flex-direction:column; align-items:center; border:none; background:none; color:#aaa; font-size:10px; font-weight:600; cursor:pointer; }
+  .nav-item.active{ color:var(--purple-dark); }
+  .nav-item svg{ width:24px; height:24px; margin-bottom:2px; }
 
-  /* WhatsApp button */
-  .whatsapp-btn{
-    position:fixed;
-    bottom:80px;
-    right:24px;
-    width:50px; height:50px;
-    background:var(--green);
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow:0 4px 10px rgba(0,0,0,.2);
-    text-decoration:none;
-    z-index:50;
-  }
-  .whatsapp-btn svg{width:28px; height:28px; fill:#fff;}
-
-  @media (max-width:380px){
-    .welcome-text{font-size:16px;}
-  }
+  .whatsapp-btn{ position:fixed; bottom:90px; right:20px; background:var(--green); color:white; padding:15px; border-radius:50%; box-shadow:0 4px 10px rgba(0,0,0,0.3); z-index:99; }
 </style>
 </head>
 <body>
+
 <div class="app">
-
-  <!-- ============ INICIO ============ -->
-  <div class="screen active" id="inicio">
-    <div class="logo-wrap">
-      <svg class="logo-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M32 8C24 8 16 12 16 22c0 8 3 14 5 20 1.5 4 3 10 6 10s3-6 5-12 2-8 5-8 3 2 5 8 2 12 5 12 4.5-6 6-10c2-6 5-12 5-20C53 12 40 8 32 8z" stroke="currentColor" stroke-width="2" fill="none"/>
-      </svg>
-      <div class="logo-name">DENTAL K</div>
-      <div class="logo-sub">Dra. Ana Karen Valeria </div>
-    </div>
-
-    <div class="card welcome-card">
-      <div class="welcome-text">¡Bienvenida,<br>Nombre del<br>Paciente!</div>
-      <div class="avatar">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="50" fill="#f5c453"/>
-          <circle cx="50" cy="45" r="18" fill="#8d5524"/>
-          <path d="M20 95 Q50 60 80 95 Z" fill="#4a90d9"/>
-          <path d="M30 35 Q50 15 70 35 Q70 50 50 55 Q30 50 30 35 Z" fill="#5b3a29"/>
-        </svg>
+  <div class="content-area">
+    
+    <!-- INICIO -->
+    <section class="screen active" id="inicio">
+      <div class="logo-wrap">
+        <!-- Logotipo mejorado: Diente estilizado -->
+        <svg class="logo-svg" viewBox="0 0 24 24"><path d="M12 2C8.69 2 6 4.69 6 8v2c0 2.21 1.79 4 4 4h4c2.21 0 4-1.79 4-4V8c0-3.31-2.69-6-6-6zm0 16c-3.31 0-6 2.69-6 6h12c0-3.31-2.69-6-6-6z"/></svg>
+        <div class="logo-name">DENTAL K'</div>
       </div>
-    </div>
-
-    <div class="card appt-card">
-      <h3>Tu próxima cita:</h3>
-      <div class="appt-service">Limpieza Profunda</div>
-      <p>Fecha: <strong>15 de Junio, 2026</strong></p>
-      <p>Hora: <strong>16:00 HRS</strong></p>
-      <button class="btn btn-primary" onclick="confirmAttendance(this)">Confirmar Asistencia</button>
-      <button class="btn btn-outline" onclick="alert('Indicaciones de llegada:\n\nDirección: Av. Principal 123, Col. Centro.\nEstacionamiento disponible.\nLlegar 10 min antes de tu cita.')">
-        📍 Indicaciones de Llegada
-      </button>
-    </div>
-
-    <div class="card">
-      <div class="promo-title">Promociones y Noticias</div>
-      <div class="promo-row">
-        <div class="promo-item" onclick="alert('Oferta del mes: 20% de descuento en blanqueamiento dental.')">
-          <div class="promo-circle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg>
-          </div>
-          <span>Oferta en Blanqueamiento</span>
-        </div>
-        <div class="promo-item" onclick="alert('Consejo: cepilla tus dientes al menos 2 veces al día y usa hilo dental diariamente.')">
-          <div class="promo-circle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 L4 7v6c0 5 4 8 8 9 4-1 8-4 8-9V7z"/></svg>
-          </div>
-          <span>Consejo Salud Bucal</span>
-        </div>
-        <div class="promo-item" onclick="alert('¡Ya estamos de vuelta! Reabrimos nuestras puertas con horarios extendidos.')">
-          <div class="promo-circle">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="9" width="18" height="11" rx="2"/><path d="M9 9V5a3 3 0 0 1 6 0v4"/></svg>
-          </div>
-          <span>Reabrimos de Apertura</span>
-        </div>
+      <div class="card">
+        <h3>¡Bienvenida!</h3>
+        <p>Tu próxima cita: 15 Junio, 16:00 HRS</p>
+        <button class="btn btn-primary">Confirmar Asistencia</button>
       </div>
-    </div>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section class="screen" id="servicios">
+      <h2 class="title">Nuestros Tratamientos</h2>
+      <!-- ... contenido de servicios ... -->
+    </section>
+
+    <!-- CITAS -->
+    <section class="screen" id="citas">
+      <h2 class="title">Tus Citas</h2>
+    </section>
+
+    <!-- PERFIL -->
+    <section class="screen" id="perfil">
+      <h2 class="title">Mi Perfil</h2>
+    </section>
   </div>
 
-  <!-- ============ SERVICIOS / TRATAMIENTOS ============ -->
-  <div class="screen" id="servicios">
-    <div class="logo-wrap">
-      <svg class="logo-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M32 8C24 8 16 12 16 22c0 8 3 14 5 20 1.5 4 3 10 6 10s3-6 5-12 2-8 5-8 3 2 5 8 2 12 5 12 4.5-6 6-10c2-6 5-12 5-20C53 12 40 8 32 8z" stroke="currentColor" stroke-width="2" fill="none"/>
-      </svg>
-    </div>
-    <h2 class="title">Nuestros Tratamientos</h2>
-
-    <div class="treatments-grid">
-      <div class="treat-card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8 2 5 5 5 9c0 3 1 6 2 9 .6 1.8 1.3 4 2.5 4s1.5-2.5 2.5-5 1-3 2-3 1 1.5 2 4 1.5 4 2.5 4 1.9-2.2 2.5-4c1-3 2-6 2-9 0-4-3-7-7-7z"/></svg>
-        <h4>Resinas</h4>
-        <p>Propias de caries leves con mantenimiento dental</p>
-        <button class="quote-btn" onclick="openWhatsApp('Resinas')">Cotizar/Agendar</button>
-      </div>
-
-      <div class="treat-card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 4l6 6-8 8-6-6z"/><path d="M5 19l3-3"/><circle cx="6" cy="18" r="1.5"/></svg>
-        <h4>Extracciones</h4>
-        <p>Decisivas de la mayoría de eventos también extracciones</p>
-        <button class="quote-btn" onclick="openWhatsApp('Extracciones')">Cotizar/Agendar</button>
-      </div>
-
-      <div class="treat-card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3l4 4-2 8h8l-2-8 4-4"/><path d="M9 21l3-6 3 6"/><circle cx="18" cy="6" r="2" fill="currentColor" stroke="none"/></svg>
-        <h4>Limpiezas dentales</h4>
-        <p>Previene caries avanzadas y fluorosis fluorada</p>
-        <button class="quote-btn" onclick="openWhatsApp('Limpiezas dentales')">Cotizar/Agendar</button>
-      </div>
-
-      <div class="treat-card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M8 6V4h8v2"/><path d="M7 13h10M7 16h6"/></svg>
-        <h4>Curaciones provisionales</h4>
-        <p>Reparación de desperfectos dentales sencillos</p>
-        <button class="quote-btn" onclick="openWhatsApp('Curaciones provisionales')">Cotizar/Agendar</button>
-      </div>
-
-      <div class="treat-card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8 2 5 5 5 9c0 3 1 6 2 9 .6 1.8 1.3 4 2.5 4s1.5-2.5 2.5-5 1-3 2-3 1 1.5 2 4 1.5 4 2.5 4 1.9-2.2 2.5-4c1-3 2-6 2-9 0-4-3-7-7-7z"/><circle cx="12" cy="9" r="2"/></svg>
-        <h4>Restauración con material provisional</h4>
-        <p></p>
-        <button class="quote-btn" onclick="openWhatsApp('Restauración con material provisional')">Cotizar/Agendar</button>
-      </div>
-
-      <div class="treat-card promo-card" onclick="openWhatsApp('Promos de Apertura')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><path d="M19 5L5 19"/></svg>
-        <h4>Promos de Apertura</h4>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ CITAS ============ -->
-  <div class="screen" id="citas">
-    <h2 class="title">Tus Citas</h2>
-
-    <div class="doctor-card">
-      <div class="doctor-img">
-        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 22c0-4.4 3.6-8 8-8s8 3.6 8 8z"/></svg>
-      </div>
-      <div class="doctor-info">
-        <h3>Dra. Karen Valeria</h3>
-        <div class="sub">Cita de Limpieza Dental Provisoria</div>
-        <div class="info-row"><span>FECHA</span><span>21 de Mayo, 2026</span></div>
-        <div class="info-row"><span>HORA</span><span>10:11 HRS</span></div>
-        <button class="btn btn-primary" onclick="confirmAttendance(this)">Confirmar Asistencia</button>
-        <button class="btn btn-outline" onclick="alert('Indicaciones de llegada:\n\nDirección: Av. Principal 123, Col. Centro.\nEstacionamiento disponible.\nLlegar 10 min antes de tu cita.')">📍 Instrucciones de Llegada</button>
-      </div>
-    </div>
-
-    <div class="card history-card">
-      <h4>Historial de Citas</h4>
-      <div class="history-item">
-        <div class="dot"></div>
-        <div class="history-text">
-          <span class="history-date">12 Mar 2026</span>
-          Resina - <span class="completed">Completado</span>
-        </div>
-      </div>
-      <div class="history-item">
-        <div class="dot"></div>
-        <div class="history-text">
-          <span class="history-date">10 Mar 2026</span>
-          Resina - <span class="completed">Completado</span><br>
-          Curaciones - <span class="completed">Completado</span>
-        </div>
-      </div>
-      <div class="history-item">
-        <div class="dot"></div>
-        <div class="history-text">
-          <span class="history-date">12 Mar 2026</span>
-          Resina - <span class="completed">Completado</span>
-        </div>
-      </div>
-    </div>
-
-    <button class="btn btn-primary" onclick="openWhatsApp('Agendar Nueva Cita')">AGENDAR NUEVA CITA</button>
-  </div>
-
-  <!-- ============ PERFIL ============ -->
-  <div class="screen" id="perfil">
-    <h2 class="title" style="text-align:center;">Mi Perfil</h2>
-    <div class="profile-header">
-      <div class="profile-avatar">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="50" fill="#cdbde8"/>
-          <circle cx="50" cy="42" r="16" fill="#8d5524"/>
-          <path d="M22 95 Q50 65 78 95 Z" fill="#7d63a8"/>
-          <path d="M32 30 Q50 12 68 30 Q68 45 50 50 Q32 45 32 30 Z" fill="#5b3a29"/>
-        </svg>
-      </div>
-      <h3 id="profileName">[Nombre Completo]</h3>
-      <p id="profilePhone">(227) 138-17-23</p>
-      <p id="profileEmail">e-mail: karen@dentalk.com</p>
-    </div>
-
-    <div class="profile-list">
-      <div class="profile-item" onclick="editProfile()">
-        <div class="left">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
-          Datos Personales
-        </div>
-        <svg class="edit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5l4 4L7 21l-4 1 1-4z"/></svg>
-      </div>
-      <div class="profile-item" onclick="alert('Historial Clínico:\n\nPróximamente disponible.')">
-        <div class="left">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>
-          Historial Clínico
-        </div>
-      </div>
-      <div class="profile-item" onclick="alert('Formas de Pago:\n\nEfectivo, Tarjeta de crédito/débito, Transferencia.')">
-        <div class="left">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-          Formas de Pago
-        </div>
-      </div>
-      <div class="profile-item" onclick="alert('Avisos de Privacidad:\n\nTus datos personales están protegidos conforme a la Ley Federal de Protección de Datos.')">
-        <div class="left">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-4 8-8 10-4-2-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
-          Avisos de Privacidad
-        </div>
-      </div>
-    </div>
-
-    <p class="info-text">Más detalles se muestran tras cada cita en el Historial de Citas</p>
-
-    <button class="btn btn-primary" onclick="logout()">CERRAR SESIÓN</button>
-  </div>
-
-  <!-- ============ BOTTOM NAV ============ -->
-  <div class="bottom-nav">
-    <button class="nav-item active" data-screen="inicio" onclick="showScreen('inicio', this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-      INICIO
+  <!-- NAVEGACIÓN -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="navigate('inicio', this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Inicio
     </button>
-    <button class="nav-item" data-screen="servicios" onclick="showScreen('servicios', this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4"/><path d="M5 8v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8"/><path d="M10 12h4"/></svg>
-      SERVICIOS
+    <button class="nav-item" onclick="navigate('servicios', this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>Servicios
     </button>
-    <button class="nav-item" data-screen="citas" onclick="showScreen('citas', this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-      CITAS
+    <button class="nav-item" onclick="navigate('citas', this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>Citas
     </button>
-    <button class="nav-item" data-screen="perfil" onclick="showScreen('perfil', this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
-      Perfil
+    <button class="nav-item" onclick="navigate('perfil', this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Perfil
     </button>
-  </div>
-
-  <!-- WhatsApp floating button -->
-  <a href="#" class="whatsapp-btn" onclick="openWhatsApp('Información general'); return false;">
-    <svg viewBox="0 0 24 24"><path d="M17.6 6.32A8 8 0 0 0 4 12.04c0 1.42.37 2.78 1.06 4L4 22l6.06-1.59A8 8 0 0 0 20 12.04a8 8 0 0 0-2.4-5.72zM12 18.5a6.4 6.4 0 0 1-3.3-.9l-.24-.14-2.6.68.7-2.55-.16-.26A6.45 6.45 0 0 1 12 5.5a6.5 6.5 0 0 1 0 13zm3.4-4.8c-.18-.1-1.06-.52-1.22-.58-.16-.06-.28-.1-.4.1-.12.18-.46.58-.56.7-.1.12-.2.13-.38.04-.18-.1-.76-.28-1.44-.9a5.4 5.4 0 0 1-1-1.24c-.1-.18 0-.28.1-.38.1-.1.24-.26.36-.4.12-.13.16-.23.24-.38.08-.16.04-.28-.02-.38-.06-.1-.5-1.2-.68-1.64-.18-.42-.36-.36-.5-.37-.12-.01-.27-.01-.4-.01-.14 0-.36.05-.55.27-.2.22-.74.72-.74 1.76 0 1.04.76 2.04.86 2.18.1.14 1.5 2.3 3.66 3.13 1.8.69 2.16.55 2.55.51.4-.04 1.28-.52 1.46-1.02.18-.5.18-.93.13-1.02-.06-.1-.18-.16-.36-.26z"/></svg>
-  </a>
-
+  </nav>
 </div>
 
 <script>
-  function showScreen(id, btn){
-    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  function navigate(id, btn){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
     btn.classList.add('active');
-  }
-
-  function confirmAttendance(btn){
-    btn.textContent = '✓ Asistencia Confirmada';
-    btn.style.background = '#2e9e5b';
-    btn.disabled = true;
-  }
-
-  function openWhatsApp(servicio){
-    const numero = '5210000000000'; // Reemplaza con el número real del consultorio (con código de país)
-    const mensaje = encodeURIComponent('Hola, me gustaría información / cotización sobre: ' + servicio);
-    window.open('https://wa.me/' + numero + '?text=' + mensaje, '_blank');
-  }
-
-  function editProfile(){
-    const nombre = prompt('Nombre completo:', document.getElementById('profileName').textContent);
-    if(nombre) document.getElementById('profileName').textContent = nombre;
-    const tel = prompt('Teléfono:', document.getElementById('profilePhone').textContent);
-    if(tel) document.getElementById('profilePhone').textContent = tel;
-    const email = prompt('Correo electrónico:', document.getElementById('profileEmail').textContent);
-    if(email) document.getElementById('profileEmail').textContent = email;
-  }
-
-  function logout(){
-    if(confirm('¿Cerrar sesión?')){
-      alert('Sesión cerrada correctamente.');
-      showScreen('inicio', document.querySelector('.nav-item[data-screen="inicio"]'));
-    }
   }
 </script>
 </body>
