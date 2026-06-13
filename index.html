@@ -3,79 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dental K'</title>
+    <title>Dental K' App</title>
     <style>
         :root {
-            --primary: #d1c4e9; /* Lavanda claro */
-            --dark-purple: #4a148c; /* Morado fuerte para botones */
-            --white: #ffffff;
-            --gray: #f5f5f5;
+            --bg: #F0EDF5;
+            --purple-main: #6A5ACD;
+            --white: #FFFFFF;
+            --text: #333;
         }
-        body { font-family: sans-serif; background-color: var(--gray); margin: 0; padding-bottom: 70px; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; padding-bottom: 80px; }
         
-        /* Contenedores de secciones */
+        /* Contenedores */
         .page { display: none; padding: 20px; }
         .active { display: block; }
 
-        /* Estilos de tarjetas */
-        .card { background: var(--white); border-radius: 20px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        
-        /* Navegación Inferior */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--white); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #ddd; }
-        .nav-btn { background: none; border: none; font-size: 12px; color: #555; cursor: pointer; }
+        /* Tarjetas estilo App */
+        .card { background: var(--white); border-radius: 20px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        h2 { color: var(--purple-main); }
 
-        /* Botón de acción principal */
-        .btn-action { background-color: var(--dark-purple); color: white; border: none; padding: 10px 20px; border-radius: 10px; width: 100%; margin-top: 10px; }
+        /* Botones */
+        .btn { background: var(--purple-main); color: white; border: none; padding: 12px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; }
+
+        /* Navegación Inferior */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--white); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #ddd; }
+        .nav-item { cursor: pointer; text-align: center; font-size: 12px; color: #777; }
     </style>
 </head>
 <body>
 
-    <div id="inicio" class="page active">
-        <h2>Bienvenida, [Nombre]!</h2>
+    <section id="inicio" class="page active">
+        <h2>Bienvenida, Paciente</h2>
         <div class="card">
-            <p><strong>Tu próxima cita:</strong> Limpieza Profunda</p>
-            <p>15 de Junio, 2026 | 16:00 HRS</p>
-            <button class="btn-action">Confirmar Asistencia</button>
+            <p><strong>Tu próxima cita:</strong></p>
+            <p>Limpieza Profunda</p>
+            <p>📅 15 Jun 2026 | 16:00 HRS</p>
+            <button class="btn">Confirmar Asistencia</button>
         </div>
-    </div>
+    </section>
 
-    <div id="tratamientos" class="page">
+    <section id="tratamientos" class="page">
         <h2>Nuestros Tratamientos</h2>
         <div class="card">
-            <p>Resinas - <a>Cotizar/Agendar</a></p>
-            <p>Extracciones - <a>Cotizar/Agendar</a></p>
+            <p>🦷 Resinas</p>
+            <p>🪓 Extracciones</p>
+            <p>✨ Limpiezas dentales</p>
         </div>
-    </div>
+    </section>
 
-    <div id="citas" class="page">
+    <section id="citas" class="page">
         <h2>Tus Citas</h2>
         <div class="card">
             <p>Dra. Karen Valeria</p>
-            <p>Cita de Limpieza - 21 de Mayo, 2026</p>
-            <button class="btn-action">Agendar Nueva Cita</button>
+            <p>Cita: Limpieza Dental</p>
+            <p>Fecha: 21 Mayo 2026</p>
+            <button class="btn">Agendar Nueva Cita</button>
         </div>
-    </div>
+    </section>
 
-    <div id="perfil" class="page">
+    <section id="perfil" class="page">
         <h2>Mi Perfil</h2>
         <div class="card">
-            <p>[Nombre Completo]</p>
-            <p>e-mail: taren@nalerid.com</p>
+            <p><strong>[Nombre Completo]</strong></p>
+            <p>📞 227-138-17-23</p>
         </div>
         <div class="card">
             <p>👤 Datos Personales</p>
             <p>🦷 Historial Clínico</p>
             <p>💳 Formas de Pago</p>
-            <p>🛡️ Avisos de Privacidad</p>
+            <p>📄 Avisos de Privacidad</p>
         </div>
-        <button class="btn-action" style="background-color: #5d4037;">CERRAR SESIÓN</button>
-    </div>
+        <button class="btn" style="background:#d9534f;">CERRAR SESIÓN</button>
+    </section>
 
-    <nav class="bottom-nav">
-        <button class="nav-btn" onclick="show('inicio')">🏠 Inicio</button>
-        <button class="nav-btn" onclick="show('tratamientos')">📋 Tratamientos</button>
-        <button class="nav-btn" onclick="show('citas')">📅 Citas</button>
-        <button class="nav-btn" onclick="show('perfil')">👤 Perfil</button>
+    <nav class="nav-bar">
+        <div class="nav-item" onclick="show('inicio')">🏠<br>Inicio</div>
+        <div class="nav-item" onclick="show('tratamientos')">📋<br>Tratamientos</div>
+        <div class="nav-item" onclick="show('citas')">📅<br>Citas</div>
+        <div class="nav-item" onclick="show('perfil')">👤<br>Perfil</div>
     </nav>
 
     <script>
